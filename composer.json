@@ -1,0 +1,14 @@
+{
+    "name": "timecontrol/app",
+    "description": "Sistema TimeControl",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {
+        "firebase/php-jwt": "^6.0",
+        "php": ">=7.4"
+    }
+}
