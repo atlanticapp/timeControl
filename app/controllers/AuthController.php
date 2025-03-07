@@ -16,6 +16,7 @@ class AuthController extends Controller
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             session_start(); // Asegurar que las sesiones están iniciadas
+            unset($_SESSION['data_entered']); // 🛑 Evitar redirecciones incorrectas
     
             $codigo_empleado = $_POST['codigo_empleado'] ?? '';
             $password = $_POST['password'] ?? '';
@@ -27,6 +28,7 @@ class AuthController extends Controller
                 $this->createAndStoreJWT($user);
     
                 if (!empty($user['item']) && !empty($user['jtWo'])) {
+                    $_SESSION['data_entered'] = true;
                     header('Location: /timeControl/public/control');
                     exit();
                 } else {

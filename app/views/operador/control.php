@@ -100,24 +100,25 @@
             <table>
                 <tr>
                     <th>Bienvenido:</th>
-                    <td><?php echo htmlspecialchars($nombre_operador); ?>!</td>
+                    <td><?php echo htmlspecialchars($data['nombre']); ?>!</td>
                 </tr>
                 <tr>
                     <th>Job Ticket:</th>
-                    <td><?php echo htmlspecialchars($jtWo); ?></td>
+                    <td><?php echo htmlspecialchars($data['jtWo']); ?></td>
                 </tr>
                 <tr>
                     <th>Maquina:</th>
-                    <td><?php echo htmlspecialchars($nombre_maquina); ?></td>
+                    <td><?php echo htmlspecialchars($maquina); ?></td>
                 </tr>
                 <tr>
                     <th>Item:</th>
-                    <td><?php echo htmlspecialchars($item); ?></td>
+                    <td><?php echo htmlspecialchars($data['item']); ?></td>
                 </tr>
             </table>
         </div>
         <center>
-            <h1>Control de Tiempos - <?php echo htmlspecialchars($nombre_area); ?></h1>
+            <h1>Control de Tiempos - <?php echo htmlspecialchars($area); ?></h1>
+            <h1><? $bad_copy['descripcion']  ?> ds</h1>
         </center>
         <div class="buttons">
             <!-- Formulario para Preparación -->
@@ -137,18 +138,15 @@
                 <select name="badCopy" id="badCopy" required>
                     <option value="">Seleccionar Contratiempos</option>
                     <?php
-                    // Consultar las máquinas según el área seleccionada
-                    $query = "SELECT * FROM operacion WHERE maquina_id = ? AND tipo_operacion = 'Contratiempos'";
-                    $stmt = $conn->prepare($query);
-                    $stmt->bind_param("s", $codigo_maquina);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
+                    // Verificar si el array $bad_copy tiene elementos
+                    if (!empty($bad_copy)) {
+                        // Iterar sobre el array y mostrar las opciones
+                        foreach ($bad_copy as $row) {
                             echo "<option value='" . htmlspecialchars($row['descripcion']) . "'>" . htmlspecialchars($row['descripcion']) . "</option>";
                         }
+                    } else {
+                        echo "<option value=''>No hay contratiempos disponibles</option>";
                     }
-                    $stmt->close();
                     ?>
                 </select>
             </form>
@@ -232,20 +230,15 @@
             </thead>
             <tbody>
                 <?php
-                // Consultar las operaciones de preparación para la máquina actual
-                $query = "SELECT descripcion FROM operacion WHERE maquina_id = ? AND tipo_operacion = 'Preparación'";
-                $stmt = $conn->prepare($query);
-                $stmt->bind_param("s", $codigo_maquina);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr><td>" . htmlspecialchars($row['descripcion']) . "</td></tr>";
+                // Verificar si el array $preparacion tiene elementos
+                if (!empty($preparacion)) {
+                    // Iterar sobre el array y mostrar las opciones
+                    foreach ($preparacion as $descripcion) {
+                        echo "<tr><td>" . htmlspecialchars($descripcion) . "</td></tr>";
                     }
                 } else {
                     echo "<tr><td>No hay operaciones disponibles</td></tr>";
                 }
-                $stmt->close();
                 ?>
             </tbody>
         </table>
