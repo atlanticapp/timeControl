@@ -101,4 +101,53 @@ class AuthController extends Controller
             return false;
         }
     }
+
+    public function getStatus()
+{
+    // Asegurarse de que la sesión esté iniciada
+    session_start();
+
+    // Verificar si hay un mensaje de estado en la sesión
+    if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+        $status = $_SESSION['status'];
+        $message = $_SESSION['message'];
+
+        // Limpiar las variables de estado para que no persistan
+        unset($_SESSION['status']);
+        unset($_SESSION['message']);
+
+        // Devolver la respuesta en formato JSON
+        echo json_encode([
+            'status' => $status,
+            'message' => $message
+        ]);
+    } else {
+        // Si no hay estado, devolver una respuesta vacía
+        echo json_encode([
+            'status' => '',
+            'message' => ''
+        ]);
+    }
+
+    exit(); // Finalizar el script después de enviar la respuesta
+}
+
+public function error()
+{
+    session_start();
+
+    // Verificar si hay un mensaje de error en la sesión
+    $status = isset($_SESSION['status']) ? $_SESSION['status'] : null;
+    $message = isset($_SESSION['message']) ? $_SESSION['message'] : null;
+
+    // Limpiar las variables de estado para que no persistan
+    unset($_SESSION['status']);
+    unset($_SESSION['message']);
+
+    // Renderizar la vista del error con el mensaje
+    $this->view('error', [
+        'status' => $status,
+        'message' => $message
+    ]);
+}
 }

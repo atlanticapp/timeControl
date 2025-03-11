@@ -118,21 +118,20 @@
         </div>
         <center>
             <h1>Control de Tiempos - <?php echo htmlspecialchars($area); ?></h1>
-            <h1><? $bad_copy['descripcion']  ?> ds</h1>
         </center>
         <div class="buttons">
             <!-- Formulario para Preparación -->
-            <form id="makeReadyForm" action="./modulos/guardar_registros.php" method="post" onsubmit="return confirmMakeReady()">
+            <form id="makeReadyForm" action="/timeControl/public/registrar" method="post" onsubmit="return confirmMakeReady()">
                 <input type="hidden" name="tipo_boton" value="Preparación">
-                <button type="submit" id="makeReadyButton" <?php if ($active_button_id === 'Preparación') echo 'class="active-button"'; ?>>Preparación</button>
+                <button type="submit" id="makeReadyButton" <?php if ($data['active_button_id'] === 'Preparación') echo 'class="active-button"'; ?>>Preparación</button>
             </form>
             <!-- Formulario para Producción -->
-            <form id="goodCopyForm" action="./modulos/guardar_registros.php" method="post" onsubmit="return confirmGoodCopy()">
+            <form id="goodCopyForm" action="/timeControl/public/registrar" method="post" onsubmit="return confirmGoodCopy()">
                 <input type="hidden" name="tipo_boton" value="Producción">
                 <button type="submit" id="goodCopyButton" <?php if ($active_button_id === 'Producción') echo 'class="active-button"'; ?>>Producción</button>
             </form>
             <!-- Formulario para Contratiempos -->
-            <form id="badCopyForm" action="./modulos/guardar_registros.php" method="post" onsubmit="return validateBadCopyForm()">
+            <form id="badCopyForm" action="/timeControl/public/registrar" method="post" onsubmit="return validateBadCopyForm()">
                 <input type="hidden" name="tipo_boton" value="Contratiempos">
                 <button type="submit" id="badCopyButton" <?php if ($active_button_id === 'Contratiempos') echo 'class="active-button"'; ?>>Contratiempos</button>
                 <select name="badCopy" id="badCopy" required>
@@ -151,13 +150,13 @@
                 </select>
             </form>
             <!-- Formulario para Velocidad -->
-            <form id="velocidadForm" class="velForm" action="./modulos/guardar_velocidad.php" method="post">
+            <form id="velocidadForm" class="velForm" action="/timeControl/public/saveVelocidad" method="post">
                 <input type="hidden" name="tipo_boton" value="Velocidad">
                 <input type="number" style="font-size: 20px;" name="velocidadProduccion" id="velocidadProduccion" placeholder="Velocidad Producción" required>
                 <button type="submit">Asignar Velocidad</button>
             </form>
             <!-- Formulario para Fin de Producción -->
-            <form id="finForm" action="./modulos/guardar_registros.php" method="post" onsubmit="return validateFinalProduction()">
+            <form id="finForm" action="/timeControl/public/registrar" method="post" onsubmit="return validateFinalProduction()">
                 <input type="hidden" name="tipo_boton" value="final_produccion">
                 <button type="button" onclick="toggleFinalProductionInput()" id="finButton" <?php if ($active_button_id === 'final_produccion'); ?>>Fin</button>
                 <div class="finalProductionInput" id="finalProductionInput" style="display: <?php echo ($active_button_id === 'finButton') ? 'block' : 'none'; ?>;">
@@ -171,7 +170,7 @@
                 </div>
             </form>
             <!-- Formulario para Parcial -->
-            <form id="parcialForm" action="./modulos/guardar_registros.php" method="post" onsubmit="return validateParcial()">
+            <form id="parcialForm" action="/timeControl/public/registrar" method="post" onsubmit="return validateParcial()">
                 <input type="hidden" name="tipo_boton" value="Parcial">
                 <button type="button" onclick="toggleParcialInput()" id="parcialButton" <?php if ($active_button_id === 'Parcial') echo 'class="active-button"'; ?>>Entrega Parcial</button>
                 <div class="parcialInput" id="parcialInput" style="display: <?php echo ($active_button_id === 'parcialButton') ? 'block' : 'none'; ?>;">
@@ -233,8 +232,8 @@
                 // Verificar si el array $preparacion tiene elementos
                 if (!empty($preparacion)) {
                     // Iterar sobre el array y mostrar las opciones
-                    foreach ($preparacion as $descripcion) {
-                        echo "<tr><td>" . htmlspecialchars($descripcion) . "</td></tr>";
+                    foreach ($preparacion as $row) {
+                        echo "<tr><td>" . htmlspecialchars($row['descripcion']) . "</td></tr>";
                     }
                 } else {
                     echo "<tr><td>No hay operaciones disponibles</td></tr>";

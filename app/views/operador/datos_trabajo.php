@@ -163,7 +163,7 @@
         <button class="logout-button" onclick="confirmLogout()">Cerrar Sesión</button>
         <br><br>
         <!-- Formulario para Espera de Trabajo -->
-        <form class="form" method="POST" action="./modulos/guardar_registros.php" onsubmit="return confirmWait()">
+        <form class="form" method="POST" action="/timeControl/public/espera_trabajo" onsubmit="return confirmWait()">
             <input type="hidden" name="tipo_boton" value="Espera_trabajo">
             <button type="submit" class="wait_button <?php echo ($active_button_id === 'Espera_trabajo') ? 'active-button' : ''; ?>">Espera Trabajo</button>
         </form>
@@ -187,7 +187,7 @@
                         });
 
                         setTimeout(() => {
-                            window.location.href = "/timeControl/public/ingresar_datos"; // Limpia la URL
+                            window.location.href = "/timeControl/public/datos_trabajo"; // Limpia la URL
                         }, 2000);
                     }
                 });

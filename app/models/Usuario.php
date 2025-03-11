@@ -8,7 +8,7 @@ class Usuario extends Model {
     protected $table = 'users';
     
     public function findByCodigo($codigo) {
-        $sql = "SELECT id, nombre, codigo_empleado, tipo_usuario, area_id, maquina_id, item, jtWo, password FROM {$this->table} WHERE codigo_empleado = ?";
+        $sql = "SELECT * FROM {$this->table} WHERE codigo_empleado = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("s", $codigo);
         $stmt->execute();
