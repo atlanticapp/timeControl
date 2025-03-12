@@ -6,7 +6,6 @@ use App\Core\Model;
 
 class Maquina extends Model
 {
-
     // Método para obtener las máquinas por área
     public function getMaquinasByArea($area_id)
     {

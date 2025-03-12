@@ -48,77 +48,95 @@ class MaquinaController extends Controller
             ]);
         } catch (\Exception $e) {
             // Manejar cualquier error
-            error_log("Error en index de MaquinaController: " . $e->getMessage());
-            header('Location: /timeControl/public/error');
-            exit();
+           $this->redirectToError();
         }
     }
 
     public function seleccionarMaquina()
     {
-        session_start(); // Asegurarse de que la sesión esté iniciada
-
-        // Obtener usuario actual desde el JWT
-        $user = AuthHelper::getCurrentUser();
-        if (!$user) {
-            header('Location: /timeControl/public/login');
-            exit();
-        }
-
         // Validar la máquina seleccionada
         $maquina_id = $_POST['maquina_id'] ?? null;
+        if (!$maquina_id) {
+            $this->redirectToError();
+        }
 
         // Obtener el JWT actual de la cookie
         $jwt = $_COOKIE['jwt'] ?? null;
         if (!$jwt) {
-            header('Location: /timeControl/public/login');
-            exit();
+            $this->redirectToLogin();
         }
 
-        // Decodificar el JWT existente
-        try {
-            $decoded = JWT::decode($jwt, new Key($this->jwt_secret, 'HS256'));
-            $userData = (array) $decoded->data;
-        } catch (\Exception $e) {
-            error_log("Error al decodificar JWT: " . $e->getMessage());
-            header('Location: /timeControl/public/error');
-            exit();
+        // Decodificar el JWT
+        $userData = $this->decodeJWT($jwt);
+        if (!$userData) {
+            $this->redirectToError();
         }
 
-        // Actualizar el campo maquina_id en la base de datos
+        // Actualizar la máquina del usuario
         $maquinaModel = new Maquina();
         if (!$maquinaModel->actualizarMaquinaId($maquina_id, $userData['codigo_empleado'])) {
-            error_log("Error al actualizar maquina_id en la base de datos.");
-            header('Location: /timeControl/public/error');
-            exit();
+            $this->redirectToError();
         }
 
         // Actualizar el JWT con el nuevo maquina_id
-        $nuevo_payload = [
-            'iat' => time(),
-            'exp' => time() + 3600, // Expira en 1 hora
-            'data' => array_merge($userData, ['maquina_id' => $maquina_id])
-        ];
-
-        try {
-            $nuevo_jwt = JWT::encode($nuevo_payload, $this->jwt_secret, 'HS256');
-
-            // Establecer la cookie con el nuevo JWT
-            setcookie('jwt', $nuevo_jwt, [
-                'expires' => time() + 3600,
-                'path' => '/',
-                'secure' => isset($_SERVER['HTTPS']),
-                'httponly' => true,
-                'samesite' => 'Lax'
-            ]);
-        } catch (\Exception $e) {
-            error_log("Error al generar el token JWT: " . $e->getMessage());
-            header('Location: /timeControl/public/error');
-            exit();
+        $nuevo_jwt = $this->generateJWT($userData, $maquina_id);
+        if (!$nuevo_jwt) {
+            $this->redirectToError();
         }
+
+        // Establecer la cookie con el nuevo JWT
+        $this->setJWTCookie($nuevo_jwt);
 
         // Redirigir al usuario después de seleccionar la máquina
         header('Location: /timeControl/public/datos_trabajo');
         exit();
+    }
+
+    private function redirectToLogin()
+    {
+        header('Location: /timeControl/public/login');
+        exit();
+    }
+
+    private function redirectToError()
+    {
+        header('Location: /timeControl/public/error');
+        exit();
+    }
+
+    private function decodeJWT($jwt)
+    {
+        try {
+            $decoded = JWT::decode($jwt, new Key($this->jwt_secret, 'HS256'));
+            return (array) $decoded->data;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    private function generateJWT($userData, $maquina_id)
+    {
+        try {
+            $nuevo_payload = [
+                'iat' => time(),
+                'exp' => time() + 3600, // Expira en 1 hora
+                'data' => array_merge($userData, ['maquina_id' => $maquina_id])
+            ];
+            return JWT::encode($nuevo_payload, $this->jwt_secret, 'HS256');
+        } catch (\Exception $e) {
+            error_log("Error al generar el token JWT: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    private function setJWTCookie($jwt)
+    {
+        setcookie('jwt', $jwt, [
+            'expires' => time() + 3600,
+            'path' => '/',
+            'secure' => isset($_SERVER['HTTPS']),
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
     }
 }

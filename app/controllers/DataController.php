@@ -105,7 +105,7 @@ class DataController extends Controller
                 throw new \Exception("Método no permitido");
             }
 
-            // Validar que el usuario está autenticado
+            // Validar autenticación del usuario
             $user = AuthHelper::getCurrentUser();
             if (!$user) {
                 throw new \Exception("Usuario no autenticado");
@@ -116,8 +116,8 @@ class DataController extends Controller
                 session_start();
             }
 
-            $control = new Control();
             $usuario = new Usuario();
+            $control = new Control();
 
             // Obtener información del usuario
             $data = $usuario->findByCodigo($user->codigo_empleado);
@@ -125,16 +125,22 @@ class DataController extends Controller
                 throw new \Exception("No se encontró información del usuario.");
             }
 
-            $tipo_boton = $_POST['tipo_boton'] ?? null;
             $codigo_empleado = $user->codigo_empleado;
+            $tipo_boton = $_POST['tipo_boton'] ?? null;
             $maquina = $data['maquina_id'] ?? null;
             $area_id = $user->area_id ?? null;
 
-            // Obtener la fecha y hora actual
+            // Configurar zona horaria y obtener fecha actual
             date_default_timezone_set("America/Santo_Domingo");
             $fecha_actual = date("Y-m-d H:i:s");
 
-            // Crear un array con los datos recibidos
+            // Verificar si el botón ya está activo
+            if ($control->getActiveButton($codigo_empleado) === 'Espera_trabajo') {
+                $this->setSessionMessage('error', 'El botón ya está activo, no se puede crear un nuevo registro.');
+                $this->redirect('/timeControl/public/datos_trabajo');
+            }
+
+            // Crear el registro de espera de trabajo
             $registroData = [
                 'tipo_boton' => $tipo_boton,
                 'codigo_empleado' => $codigo_empleado,
@@ -143,36 +149,37 @@ class DataController extends Controller
                 'fecha_registro' => $fecha_actual
             ];
 
-            // Instancia del modelo
-            $control = new Control();
-
-            $active_button_id = $control->getActiveButton($codigo_empleado);
-            if ($active_button_id === 'Espera_trabajo') {
-                $_SESSION['status'] = 'error';
-                $_SESSION['message'] = 'El botón ya está activo, no se puede crear un nuevo registro.';
-                header("Location: /timeControl/public/datos_trabajo");
-                exit();
+            if (!$control->insertEsperaTrabajo($registroData)) {
+                throw new \Exception("Error al insertar el registro de espera de trabajo.");
             }
 
-            //Ejecución de la inserción
-            $resultado = $control->insertEsperaTrabajo($registroData);
-
-            // Llamada al método que actualiza el estado del botón del usuario
-            $estadoBotonExitoso = $control->actualizarEstadoBoton($codigo_empleado, $tipo_boton);
-            if (!$estadoBotonExitoso) {
+            // Actualizar estado del botón
+            if (!$control->actualizarEstadoBoton($codigo_empleado, $tipo_boton)) {
                 throw new \Exception("Error al actualizar el estado del botón.");
             }
 
-            if ($resultado) {
-                $_SESSION['status'] = 'success';
-                $_SESSION['message'] = 'Registro de espera de trabajo exitoso!';
-                header("Location: /timeControl/public/datos_trabajo");
-            } else {
-                throw new \Exception("Error al insertar el registro de espera de trabajo.");
-            }
+            $this->setSessionMessage('success', 'Registro de espera de trabajo exitoso!');
+            $this->redirect('/timeControl/public/datos_trabajo');
         } catch (\Exception $e) {
-            header("Location: /timeControl/public/error");
+            $this->redirect('/timeControl/public/error');
         }
+    }
+
+    /**
+     * Método auxiliar para establecer mensajes en sesión
+     */
+    private function setSessionMessage($status, $message)
+    {
+        $_SESSION['status'] = $status;
+        $_SESSION['message'] = $message;
+    }
+
+    /**
+     * Método auxiliar para redirigir
+     */
+    private function redirect($url)
+    {
+        header("Location: $url");
         exit();
     }
 }

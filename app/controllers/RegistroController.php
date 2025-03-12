@@ -42,7 +42,7 @@ class RegistroController extends Controller
 
             // Validar existencia de máquina y área antes de llamar a los métodos
             $nombre_maquina = isset($data['maquina_id']) ? $control->getNameMaquina($data['maquina_id']) : "No asignado";
-            $nombre_area = isset($user->area_id) ? $control->getNameArea($user->area_id) : "No asignado";
+            $nombre_area = isset($user->area_id) ? $usuario->getNameArea($user->area_id) : "No asignado";
 
             // Obtener datos adicionales
             $active_button_id = $control->getActiveButton($user->codigo_empleado);
@@ -68,19 +68,14 @@ class RegistroController extends Controller
     public function registrar()
     {
         try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new \Exception("Método no permitido");
-            }
+           $this->validateRequestMethod('POST');
 
             $user = AuthHelper::getCurrentUser();
             if (!$user) {
                 throw new \Exception("Usuario no autenticado");
             }
 
-            // Iniciar sesión si no está iniciada
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
+            $this->startSessionIfNeeded();
 
             $control = new Control();
             $usuario = new Usuario();
@@ -88,7 +83,7 @@ class RegistroController extends Controller
             // Obtener información del usuario
             $data = $usuario->findByCodigo($user->codigo_empleado);
             if (!$data) {
-                throw new \Exception("No se encontró información del usuario.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'No se encontró información del usuario.');
             }
 
             // Recibir y validar datos del formulario
@@ -103,7 +98,7 @@ class RegistroController extends Controller
             $area_id = $user->area_id ?? null;
 
             if (!$tipo_boton || !$item || !$jtWo || !$maquina) {
-                throw new \Exception("Todos los campos son obligatorios.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Datos insuficientes para registrar.');
             }
 
             // Obtener la fecha y hora actual
@@ -167,28 +162,54 @@ class RegistroController extends Controller
                     break;
 
                 default:
-                    throw new \Exception("Tipo de botón no reconocido.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Tipo de botón no reconocido.');
             }
 
             // Insertar el registro en la base de datos
             $registroExitoso = $control->insertRegistro($registroData);
 
             if (!$registroExitoso) {
-                throw new \Exception("Error al guardar el registro.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Error al guardar el registro.');
             }
 
             // Llamada al método que actualiza el estado del botón del usuario
             $estadoBotonExitoso = $control->actualizarEstadoBoton($codigo_empleado, $registroData['tipo_boton']);
             if (!$estadoBotonExitoso) {
-                throw new \Exception("Error al actualizar el estado del botón.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Error al actualizar el estado del botón.');
             }
 
-            header("Location: /timeControl/public/control?status=success");
-            exit();
+            $this->redirectWithMessage('/timeControl/public/control', 'success', 'Registro guardado correctamente.');
         } catch (\Exception $e) {
-            error_log("Error en RegistroController@registrar: " . $e->getMessage());
-            header("Location: /timeControl/public/control?status=error");
-            exit();
+           $this->redirectWithMessage('/timeControl/public/error', 'error', 'Ocurrió un error inesperado.');
+
         }
+    }
+
+    private function validateRequestMethod($method)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== $method) {
+            throw new \Exception("Método no permitido");
+        }
+    }
+
+    /**
+     * Método auxiliar para iniciar sesión si no está iniciada
+     */
+    private function startSessionIfNeeded()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
+    /**
+     * Método auxiliar para establecer mensajes en sesión y redirigir
+     */
+    private function redirectWithMessage($url, $status, $message)
+    {
+        $_SESSION['status'] = $status;
+        $_SESSION['message'] = $message;
+        header("Location: $url");
+        exit();
     }
 }

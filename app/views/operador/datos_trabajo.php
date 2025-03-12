@@ -201,7 +201,7 @@
         // Función para confirmar el cierre de sesión
         function confirmLogout() {
             if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
-                window.location.href = "./modulos/logout.php";
+                window.location.href = "/timeControl/public/logout";
             }
         }
     </script>

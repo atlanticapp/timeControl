@@ -123,8 +123,7 @@
 
         function confirmLogout() {
             if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
-                document.cookie = 'jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-                window.location.href = "./login.php";
+                window.location.href = "/timeControl/public/logout";
             }
         }
     </script>

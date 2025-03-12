@@ -215,7 +215,7 @@
         <!-- Agrega esta sección al final del contenido dentro de <div class="container"> -->
         <div class="comment-section">
             <h2>Comentarios</h2>
-            <form class="comment-form" action="./modulos/guardar_comentario.php" method="post">
+            <form class="comment-form" action="/timeControl/public/addComentario" method="post">
                 <textarea name="comentario" id="comentario" rows="3" placeholder="Escribe tu comentario aquí..." maxlength="255" required></textarea>
                 <button type="submit">Guardar Comentario</button>
             </form>
@@ -245,30 +245,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>
-        // Mostrar el toast cuando la página se cargue
-        $(document).ready(function() {
-            // Obtener el parámetro 'status' de la URL
-            var urlParams = new URLSearchParams(window.location.search);
-            var status = urlParams.get('status');
+        document.addEventListener("DOMContentLoaded", function() {
+            // Llama al endpoint para obtener el estado y mensaje
+            fetch('/timeControl/public/getStatus')
+                .then(response => response.json())
+                .then(data => {
+                    // Asegúrate de que el 'status' y 'message' estén presentes
+                    if (data.status && data.message) {
+                        const toastrFunction = data.status === "success" ? toastr.success : toastr.error;
 
-            // Mostrar el toast correspondiente
-            if (status === 'success') {
-                toastr.success('¡Registro agregado correctamente!', '', {
-                    timeOut: 1800 // Duración más larga (en milisegundos)
-                }).on('hidden.bs.toast', function() {
-                    // Desvanecer gradualmente el toast cuando se oculte
-                    $(this).fadeOut(500);
+                        // Muestra el mensaje usando toastr
+                        toastrFunction(data.message, '', {
+                            timeOut: 2000 // El mensaje desaparece después de 2 segundos
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener el estado:', error);
                 });
-            } else if (status === 'error') {
-                var errorMessage = urlParams.get('message') || 'Error al agregar el registro';
-                toastr.error(errorMessage, '', {
-                    timeOut: 1800 // Duración más larga (en milisegundos)
-                }).on('hidden.bs.toast', function() {
-                    // Desvanecer gradualmente el toast cuando se oculte
-                    $(this).fadeOut(500);
-                });
-            }
         });
+
 
         // Validar Contratiempos
         function validateBadCopyForm() {

@@ -13,18 +13,14 @@ class saveVelocidad extends Controller
     public function saveVelocidad()
     {
         try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new \Exception("Método no permitido");
-            }
+            $this->validateRequestMethod('POST');
 
             $user = AuthHelper::getCurrentUser();
             if (!$user) {
                 throw new \Exception("Usuario no autenticado");
             }
 
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
+            $this->startSessionIfNeeded();
 
             $velocidad = new Velocidad();
             $control = new Control();
@@ -33,18 +29,18 @@ class saveVelocidad extends Controller
             // Obtener información del usuario
             $data = $usuario->findByCodigo($user->codigo_empleado);
             if (!$data) {
-                throw new \Exception("No se encontró información del usuario.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'No se encontró información del usuario.');
             }
 
             // Validar que se está en producción
             $active_button_id = $control->getActiveButton($user->codigo_empleado);
             if ($active_button_id !== 'Producción') {
-                throw new \Exception("No se está en producción.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'No se puede registrar velocidad fuera de producción.');
             }
 
             // Verificar si se recibió la velocidad de producción
             if (!isset($_POST['velocidadProduccion'])) {
-                throw new \Exception("No se recibió la velocidad de producción.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'No se recibió la velocidad de producción.');
             }
 
             $velocidad_produccion = $_POST['velocidadProduccion'];
@@ -54,7 +50,7 @@ class saveVelocidad extends Controller
             $item = $data['item'] ?? null;
 
             if (!$maquina || !$area_id || !$jtWo || !$item) {
-                throw new \Exception("Datos insuficientes para registrar velocidad.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Datos insuficientes para registrar velocidad.');
             }
 
             // Insertar en la base de datos
@@ -67,15 +63,41 @@ class saveVelocidad extends Controller
             ]);
 
             if (!$registroExitoso) {
-                throw new \Exception("Error al guardar la velocidad de producción.");
+                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Error al guardar la velocidad de producción.');
             }
 
-            header("Location: /timeControl/public/control?status=success");
-            exit();
+            $this->redirectWithMessage('/timeControl/public/control', 'success', 'Velocidad de producción registrada correctamente.');
+            
         } catch (\Exception $e) {
-            error_log("Error en RegistroController@saveVelocidad: " . $e->getMessage());
-            header("Location: /timeControl/public/control?status=error");
-            exit();
+            $this->redirectWithMessage('/timeControl/public/control', 'error', 'Error al guardar la velocidad de producción.');
         }
+    }
+
+    private function validateRequestMethod($method)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== $method) {
+            throw new \Exception("Método no permitido");
+        }
+    }
+
+    /**
+     * Método auxiliar para iniciar sesión si no está iniciada
+     */
+    private function startSessionIfNeeded()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
+    /**
+     * Método auxiliar para establecer mensajes en sesión y redirigir
+     */
+    private function redirectWithMessage($url, $status, $message)
+    {
+        $_SESSION['status'] = $status;
+        $_SESSION['message'] = $message;
+        header("Location: $url");
+        exit();
     }
 }

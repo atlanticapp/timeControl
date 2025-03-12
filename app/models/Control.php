@@ -49,19 +49,6 @@ class Control extends Model
         return $nombreMaquina;
     }
 
-    public function getNameArea($area_id)
-    {
-        $areaSql = "SELECT nombre FROM area WHERE id = ?";
-        $areaStmt = $this->db->prepare($areaSql);
-        $areaStmt->bind_param("i", $area_id);
-        $areaStmt->execute();
-        $areaStmt->bind_result($nombreArea);
-        $areaStmt->fetch();
-        $areaStmt->close();
-
-        return $nombreArea;
-    }
-
     public function getBadCopy($maquina_id)
     {
         $query = "SELECT * FROM operacion WHERE maquina_id = ? AND tipo_operacion = 'Contratiempos'";

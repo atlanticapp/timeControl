@@ -187,7 +187,7 @@
     <section id="operaciones-abiertas" class="tab-content bg-green-50 shadow-lg rounded-lg p-6 mb-10 hidden">
         <span class="fecha-estilo"><?php echo date('d/m/Y'); ?></span>
         <h2 class="section-title" id="operaciones-abiertas-toggle">Operaciones Abiertas - Área
-            <?= htmlspecialchars($nombre_area) ?>
+            <?= htmlspecialchars($area) ?>
         </h2>
 
         <!-- Formulario de filtros -->
@@ -198,7 +198,7 @@
                     <select class="form-select mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="codigo_empleado" name="codigo_empleado">
                         <option value="">Seleccione un empleado</option>
                         <?php foreach ($empleados as $empleado) : ?>
-                            <option value="<?= htmlspecialchars($empleado['codigo_empleado']) ?>" <?= isset($filters[0]) && $filters[0] === $empleado['codigo_empleado'] ? 'selected' : '' ?>>
+                            <option value="<?= htmlspecialchars($empleado['codigo_empleado']) ?>" <?= isset($filters['codigo_empleado']) && $filters['codigo_empleado'] === $empleado['codigo_empleado'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($empleado['nombre']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -209,7 +209,7 @@
                     <select class="form-select mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="tipo_boton" name="tipo_boton">
                         <option value="">Seleccione una Operación</option>
                         <?php foreach ($botones as $boton) : ?>
-                            <option value="<?= htmlspecialchars($boton['tipo_boton']) ?>" <?= isset($filters[1]) && $filters[1] === $boton['tipo_boton'] ? 'selected' : '' ?>>
+                            <option value="<?= htmlspecialchars($boton['tipo_boton']) ?>" <?= isset($filters['tipo_boton']) && $filters['tipo_boton'] === $boton['tipo_boton'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($boton['tipo_boton']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -220,7 +220,7 @@
                     <select class="form-select mt-1 block w-full border-gray-300 rounded-md shadow-sm" id="maquina" name="maquina">
                         <option value="">Seleccione una máquina</option>
                         <?php foreach ($maquinas as $maquina) : ?>
-                            <option value="<?= htmlspecialchars($maquina['id']) ?>" <?= isset($filters[2]) && $filters[2] === $maquina['id'] ? 'selected' : '' ?>>
+                            <option value="<?= htmlspecialchars($maquina['id']) ?>" <?= isset($filters['maquina']) && $filters['maquina'] === $maquina['id'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($maquina['nombre']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -231,6 +231,7 @@
                 </div>
             </div>
         </form>
+
 
         <div id="operaciones-abiertas-content" class="overflow-x-auto">
             <table class="table table-modern">
@@ -245,40 +246,43 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-700 text-sm">
-                    <?php foreach ($operaciones_abiertas as $row) : ?>
-                        <?php
-                        $fechaRegistro = new DateTime($row['fecha_registro']);
-                        $fechaActual = new DateTime();
-                        $intervalo = $fechaRegistro->diff($fechaActual);
-                        $tiempoTranscurrido = $intervalo->format('%H:%I:%S');
-
-                        $tiempoTranscurridoClass = '';
-                        if ($intervalo->h >= 8) {
-                            $tiempoTranscurridoClass = 'text-danger';
-                        } elseif ($intervalo->h >= 6) {
-                            $tiempoTranscurridoClass = 'text-warning';
-                        } else {
-                            $tiempoTranscurridoClass = 'text-success';
-                        }
-
-                        $rowClass = $row['tipo_boton'] === 'Contratiempos' ? 'bg-red-100 blink' : 'bg-white';
-                        ?>
-                        <tr class="<?= $rowClass ?>" data-start-time="<?= $row['fecha_registro'] ?>">
-                            <td><?= htmlspecialchars($row['nombre']) ?></td>
-                            <td><?= htmlspecialchars($row['tipo_boton']) ?></td>
-                            <td><?= htmlspecialchars($row['item']) ?></td>
-                            <td><?= htmlspecialchars($row['nombre_maquina']) ?></td>
-                            <td><span class="tiempo <?= $tiempoTranscurridoClass ?>">
-                                    <?= $tiempoTranscurrido ?>
-                                </span></td>
-                            <td><?= htmlspecialchars($row['descripcion']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
                     <?php if (empty($operaciones_abiertas)) : ?>
                         <tr>
-                            <td colspan="5" class="text-center">No hay operaciones abiertas que coincidan con los filtros seleccionados.</td>
+                            <td colspan="6" class="text-center">No hay operaciones abiertas que coincidan con los filtros seleccionados.</td>
                         </tr>
+                    <?php else: ?>
+                        <?php foreach ($operaciones_abiertas as $row) : ?>
+                            <?php
+                            // Calcular el tiempo transcurrido
+                            $fechaRegistro = new DateTime($row['fecha_registro']);
+                            $fechaActual = new DateTime();
+                            $intervalo = $fechaRegistro->diff($fechaActual);
+                            $tiempoTranscurrido = $intervalo->format('%H:%I:%S');
+
+                            // Determinar la clase de color según el tiempo transcurrido
+                            $tiempoTranscurridoClass = '';
+                            if ($intervalo->h >= 8) {
+                                $tiempoTranscurridoClass = 'text-danger';
+                            } elseif ($intervalo->h >= 6) {
+                                $tiempoTranscurridoClass = 'text-warning';
+                            } else {
+                                $tiempoTranscurridoClass = 'text-success';
+                            }
+
+                            // Determinar la clase de la fila según el tipo de operación
+                            $rowClass = $row['tipo_boton'] === 'Contratiempos' ? 'bg-red-100 blink' : 'bg-white';
+                            ?>
+                            <tr class="<?= $rowClass ?>" data-start-time="<?= $row['fecha_registro'] ?>">
+                                <td><?= htmlspecialchars($row['nombre_empleado']) ?></td>
+                                <td><?= htmlspecialchars($row['tipo_boton']) ?></td>
+                                <td><?= htmlspecialchars($row['item']) ?></td>
+                                <td><?= htmlspecialchars($row['nombre_maquina']) ?></td>
+                                <td><span class="tiempo <?= $tiempoTranscurridoClass ?>"><?= $tiempoTranscurrido ?></span></td>
+                                <td><?= htmlspecialchars($row['descripcion']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     <?php endif; ?>
+
                 </tbody>
             </table>
         </div>
@@ -315,9 +319,11 @@
         <div class="overflow-x-auto" id="detalle-produccion-scrap-content">
             <?php foreach ($produccion_por_maquina_empleado as $maquina_id => $maquina) : ?>
 
-                <strong><h3 class="text-xl font-semibold mb-4 border-b-2 border-gray-300 pb-2">
-                    <?= htmlspecialchars($maquina['nombre_maquina']); ?>
-                </h3></strong>
+                <strong>
+                    <h3 class="text-xl font-semibold mb-4 border-b-2 border-gray-300 pb-2">
+                        <?= htmlspecialchars($maquina['nombre_maquina']); ?>
+                    </h3>
+                </strong>
                 <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
                     <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
                         <tr>

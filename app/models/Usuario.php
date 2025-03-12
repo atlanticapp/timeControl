@@ -48,4 +48,17 @@ class Usuario extends Model {
         
         return $areas;
     }
+
+    public function getNameArea($area_id)
+    {
+        $areaSql = "SELECT nombre FROM area WHERE id = ?";
+        $areaStmt = $this->db->prepare($areaSql);
+        $areaStmt->bind_param("i", $area_id);
+        $areaStmt->execute();
+        $areaStmt->bind_result($nombreArea);
+        $areaStmt->fetch();
+        $areaStmt->close();
+
+        return $nombreArea;
+    }
 }
