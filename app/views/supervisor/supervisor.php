@@ -273,7 +273,7 @@
                             $rowClass = $row['tipo_boton'] === 'Contratiempos' ? 'bg-red-100 blink' : 'bg-white';
                             ?>
                             <tr class="<?= $rowClass ?>" data-start-time="<?= $row['fecha_registro'] ?>">
-                                <td><?= htmlspecialchars($row['nombre_empleado']) ?></td>
+                                <td><?= htmlspecialchars($row['nombre']) ?></td>
                                 <td><?= htmlspecialchars($row['tipo_boton']) ?></td>
                                 <td><?= htmlspecialchars($row['item']) ?></td>
                                 <td><?= htmlspecialchars($row['nombre_maquina']) ?></td>
@@ -293,7 +293,7 @@
         <span class="fecha-estilo"><?php echo date('d/m/Y'); ?></span>
         <h2 class="section-title" id="detalle-produccion-scrap-toggle">
             Producción y Scrap X Máquina y Empleado - Área
-            <?= htmlspecialchars($nombre_area) ?>
+            <?= htmlspecialchars($area) ?>
         </h2>
 
         <!-- Formulario de filtro -->
@@ -317,49 +317,51 @@
 
         <!-- Detalle de producción y scrap por máquina -->
         <div class="overflow-x-auto" id="detalle-produccion-scrap-content">
-            <?php foreach ($produccion_por_maquina_empleado as $maquina_id => $maquina) : ?>
-
-                <strong>
-                    <h3 class="text-xl font-semibold mb-4 border-b-2 border-gray-300 pb-2">
-                        <?= htmlspecialchars($maquina['nombre_maquina']); ?>
-                    </h3>
-                </strong>
-                <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
-                    <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
-                        <tr>
-                            <th class="py-3 px-4 text-left">Código Empleado</th>
-                            <th class="py-3 px-4 text-left">Nombre Empleado</th>
-                            <th class="py-3 px-4 text-left">Producción</th>
-                            <th class="py-3 px-4 text-left">Scrap</th>
-                            <th class="py-3 px-4 text-left">Hora</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700 text-sm">
-                        <?php foreach ($maquina['empleados'] as $empleado_codigo => $empleado) : ?>
+            <?php if (!empty($produccion['produccion_por_maquina_empleado'])) : ?>
+                <?php foreach ($produccion['produccion_por_maquina_empleado'] as $maquina_id => $maquina) : ?>
+                    <strong>
+                        <h3 class="text-xl font-semibold mb-4 border-b-2 border-gray-300 pb-2">
+                            <?= htmlspecialchars($maquina['nombre_maquina']); ?>
+                        </h3>
+                    </strong>
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                        <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
                             <tr>
-                                <td class="py-3 px-4"><?= htmlspecialchars($empleado_codigo); ?></td>
-                                <td class="py-3 px-4"><?= htmlspecialchars($empleado['nombre_empleado']); ?></td>
-                                <td class="py-3 px-4"><?= number_format($empleado['total_produccion'], 2, '.', ','); ?></td>
-                                <td class="py-3 px-4"><?= number_format($empleado['total_scrap'], 2, '.', ','); ?></td>
-                                <td class="py-3 px-4 font-bold text-blue-600 text-lg text-center"><?= date('g:i A', strtotime($empleado['fecha_registro'])); ?></td>
+                                <th class="py-3 px-4 text-left">Código Empleado</th>
+                                <th class="py-3 px-4 text-left">Nombre Empleado</th>
+                                <th class="py-3 px-4 text-left">Producción</th>
+                                <th class="py-3 px-4 text-left">Scrap</th>
+                                <th class="py-3 px-4 text-left">Hora</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table><br>
-
-            <?php endforeach; ?>
-            <?php if (empty($produccion_por_maquina_empleado)) : ?>
-                <p class="text-center">No hay datos de producción o scrap que coincidan con los filtros seleccionados.</p>
+                        </thead>
+                        <tbody class="text-gray-700 text-sm">
+                            <?php foreach ($maquina['empleados'] as $empleado_codigo => $empleado) : ?>
+                                <tr>
+                                    <td class="py-3 px-4"><?= htmlspecialchars($empleado_codigo); ?></td>
+                                    <td class="py-3 px-4"><?= htmlspecialchars($empleado['nombre_empleado']); ?></td>
+                                    <td class="py-3 px-4"><?= number_format((float)$empleado['total_produccion'], 2, '.', ','); ?></td>
+                                    <td class="py-3 px-4"><?= number_format((float)$empleado['total_scrap'], 2, '.', ','); ?></td>
+                                    <td class="py-3 px-4 font-bold text-blue-600 text-lg text-center">
+                                        <?= !empty($empleado['fecha_registro']) ? date('g:i A', strtotime($empleado['fecha_registro'])) : 'N/A'; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table><br>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <p class="text-center text-gray-600 font-semibold">No hay datos de producción o scrap que coincidan con los filtros seleccionados.</p>
             <?php endif; ?>
         </div>
+
         <!-- Totales generales de producción y scrap -->
         <div class="totals">
             <h3>Totales Generales</h3>
             <p>Total Producción:
-                <b><?php echo number_format($totalProduccion, 2, '.', ','); ?></b>
+                <b><?php echo number_format($produccion['totalProduccion'], 2, '.', ','); ?></b>
             </p>
             <p>Total Scrap:
-                <b><?php echo number_format($totalScrap, 2, '.', ','); ?></b>
+                <b><?php echo number_format($produccion['totalScrap'], 2, '.', ','); ?></b>
             </p>
         </div>
     </section>

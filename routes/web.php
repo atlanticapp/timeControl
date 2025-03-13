@@ -45,7 +45,6 @@ $router->get('/supervisor', [SupervisorController::class, 'index']);
 $router->post('/supervisor', [SupervisorController::class, 'index']);
 
 
-
 // Error handling
 $router->get('/error', function () {
     // Verificamos si existen los valores de mensaje y estado en la sesión
