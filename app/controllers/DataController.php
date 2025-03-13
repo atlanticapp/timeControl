@@ -27,6 +27,10 @@ class DataController extends Controller
                 throw new \Exception("Usuario no autenticado");
             }
 
+            if ($user->tipo_usuario !== 'operador') {
+                $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es operador.');
+            }
+
             // Iniciar sesión si no está iniciada
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
@@ -48,8 +52,7 @@ class DataController extends Controller
                 'active_button_id' => $active_button_id
             ]);
         } catch (\Exception $e) {
-            error_log("Error en datos_trabajo: " . $e->getMessage());
-            header('Location: /timeControl/public/login?status=error');
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Error al cargar la página de datos de trabajo.');
         }
     }
 
@@ -136,8 +139,7 @@ class DataController extends Controller
 
             // Verificar si el botón ya está activo
             if ($control->getActiveButton($codigo_empleado) === 'Espera_trabajo') {
-                $this->setSessionMessage('error', 'El botón ya está activo, no se puede crear un nuevo registro.');
-                $this->redirect('/timeControl/public/datos_trabajo');
+                $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'El botón ya está activo, no se puede crear un nuevo registro.');
             }
 
             // Crear el registro de espera de trabajo
@@ -158,20 +160,10 @@ class DataController extends Controller
                 throw new \Exception("Error al actualizar el estado del botón.");
             }
 
-            $this->setSessionMessage('success', 'Registro de espera de trabajo exitoso!');
-            $this->redirect('/timeControl/public/datos_trabajo');
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'success', 'Registro de espera de trabajo exitoso!');
         } catch (\Exception $e) {
             $this->redirect('/timeControl/public/error');
         }
-    }
-
-    /**
-     * Método auxiliar para establecer mensajes en sesión
-     */
-    private function setSessionMessage($status, $message)
-    {
-        $_SESSION['status'] = $status;
-        $_SESSION['message'] = $message;
     }
 
     /**
@@ -179,6 +171,14 @@ class DataController extends Controller
      */
     private function redirect($url)
     {
+        header("Location: $url");
+        exit();
+    }
+
+    private function redirectWithMessage($url, $status, $message)
+    {
+        $_SESSION['status'] = $status;
+        $_SESSION['message'] = $message;
         header("Location: $url");
         exit();
     }

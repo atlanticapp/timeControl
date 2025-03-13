@@ -30,6 +30,10 @@ class MaquinaController extends Controller
             // Obtener el usuario actual
             $user = AuthHelper::getCurrentUser();
 
+            if ($user->tipo_usuario !== 'operador') {
+                $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es operador.');
+            }
+
             // Verificar si ya ingresó datos
             session_start();
             if (isset($_SESSION['data_entered']) && $_SESSION['data_entered'] === true) {
@@ -48,7 +52,7 @@ class MaquinaController extends Controller
             ]);
         } catch (\Exception $e) {
             // Manejar cualquier error
-           $this->redirectToError();
+           $this->redirectWithMessage('/timeControl/public/error', 'error', 'Error al cargar la vista de máquinas.');
         }
     }
 
@@ -57,31 +61,31 @@ class MaquinaController extends Controller
         // Validar la máquina seleccionada
         $maquina_id = $_POST['maquina_id'] ?? null;
         if (!$maquina_id) {
-            $this->redirectToError();
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo_maquina', 'error', 'No se ha seleccionado una máquina.');
         }
 
         // Obtener el JWT actual de la cookie
         $jwt = $_COOKIE['jwt'] ?? null;
         if (!$jwt) {
-            $this->redirectToLogin();
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'No se ha iniciado sesión.');
         }
 
         // Decodificar el JWT
         $userData = $this->decodeJWT($jwt);
         if (!$userData) {
-            $this->redirectToError();
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Error al decodificar el token JWT.');
         }
 
         // Actualizar la máquina del usuario
         $maquinaModel = new Maquina();
         if (!$maquinaModel->actualizarMaquinaId($maquina_id, $userData['codigo_empleado'])) {
-            $this->redirectToError();
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo_maquina', 'error', 'Error al actualizar la máquina del usuario.');
         }
 
         // Actualizar el JWT con el nuevo maquina_id
         $nuevo_jwt = $this->generateJWT($userData, $maquina_id);
         if (!$nuevo_jwt) {
-            $this->redirectToError();
+            $this->redirectWithMessage('/timeControl/public/error', 'error', 'Error al generar el token JWT.');
         }
 
         // Establecer la cookie con el nuevo JWT
@@ -92,15 +96,11 @@ class MaquinaController extends Controller
         exit();
     }
 
-    private function redirectToLogin()
+    private function redirectWithMessage($url, $status, $message)
     {
-        header('Location: /timeControl/public/login');
-        exit();
-    }
-
-    private function redirectToError()
-    {
-        header('Location: /timeControl/public/error');
+        $_SESSION['status'] = $status;
+        $_SESSION['message'] = $message;
+        header("Location: $url");
         exit();
     }
 

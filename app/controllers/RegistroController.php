@@ -24,7 +24,7 @@ class RegistroController extends Controller
             }
 
             if ($user->tipo_usuario !== 'operador') {
-                header('Location: /timeControl/public/login?status=error=Tipo de usuario no es operador.');
+                $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es operador.');
             }
 
             $usuario = new Usuario();
