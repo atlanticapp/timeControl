@@ -1,0 +1,386 @@
+<?php
+
+namespace App\Models;
+
+use App\Core\Model;
+use App\Models\Control;
+
+class Qa extends Model
+{
+    protected $table = 'registro';
+
+    // Obtener entregas pendientes de validación
+    public function getEntregasPendientes($area_id)
+    {
+        // Consulta base para obtener todos los registros pendientes
+        $query = "
+        SELECT 
+            id, 
+            maquina, 
+            jtWo, 
+            item, 
+            area_id,
+            codigo_empleado,
+            tipo_boton,
+            descripcion,
+            fecha_registro,
+            cantidad_produccion,
+            cantidad_scrapt,
+            estado
+        FROM registro
+        WHERE estado = 'Pendiente'
+            AND area_id = ?
+            AND (
+                (tipo_boton = 'Producción' AND descripcion = 'Parcial') 
+                OR (tipo_boton = 'final_produccion')
+            )
+        ORDER BY fecha_registro DESC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $area_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $entregas_produccion = [];
+        $entregas_scrap = [];
+        $control = new Control();
+
+        while ($row = $result->fetch_assoc()) {
+            $nombre_empleado = $this->getNombreEmpleado($row['codigo_empleado']);
+            $nombre_maquina = $control->getNameMaquina($row['maquina']);
+
+            // Datos comunes
+            $datos_comunes = [
+                'id' => $row['id'],
+                'maquina' => $row['maquina'],
+                'jtWo' => $row['jtWo'],
+                'item' => $row['item'],
+                'area_id' => $row['area_id'],
+                'codigo_empleado' => $row['codigo_empleado'],
+                'tipo_boton' => $row['tipo_boton'],
+                'descripcion' => $row['descripcion'],
+                'fecha_registro' => $row['fecha_registro'],
+                'nombre_empleado' => $nombre_empleado,
+                'nombre_maquina' => $nombre_maquina
+            ];
+
+            // Crear registro para producción si hay cantidad
+            if ($row['cantidad_produccion'] > 0) {
+                $produccion = $datos_comunes;
+                $produccion['cantidad'] = $row['cantidad_produccion'];
+                $produccion['tipo_registro'] = 'produccion';
+                $entregas_produccion[] = $produccion;
+            }
+
+            // Crear registro para scrap si hay cantidad
+            if ($row['cantidad_scrapt'] > 0) {
+                $scrap = $datos_comunes;
+                $scrap['cantidad'] = $row['cantidad_scrapt'];
+                $scrap['tipo_registro'] = 'scrap';
+                $entregas_scrap[] = $scrap;
+            }
+        }
+
+        return [
+            'entregas_produccion' => $entregas_produccion,
+            'entregas_scrap' => $entregas_scrap
+        ];
+    }
+
+
+    // Validar entrega (aceptar)
+    public function validarEntrega($codigo_empleado, $maquina_id, $item, $jtwo, $tipo, $qa_id)
+    {
+        if ($tipo == 'scrapt') {
+            // Obtener el total de scrapt
+            $query = "
+                SELECT SUM(cantidad_scrapt) AS total_scrapt
+                FROM registro
+                WHERE codigo_empleado = ?
+                AND maquina = ?
+                AND item = ?
+                AND jtWo = ?
+                AND tipo_boton = 'final_produccion'
+                AND descripcion = 'Parcial'";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param("iiss", $codigo_empleado, $maquina_id, $item, $jtwo);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            $total_scrapt = $row['total_scrapt'];
+
+            // Insertar en la tabla scrapt_final
+            $query_insert = "
+                INSERT INTO scrapt_final (empleado_id, maquina_id, item, jtwo, cantidad, aprobado_por, fecha_aprobacion)
+                VALUES (?, ?, ?, ?, ?, ?, NOW())";
+
+            $stmt_insert = $this->db->prepare($query_insert);
+            $stmt_insert->bind_param("iissdi", $codigo_empleado, $maquina_id, $item, $jtwo, $total_scrapt, $qa_id);
+            $insert_result = $stmt_insert->execute();
+            $stmt_insert->close();
+
+            if (!$insert_result) {
+                return false;
+            }
+        }
+
+        // Actualizar el estado de todas las entregas relacionadas
+        $query_update = "
+            UPDATE registro
+            SET estado = 'Validado',
+                validado_por = ?,
+                fecha_validacion = NOW()
+            WHERE codigo_empleado = ?
+            AND maquina = ?
+            AND item = ?
+            AND jtWo = ?
+            AND tipo_boton = 'final_produccion'
+            AND descripcion = 'Parcial'";
+
+        $stmt_update = $this->db->prepare($query_update);
+        $stmt_update->bind_param("iiiss", $qa_id, $codigo_empleado, $maquina_id, $item, $jtwo);
+        $update_result = $stmt_update->execute();
+        $stmt_update->close();
+
+        return $update_result;
+    }
+
+    // Enviar corrección al operador
+    public function enviarCorreccion($codigo_empleado, $maquina_id, $item, $jtwo, $comentario)
+    {
+        $query = "
+            UPDATE registro
+            SET estado = 'Correccion',
+                comentario_qa = ?
+            WHERE codigo_empleado = ?
+            AND maquina = ?
+            AND item = ?
+            AND jtWo = ?
+            AND tipo_boton = 'final_produccion'
+            AND descripcion = 'Parcial'";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("siiss", $comentario, $codigo_empleado, $maquina_id, $item, $jtwo);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
+
+    // Obtener detalles de un scrapt validado para el reporte
+    public function getScrapFinalDetails($id)
+    {
+        $query = "
+            SELECT sf.*, u.nombre AS nombre_empleado, m.nombre AS nombre_maquina, 
+                qa.nombre AS nombre_qa
+            FROM scrapt_final sf
+            JOIN users u ON sf.empleado_id = u.codigo_empleado
+            JOIN maquinas m ON sf.maquina_id = m.id
+            JOIN users qa ON sf.aprobado_por = qa.codigo_empleado
+            WHERE sf.id = ?";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();
+        }
+
+        return null;
+    }
+
+    // Obtener entregas validadas para el panel principal
+    public function getEntregasValidadas()
+    {
+        $query = "
+            SELECT r.codigo_empleado, u.nombre AS nombre_empleado, r.maquina, 
+                m.nombre AS nombre_maquina, r.item, r.jtWo, 
+                SUM(r.cantidad_produccion) AS total_produccion, 
+                SUM(r.cantidad_scrapt) AS total_scrapt, 
+                MAX(r.fecha_validacion) AS fecha_validacion,
+                qa.nombre AS validado_por
+            FROM registro r
+            JOIN users u ON r.codigo_empleado = u.codigo_empleado
+            JOIN maquinas m ON r.maquina = m.id
+            JOIN users qa ON r.validado_por = qa.codigo_empleado
+            WHERE r.tipo_boton = 'final_produccion' 
+            AND r.descripcion = 'Parcial'
+            AND r.estado = 'Validado'
+            GROUP BY r.codigo_empleado, r.maquina, r.item, r.jtWo
+            ORDER BY fecha_validacion DESC
+            LIMIT 50";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $entregas = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $entregas[] = $row;
+            }
+        }
+
+        return $entregas;
+    }
+
+    private function getNombreEmpleado($codigo_empleado)
+    {
+        $query = "SELECT nombre FROM users WHERE codigo_empleado = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("s", $codigo_empleado);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $empleado = $result->fetch_assoc();
+        return $empleado ? $empleado['nombre'] : 'Desconocido';
+    }
+
+
+
+
+
+    /**
+     * Obtiene el conteo de entregas pendientes por área
+     */
+    public function getCountEntregasPendientes($area_id)
+    {
+        $query = "
+    WITH entregas_finales AS (
+        SELECT maquina, jtWo, item, codigo_empleado
+        FROM registro
+        WHERE tipo_boton = 'final_produccion'
+          AND estado = 'Pendiente'
+          AND area_id = ?
+    ),
+    entregas_parciales AS (
+        SELECT maquina, jtWo, item, codigo_empleado
+        FROM registro
+        WHERE tipo_boton = 'Producción'
+          AND descripcion = 'Parcial'
+          AND estado = 'Pendiente'
+          AND area_id = ?
+    )
+    SELECT 
+        COUNT(*) AS total_entregas
+    FROM (
+        SELECT maquina, jtWo, item, codigo_empleado FROM entregas_finales
+        UNION ALL -- Usamos UNION ALL para no eliminar duplicados
+        SELECT maquina, jtWo, item, codigo_empleado FROM entregas_parciales
+    ) AS todas_entregas";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('ii', $area_id, $area_id); // Corregido: Necesitamos vincular dos parámetros
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total_entregas'] ?? 0; // Corregido: El nombre de la columna es 'total_entregas'
+    }
+
+    /**
+     * Obtiene el conteo de entregas validadas
+     */
+    public function getCountEntregasValidadas()
+    {
+        $query = "
+            SELECT COUNT(DISTINCT CONCAT(codigo_empleado, maquina, jtWo, item)) as total
+            FROM registro
+            WHERE tipo_boton = 'final_produccion' 
+            AND descripcion = 'Parcial'
+            AND estado = 'Validado'";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total'] ?? 0;
+    }
+
+    /**
+     * Obtiene el total de producción validada
+     */
+    public function getProduccionTotalValidada()
+    {
+        $query = "
+            SELECT SUM(cantidad_produccion) as total
+            FROM registro
+            WHERE tipo_boton = 'final_produccion' 
+            AND estado = 'Validado'";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total'] ?? 0;
+    }
+
+    /**
+     * Obtiene el total de scrapt validado
+     */
+    public function getScrapTotalValidado()
+    {
+        $query = "
+            SELECT SUM(cantidad_scrapt) as total
+            FROM registro
+            WHERE tipo_boton = 'final_produccion' 
+            AND estado = 'Validado'";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total'] ?? 0;
+    }
+
+    /**
+     * Obtiene estadísticas de producción por máquina
+     */
+    public function getEstadisticasPorMaquina()
+    {
+        $query = "
+            SELECT 
+                r.maquina,
+                m.nombre AS nombre_maquina,
+                r.jtWo,
+                SUM(r.cantidad_produccion) AS produccion,
+                SUM(r.cantidad_scrapt) AS scrapt,
+                COUNT(DISTINCT CONCAT(r.codigo_empleado, r.jtWo, r.item)) AS entregas
+            FROM registro r
+            JOIN maquinas m ON r.maquina = m.id
+            WHERE (r.tipo_boton = 'final_produccion' OR (r.tipo_boton = 'Producción' AND r.descripcion = 'Parcial'))
+            AND r.estado = 'Pendiente'
+            GROUP BY r.maquina, m.nombre, r.jtWo
+            ORDER BY produccion DESC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stats = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $stats[] = $row;
+        }
+
+        return $stats;
+    }
+
+
+
+    /**
+     * Obtiene estadísticas para el dashboard
+     */
+    public function getDashboardStats($area_id)
+    {
+        $stats = [
+            'pendientes' => $this->getCountEntregasPendientes($area_id),
+            'validadas' => $this->getCountEntregasValidadas(),
+            'produccion_total' => $this->getProduccionTotalValidada(),
+            'scrapt_total' => $this->getScrapTotalValidado()
+        ];
+
+        return $stats;
+    }
+}

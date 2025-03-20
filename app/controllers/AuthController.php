@@ -17,64 +17,80 @@ class AuthController extends Controller
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             session_start(); // Asegurar que las sesiones están iniciadas
             unset($_SESSION['data_entered']); // 🛑 Evitar redirecciones incorrectas
-    
+
             $codigo_empleado = $_POST['codigo_empleado'] ?? '';
             $password = $_POST['password'] ?? '';
-    
+
             $usuario = new Usuario();
             $user = $usuario->findByCodigo($codigo_empleado);
-    
+
             if ($user && password_verify($password, $user['password'])) {
                 $this->createAndStoreJWT($user);
-    
+
                 if (!empty($user['item']) && !empty($user['jtWo'])) {
                     $_SESSION['data_entered'] = true;
                     header('Location: /timeControl/public/control');
                     exit();
                 } else {
-                    $redirectPage = ($user['tipo_usuario'] === 'supervisor') ? 'supervisor' : 'datos_trabajo_maquina';
+                    $redirectPage = ($user['tipo_usuario'] === 'supervisor') ? 'supervisor' : (($user['tipo_usuario'] === 'qa') ? 'qa' : 'datos_trabajo_maquina');
                     header("Location: /timeControl/public/{$redirectPage}");
                     exit();
                 }
             } else {
-                $_SESSION['status'] = 'error';
-                $_SESSION['message'] = $user ? 'Contraseña incorrecta.' : 'Código de empleado incorrecto.';
-    
-                header('Location: /timeControl/public/login');
-                exit();
+                $this->redirectWithMessage('/timeControl/public/login', 'error', $user ? 'Contraseña incorrecta.' : 'Código de empleado incorrecto.');
             }
         }
-    
+
         // Cargar áreas para el formulario de registro
         $usuario = new Usuario();
         $areas = $usuario->getAllAreas();
-    
+
         $this->view('auth/login', ['areas' => $areas]);
     }
-    
+
 
     public function register()
     {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $userData = [
-                'nombre' => $_POST['nombre'],
-                'codigo_empleado' => $_POST['codigo_empleado'],
-                'password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
-                'tipo_usuario' => $_POST['tipo_usuario'],
-                'area_id' => $_POST['area_id']
-            ];
-
-            $usuario = new Usuario();
-            $result = $usuario->create($userData);
-
-            if ($result) {
-                header('Location: login.php?status=success&message=' . urlencode('Usuario registrado correctamente'));
-            } else {
-                header('Location: login.php?status=error&message=' . urlencode('Error al registrar usuario'));
-            }
-            exit();
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+            return;
         }
+        session_start();
+        // Obtener y validar datos del formulario
+        $nombre = filter_input(INPUT_POST, 'nombre');
+        $codigo_empleado = filter_input(INPUT_POST, 'codigo_empleado');
+        $password = $_POST['password'] ?? null;
+        $tipo_usuario = filter_input(INPUT_POST, 'tipo_usuario');
+        $area_id = filter_input(INPUT_POST, 'area_id', FILTER_VALIDATE_INT);
+
+        if (!$nombre || !$codigo_empleado || !$password || !$tipo_usuario || !$area_id) {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Todos los campos son obligatorios');
+            exit;
+        }
+
+        $usuario = new Usuario();
+
+        // Verificar si el código de empleado ya existe
+        if ($usuario->findByCodigo($codigo_empleado)) {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'El código de empleado ya está registrado');
+            exit;
+        }
+
+        $userData = [
+            'nombre' => $nombre,
+            'codigo_empleado' => $codigo_empleado,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'tipo_usuario' => $tipo_usuario,
+            'area_id' => $area_id
+        ];
+
+        $mensaje = $usuario->create($userData) ?
+            ['success', 'Usuario registrado correctamente'] :
+            ['error', 'Error al registrar usuario'];
+
+        $this->redirectWithMessage('/timeControl/public/login', $mensaje[0], $mensaje[1]);
+        exit;
     }
+
 
     private function createAndStoreJWT($user)
     {
@@ -103,51 +119,40 @@ class AuthController extends Controller
     }
 
     public function getStatus()
-{
-    // Asegurarse de que la sesión esté iniciada
-    session_start();
+    {
+        // Asegurarse de que la sesión esté iniciada
+        session_start();
 
-    // Verificar si hay un mensaje de estado en la sesión
-    if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
-        $status = $_SESSION['status'];
-        $message = $_SESSION['message'];
+        // Verificar si hay un mensaje de estado en la sesión
+        if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
+            $status = $_SESSION['status'];
+            $message = $_SESSION['message'];
 
-        // Limpiar las variables de estado para que no persistan
-        unset($_SESSION['status']);
-        unset($_SESSION['message']);
+            // Limpiar las variables de estado para que no persistan
+            unset($_SESSION['status']);
+            unset($_SESSION['message']);
 
-        // Devolver la respuesta en formato JSON
-        echo json_encode([
-            'status' => $status,
-            'message' => $message
-        ]);
-    } else {
-        // Si no hay estado, devolver una respuesta vacía
-        echo json_encode([
-            'status' => '',
-            'message' => ''
-        ]);
+            // Devolver la respuesta en formato JSON
+            echo json_encode([
+                'status' => $status,
+                'message' => $message
+            ]);
+        } else {
+            // Si no hay estado, devolver una respuesta vacía
+            echo json_encode([
+                'status' => '',
+                'message' => ''
+            ]);
+        }
+
+        exit(); // Finalizar el script después de enviar la respuesta
     }
 
-    exit(); // Finalizar el script después de enviar la respuesta
-}
-
-public function error()
-{
-    session_start();
-
-    // Verificar si hay un mensaje de error en la sesión
-    $status = isset($_SESSION['status']) ? $_SESSION['status'] : null;
-    $message = isset($_SESSION['message']) ? $_SESSION['message'] : null;
-
-    // Limpiar las variables de estado para que no persistan
-    unset($_SESSION['status']);
-    unset($_SESSION['message']);
-
-    // Renderizar la vista del error con el mensaje
-    $this->view('error', [
-        'status' => $status,
-        'message' => $message
-    ]);
-}
+    private function redirectWithMessage($url, $status, $message)
+    {
+        $_SESSION['status'] = $status;
+        $_SESSION['message'] = $message;
+        header("Location: $url");
+        exit();
+    }
 }

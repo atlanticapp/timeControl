@@ -5,6 +5,7 @@ use App\Controllers\ComentarioController;
 use App\Core\Router;
 use App\Controllers\MaquinaController;
 use App\Controllers\DataController;
+use App\Controllers\QaController;
 use App\Helpers\AuthHelper;
 use App\Controllers\RegistroController;
 use App\Controllers\SaveVelocidad;
@@ -44,6 +45,14 @@ $router->post('/addComentario', [ComentarioController::class, 'addComentario']);
 $router->get('/supervisor', [SupervisorController::class, 'index']);
 $router->post('/supervisor', [SupervisorController::class, 'index']);
 
+// Rutas QA
+$router->get('/validacion', [QaController::class, 'index']);
+$router->get('/verDetalles', [QaController::class, 'verDetalles']);
+$router->post('/validar', [QaController::class, 'validar']);
+$router->post('/corregir', [QaController::class, 'corregir']);
+$router->get('/reporteScrapt/{empleado_id}/{maquina_id}/{item}/{jtwo}', [QaController::class, 'reporteScrapt']);
+$router->get('/dashboard', [QaController::class, 'dashboard']);
+$router->get('/historial', [QaController::class, 'historial']);
 
 // Error handling
 $router->get('/error', function () {

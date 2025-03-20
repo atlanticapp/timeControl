@@ -19,6 +19,7 @@
                     <option value="" disabled selected>Seleccione el tipo de usuario</option>
                     <option value="operador">Operador</option>
                     <option value="supervisor">Supervisor</option>
+                    <option value="qa">QA</option>
                 </select>
             </div>
 

@@ -1,0 +1,187 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Core\Controller;
+use App\Helpers\AuthHelper;
+use App\Models\Qa;
+
+class QaController extends Controller
+{
+    private $qa;
+
+    public function __construct()
+    {
+        $this->qa = new Qa();
+
+        if (!AuthHelper::isAuthenticated()) {
+            header('Location: /timeControl/public/login');
+            exit();
+        }
+        $user = AuthHelper::getCurrentUser();
+        if (!$user || $user->tipo_usuario !== 'qa') {
+            header('Location: /timeControl/public/login');
+            exit();
+        }
+    }
+
+    // Mostrar panel principal de QA
+    public function index()
+    {
+        $user = AuthHelper::getCurrentUser();
+    
+        // Obtener las entregas pendientes (ahora retorna un array con dos sub-arrays)
+        $entregas_pendientes = $this->qa->getEntregasPendientes($user->area_id);
+        
+        $data = [
+            'title' => 'Panel de QA - Validación de Entregas',
+            'entregas_produccion' => $entregas_pendientes['entregas_produccion'],
+            'entregas_scrap' => $entregas_pendientes['entregas_scrap'],
+            'entregas_validadas' => $this->qa->getEntregasValidadas()
+        ];
+    
+        $this->view('qa/validacionEnt', [
+            'data' => $data
+        ]);
+    }
+
+    // Validar entrega (aceptar)
+    public function validar()
+    {
+        // Verificar si es una solicitud POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Método no permitido');
+        }
+
+        $codigo_empleado = isset($_POST['empleado_id']) ? $_POST['empleado_id'] : null;
+        $maquina_id = isset($_POST['maquina_id']) ? $_POST['maquina_id'] : null;
+        $item = isset($_POST['item']) ? $_POST['item'] : null;
+        $jtwo = isset($_POST['jtwo']) ? $_POST['jtwo'] : null;
+        $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : null;
+        $comentario = isset($_POST['comentario']) ? $_POST['comentario'] : '';
+
+        if (!$codigo_empleado || !$maquina_id || !$item || !$jtwo || !$tipo) {
+            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Faltan parámetros para validar la entrega');
+        }
+
+        $qa_id = $_SESSION['usuario_id'];
+
+        if ($this->qa->validarEntrega($codigo_empleado, $maquina_id, $item, $jtwo, $tipo, $qa_id)) {
+            if ($tipo == 'scrapt') {
+                // Redireccionar a la página de impresión del reporte
+                $this->redirectWithMessage('/timeControl/public/reporteScrapt/' . $codigo_empleado . '/' . $maquina_id . '/' . urlencode($item) . '/' . urlencode($jtwo), 'success', 'Entrega validada correctamente');
+            } else {
+                $this->redirectWithMessage('/timeControl/public/qa', 'success', 'Entrega validada correctamente');
+            }
+        } else {
+            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Error al validar la entrega');
+        }
+    }
+
+    // Enviar corrección al operador
+    public function corregir()
+    {
+        // Verificar si es una solicitud POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Método no permitido');
+        }
+
+        $codigo_empleado = isset($_POST['empleado_id']) ? $_POST['empleado_id'] : null;
+        $maquina_id = isset($_POST['maquina_id']) ? $_POST['maquina_id'] : null;
+        $item = isset($_POST['item']) ? $_POST['item'] : null;
+        $jtwo = isset($_POST['jtwo']) ? $_POST['jtwo'] : null;
+        $comentario = isset($_POST['comentario']) ? $_POST['comentario'] : '';
+
+        if (!$codigo_empleado || !$maquina_id || !$item || !$jtwo || empty($comentario)) {
+            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Faltan parámetros para enviar la corrección');
+        }
+
+        if ($this->qa->enviarCorreccion($codigo_empleado, $maquina_id, $item, $jtwo, $comentario)) {
+            $this->redirectWithMessage('/timeControl/public/qa', 'success', 'Solicitud de corrección enviada al operador');
+        } else {
+            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Error al enviar la solicitud de corrección');
+        }
+    }
+
+    // Generar reporte de scrap
+    // public function reporteScrapt($empleado_id = null, $maquina_id = null, $item = null, $jtwo = null)
+    // {
+    //     if (!$empleado_id || !$maquina_id || !$item || !$jtwo) {
+    //         $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Parámetros incorrectos para generar el reporte');
+    //     }
+
+    //     // Obtener los detalles de la entrega
+    //     $detalles = $this->qa->getDetallesEntrega($empleado_id, $maquina_id, $item, $jtwo);
+
+    //     if (empty($detalles)) {
+    //         $this->redirectWithMessage('/timeControl/public/qa', 'error', 'No se encontraron detalles para generar el reporte');
+    //     }
+
+    //     // Calcular el total de scrap
+    //     $total_scrapt = 0;
+    //     foreach ($detalles as $detalle) {
+    //         $total_scrapt += $detalle['cantidad_scrapt'];
+    //     }
+
+    //     $data = [
+    //         'title' => 'Reporte de Scrapt Final',
+    //         'detalles' => $detalles,
+    //         'empleado_id' => $empleado_id,
+    //         'maquina_id' => $maquina_id,
+    //         'nombre_maquina' => $detalles[0]['nombre_maquina'],
+    //         'item' => $item,
+    //         'jtwo' => $jtwo,
+    //         'total_scrapt' => $total_scrapt,
+    //         'qa_nombre' => $_SESSION['usuario_nombre'],
+    //         'qa_id' => $_SESSION['usuario_id']
+    //     ];
+
+    //     $this->view('qa/reporte_scrapt', $data);
+    // }
+
+    // Dashboard con resumen de estadísticas
+    public function dashboard()
+    {
+        $user = AuthHelper::getCurrentUser();
+        $area_id = $user->area_id;
+
+        // Obtener estadísticas generales del dashboard
+        $stats = $this->qa->getDashboardStats($area_id);
+
+        // Obtener estadísticas por máquina
+        $stats_maquinas = $this->qa->getEstadisticasPorMaquina();
+
+        // Obtener validaciones recientes
+        $validaciones_recientes = $this->qa->getEntregasValidadas();
+
+        $data = [
+            'title' => 'Dashboard de Control de Calidad',
+            'stats' => $stats,
+            'stats_maquinas' => $stats_maquinas,
+            'validaciones_recientes' => $validaciones_recientes
+        ];
+
+        $this->view('qa/dashboard', [
+            'data' => $data
+        ]);
+    }
+
+    // Método para ver el historial de validaciones
+    public function historial()
+    {
+        $data = [
+            'title' => 'Historial de Validaciones',
+            'entregas_validadas' => $this->qa->getEntregasValidadas()
+        ];
+
+        $this->view('qa/historial', $data);
+    }
+
+    private function redirectWithMessage($url, $status, $message)
+    {
+        $_SESSION['status'] = $status;
+        $_SESSION['message'] = $message;
+        header("Location: $url");
+        exit();
+    }
+}
