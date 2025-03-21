@@ -48,7 +48,7 @@ $router->post('/supervisor', [SupervisorController::class, 'index']);
 // Rutas QA
 $router->get('/validacion', [QaController::class, 'index']);
 $router->get('/verDetalles', [QaController::class, 'verDetalles']);
-$router->post('/validar', [QaController::class, 'validar']);
+$router->post('/validarEnt', [QaController::class, 'validarEnt']);
 $router->post('/corregir', [QaController::class, 'corregir']);
 $router->get('/reporteScrapt/{empleado_id}/{maquina_id}/{item}/{jtwo}', [QaController::class, 'reporteScrapt']);
 $router->get('/dashboard', [QaController::class, 'dashboard']);

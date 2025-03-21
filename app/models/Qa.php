@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Core\Model;
 use App\Models\Control;
+use PDO;
+use PDOException;
 
 class Qa extends Model
 {
@@ -89,61 +91,21 @@ class Qa extends Model
 
 
     // Validar entrega (aceptar)
-    public function validarEntrega($codigo_empleado, $maquina_id, $item, $jtwo, $tipo, $qa_id)
+    public function validarEntrega($codigo_empleado_qa, $idEntrega)
     {
-        if ($tipo == 'scrapt') {
-            // Obtener el total de scrapt
-            $query = "
-                SELECT SUM(cantidad_scrapt) AS total_scrapt
-                FROM registro
-                WHERE codigo_empleado = ?
-                AND maquina = ?
-                AND item = ?
-                AND jtWo = ?
-                AND tipo_boton = 'final_produccion'
-                AND descripcion = 'Parcial'";
-
-            $stmt = $this->db->prepare($query);
-            $stmt->bind_param("iiss", $codigo_empleado, $maquina_id, $item, $jtwo);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-            $total_scrapt = $row['total_scrapt'];
-
-            // Insertar en la tabla scrapt_final
-            $query_insert = "
-                INSERT INTO scrapt_final (empleado_id, maquina_id, item, jtwo, cantidad, aprobado_por, fecha_aprobacion)
-                VALUES (?, ?, ?, ?, ?, ?, NOW())";
-
-            $stmt_insert = $this->db->prepare($query_insert);
-            $stmt_insert->bind_param("iissdi", $codigo_empleado, $maquina_id, $item, $jtwo, $total_scrapt, $qa_id);
-            $insert_result = $stmt_insert->execute();
-            $stmt_insert->close();
-
-            if (!$insert_result) {
-                return false;
-            }
-        }
-
-        // Actualizar el estado de todas las entregas relacionadas
-        $query_update = "
+        $query = "
             UPDATE registro
             SET estado = 'Validado',
                 validado_por = ?,
                 fecha_validacion = NOW()
-            WHERE codigo_empleado = ?
-            AND maquina = ?
-            AND item = ?
-            AND jtWo = ?
-            AND tipo_boton = 'final_produccion'
-            AND descripcion = 'Parcial'";
+            WHERE id = ?";
 
-        $stmt_update = $this->db->prepare($query_update);
-        $stmt_update->bind_param("iiiss", $qa_id, $codigo_empleado, $maquina_id, $item, $jtwo);
-        $update_result = $stmt_update->execute();
-        $stmt_update->close();
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("ii", $codigo_empleado_qa, $idEntrega);
+        $result = $stmt->execute();
+        $stmt->close();
 
-        return $update_result;
+        return $result;
     }
 
     // Enviar corrección al operador
@@ -166,30 +128,6 @@ class Qa extends Model
         $stmt->close();
 
         return $result;
-    }
-
-    // Obtener detalles de un scrapt validado para el reporte
-    public function getScrapFinalDetails($id)
-    {
-        $query = "
-            SELECT sf.*, u.nombre AS nombre_empleado, m.nombre AS nombre_maquina, 
-                qa.nombre AS nombre_qa
-            FROM scrapt_final sf
-            JOIN users u ON sf.empleado_id = u.codigo_empleado
-            JOIN maquinas m ON sf.maquina_id = m.id
-            JOIN users qa ON sf.aprobado_por = qa.codigo_empleado
-            WHERE sf.id = ?";
-
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            return $result->fetch_assoc();
-        }
-
-        return null;
     }
 
     // Obtener entregas validadas para el panel principal
@@ -239,9 +177,19 @@ class Qa extends Model
         return $empleado ? $empleado['nombre'] : 'Desconocido';
     }
 
-
-
-
+    public function obtenerRegistroPorId($id)
+    {
+        try {
+            $query = "SELECT * FROM registros WHERE id = :id LIMIT 1";
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_assoc();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
     /**
      * Obtiene el conteo de entregas pendientes por área
