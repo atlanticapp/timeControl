@@ -131,40 +131,35 @@ class Qa extends Model
     }
 
     // Obtener entregas validadas para el panel principal
-    public function getEntregasValidadas()
+    public function getEntregasValidadas($userqa)
     {
         $query = "
-            SELECT r.codigo_empleado, u.nombre AS nombre_empleado, r.maquina, 
-                m.nombre AS nombre_maquina, r.item, r.jtWo, 
-                SUM(r.cantidad_produccion) AS total_produccion, 
-                SUM(r.cantidad_scrapt) AS total_scrapt, 
-                MAX(r.fecha_validacion) AS fecha_validacion,
-                qa.nombre AS validado_por
-            FROM registro r
-            JOIN users u ON r.codigo_empleado = u.codigo_empleado
-            JOIN maquinas m ON r.maquina = m.id
-            JOIN users qa ON r.validado_por = qa.codigo_empleado
-            WHERE r.tipo_boton = 'final_produccion' 
-            AND r.descripcion = 'Parcial'
-            AND r.estado = 'Validado'
-            GROUP BY r.codigo_empleado, r.maquina, r.item, r.jtWo
-            ORDER BY fecha_validacion DESC
-            LIMIT 50";
+      SELECT 
+            id,
+            tipo_boton,
+            codigo_empleado,
+            maquina,
+            item,
+            jtWo,
+            cantidad_produccion,
+            cantidad_scrapt,
+            fecha_validacion,
+            validado_por,
+            descripcion,
+            estado
+        FROM registro
+        WHERE estado = 'Validado'
+            AND validado_por = ?";
 
         $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $userqa);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $entregas = [];
-
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $entregas[] = $row;
-            }
-        }
-
-        return $entregas;
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
+
+
 
     private function getNombreEmpleado($codigo_empleado)
     {
@@ -197,123 +192,88 @@ class Qa extends Model
     public function getCountEntregasPendientes($area_id)
     {
         $query = "
-    WITH entregas_finales AS (
-        SELECT maquina, jtWo, item, codigo_empleado
-        FROM registro
-        WHERE tipo_boton = 'final_produccion'
-          AND estado = 'Pendiente'
-          AND area_id = ?
-    ),
-    entregas_parciales AS (
-        SELECT maquina, jtWo, item, codigo_empleado
-        FROM registro
-        WHERE tipo_boton = 'Producción'
-          AND descripcion = 'Parcial'
-          AND estado = 'Pendiente'
-          AND area_id = ?
-    )
-    SELECT 
-        COUNT(*) AS total_entregas
-    FROM (
-        SELECT maquina, jtWo, item, codigo_empleado FROM entregas_finales
-        UNION ALL -- Usamos UNION ALL para no eliminar duplicados
-        SELECT maquina, jtWo, item, codigo_empleado FROM entregas_parciales
-    ) AS todas_entregas";
+            WITH entregas_finales AS (
+            SELECT maquina, jtWo, item, codigo_empleado
+            FROM registro
+            WHERE tipo_boton = 'final_produccion'
+            AND estado = 'Pendiente'
+            AND area_id = ?
+            ),
+            entregas_parciales AS (
+            SELECT maquina, jtWo, item, codigo_empleado
+            FROM registro
+            WHERE tipo_boton = 'Producción'
+            AND descripcion = 'Parcial'
+            AND estado = 'Pendiente'
+            AND area_id = ?
+            )
+            SELECT 
+            COUNT(*) AS total_entregas
+            FROM (
+            SELECT maquina, jtWo, item, codigo_empleado FROM entregas_finales
+            UNION ALL 
+            SELECT maquina, jtWo, item, codigo_empleado FROM entregas_parciales
+            ) AS todas_entregas";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ii', $area_id, $area_id); // Corregido: Necesitamos vincular dos parámetros
+        $stmt->bind_param('ii', $area_id, $area_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        return $row['total_entregas'] ?? 0; // Corregido: El nombre de la columna es 'total_entregas'
+        return $row['total_entregas'] ?? 0;
     }
 
     /**
      * Obtiene el conteo de entregas validadas
      */
-    public function getCountEntregasValidadas()
+    public function getCountEntregasValidadas($area_id)
     {
         $query = "
             SELECT COUNT(DISTINCT CONCAT(codigo_empleado, maquina, jtWo, item)) as total
             FROM registro
-            WHERE tipo_boton = 'final_produccion' 
+            WHERE area_id = ?            AND tipo_boton = 'final_produccion' 
             AND descripcion = 'Parcial'
             AND estado = 'Validado'";
 
         $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $area_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         return $row['total'] ?? 0;
     }
 
-    /**
-     * Obtiene el total de producción validada
-     */
-    public function getProduccionTotalValidada()
-    {
-        $query = "
-            SELECT SUM(cantidad_produccion) as total
-            FROM registro
-            WHERE tipo_boton = 'final_produccion' 
-            AND estado = 'Validado'";
+    // /**
+    //  * Obtiene estadísticas de producción por máquina
+    //  */
+    // public function getEstadisticasPorMaquina()
+    // {
+    //     $query = "
+    //         SELECT 
+    //             r.maquina,
+    //             m.nombre AS nombre_maquina,
+    //             r.jtWo,
+    //             SUM(r.cantidad_produccion) AS produccion,
+    //             SUM(r.cantidad_scrapt) AS scrapt,
+    //             COUNT(DISTINCT CONCAT(r.codigo_empleado, r.jtWo, r.item)) AS entregas
+    //         FROM registro r
+    //         JOIN maquinas m ON r.maquina = m.id
+    //         WHERE (r.tipo_boton = 'final_produccion' OR (r.tipo_boton = 'Producción' AND r.descripcion = 'Parcial'))
+    //         AND r.estado = 'Pendiente'
+    //         GROUP BY r.maquina, m.nombre, r.jtWo
+    //         ORDER BY produccion DESC";
 
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        return $row['total'] ?? 0;
-    }
+    //     $stmt = $this->db->prepare($query);
+    //     $stmt->execute();
+    //     $result = $stmt->get_result();
+    //     $stats = [];
 
-    /**
-     * Obtiene el total de scrapt validado
-     */
-    public function getScrapTotalValidado()
-    {
-        $query = "
-            SELECT SUM(cantidad_scrapt) as total
-            FROM registro
-            WHERE tipo_boton = 'final_produccion' 
-            AND estado = 'Validado'";
+    //     while ($row = $result->fetch_assoc()) {
+    //         $stats[] = $row;
+    //     }
 
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        return $row['total'] ?? 0;
-    }
-
-    /**
-     * Obtiene estadísticas de producción por máquina
-     */
-    public function getEstadisticasPorMaquina()
-    {
-        $query = "
-            SELECT 
-                r.maquina,
-                m.nombre AS nombre_maquina,
-                r.jtWo,
-                SUM(r.cantidad_produccion) AS produccion,
-                SUM(r.cantidad_scrapt) AS scrapt,
-                COUNT(DISTINCT CONCAT(r.codigo_empleado, r.jtWo, r.item)) AS entregas
-            FROM registro r
-            JOIN maquinas m ON r.maquina = m.id
-            WHERE (r.tipo_boton = 'final_produccion' OR (r.tipo_boton = 'Producción' AND r.descripcion = 'Parcial'))
-            AND r.estado = 'Pendiente'
-            GROUP BY r.maquina, m.nombre, r.jtWo
-            ORDER BY produccion DESC";
-
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $stats = [];
-
-        while ($row = $result->fetch_assoc()) {
-            $stats[] = $row;
-        }
-
-        return $stats;
-    }
+    //     return $stats;
+    // }
 
 
 
@@ -324,9 +284,7 @@ class Qa extends Model
     {
         $stats = [
             'pendientes' => $this->getCountEntregasPendientes($area_id),
-            'validadas' => $this->getCountEntregasValidadas(),
-            'produccion_total' => $this->getProduccionTotalValidada(),
-            'scrapt_total' => $this->getScrapTotalValidado()
+            'validadas' => $this->getCountEntregasValidadas($area_id)
         ];
 
         return $stats;

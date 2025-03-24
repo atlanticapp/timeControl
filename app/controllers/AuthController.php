@@ -32,7 +32,7 @@ class AuthController extends Controller
                     header('Location: /timeControl/public/control');
                     exit();
                 } else {
-                    $redirectPage = ($user['tipo_usuario'] === 'supervisor') ? 'supervisor' : (($user['tipo_usuario'] === 'qa') ? 'qa' : 'datos_trabajo_maquina');
+                    $redirectPage = ($user['tipo_usuario'] === 'supervisor') ? 'supervisor' : (($user['tipo_usuario'] === 'qa') ? 'dashboard' : 'datos_trabajo_maquina');
                     header("Location: /timeControl/public/{$redirectPage}");
                     exit();
                 }

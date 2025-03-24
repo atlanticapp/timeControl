@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Calidad - Constructor</title>
+    <title>Control de Calidad - Constructor(Qa)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
@@ -15,11 +15,11 @@
 </head>
 
 <body>
-    <div class="container mt-4">
+<div class="container mt-4">
         <div class="header-container animate__animated animate__fadeIn p-3 mb-4 text-center text-md-start row align-items-center">
             <div class="col-md-8">
-                <h1 class="header-title mb-0">Sistema de Control de Calidad</h1>
-                <p class="mb-0 mt-2 text-light">Constructor - División de Etiquetas y Empaques</p>
+                <h1 class="header-title mb-0">Sistema de Control de Calidad (QA)</h1>
+                <p class="mb-0 mt-2 text-muted">Constructor - Validacion de Entregas</p>
             </div>
             <div class="col-md-4 text-center text-md-end mt-3 mt-md-0">
                 <div class="time-display">
@@ -30,81 +30,34 @@
             </div>
         </div>
 
+        <!-- Navigation Tabs -->
         <ul class="nav nav-tabs mb-4 animate__animated animate__fadeIn" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pendientes-tab" data-bs-toggle="tab" data-bs-target="#pendientes" type="button" role="tab" aria-controls="pendientes" aria-selected="true">
-                    <i class="fas fa-clipboard-list me-2"></i>Pendientes de Validación
+                <button class="nav-link active" id="produccion-tab" data-bs-toggle="tab" data-bs-target="#produccion" type="button" role="tab" aria-controls="produccion" aria-selected="true">
+                    <i class="fas fa-clipboard-list me-2"></i>Pendientes de Producción
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="validadas-tab" data-bs-toggle="tab" data-bs-target="#validadas" type="button" role="tab" aria-controls="validadas" aria-selected="false">
-                    <i class="fas fa-check-double me-2"></i>Pendientes de Corrección
+                <button class="nav-link" id="scrap-tab" data-bs-toggle="tab" data-bs-target="#scrap" type="button" role="tab" aria-controls="scrap" aria-selected="false">
+                    <i class="fas fa-check-double me-2"></i>Pendientes de Scrap
                 </button>
             </li>
         </ul>
 
+        <!-- Tab Content -->
         <div class="tab-content animate__animated animate__fadeIn" id="myTabContent">
-            <div class="tab-pane fade show active" id="pendientes" role="tabpanel" aria-labelledby="pendientes-tab">
+            <!-- Producción Tab -->
+            <div class="tab-pane fade show active" id="produccion" role="tabpanel" aria-labelledby="produccion-tab">
                 <div class="card">
                     <div class="card-header bg-primary text-white py-3">
-                        <h3 class="mb-0"><i class="fas fa-tasks me-2"></i>Entregas pendientes de validación</h3>
+                        <h3 class="mb-0"><i class="fas fa-tasks me-2"></i>Entregas Pendientes de Validación - Producción</h3>
                     </div>
                     <div class="card-body">
-                        <?php if (empty($data['entregas_produccion']) && empty($data['entregas_scrap'])): ?>
+                        <?php if (empty($data['entregas_produccion'])): ?>
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>No hay entregas pendientes de validación.
+                                <i class="fas fa-info-circle me-2"></i>No hay entregas pendientes de validación en Producción.
                             </div>
                         <?php else: ?>
-                            <h4 class="section-title production-title"><i class="fas fa-industry me-2"></i>Registro de Producción</h4>
-                            <div class="table-responsive mb-4">
-                                <table class="table table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th><i class="fas fa-user me-1"></i> Operador</th>
-                                            <th><i class="fas fa-cogs me-1"></i> Máquina</th>
-                                            <th><i class="fas fa-tag me-1"></i> Item</th>
-                                            <th><i class="fas fa-file-alt me-1"></i> JT/WO</th>
-                                            <th><i class="fas fa-info-circle me-1"></i> Tipo</th>
-                                            <th><i class="fas fa-calendar-alt me-1"></i> Fecha/Hora</th>
-                                            <th><i class="fas fa-cubes me-1"></i> Cantidad</th>
-                                            <th><i class="fas fa-tools me-1"></i> Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php if (empty($data['entregas_produccion'])): ?>
-                                            <tr>
-                                                <td colspan="8" class="text-center">No hay registros de producción pendientes.</td>
-                                            </tr>
-                                        <?php else: ?>
-                                            <?php foreach ($data['entregas_produccion'] as $entrega): ?>
-                                                <tr>
-                                                    <td><?= htmlspecialchars($entrega['nombre_empleado']) ?></td>
-                                                    <td><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
-                                                    <td><?= htmlspecialchars($entrega['item']) ?></td>
-                                                    <td><?= htmlspecialchars($entrega['jtWo']) ?></td>
-                                                    <td>
-                                                        <span class="badge <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'badge-final' : 'badge-parcial' ?>">
-                                                            <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
-                                                        </span>
-                                                    </td>
-                                                    <td><?= date('d/m/Y H:i', strtotime($entrega['fecha_registro'])) ?></td>
-                                                    <td class="text-end fw-bold"><?= number_format($entrega['cantidad'], 0, ',', '.') ?> <small>unid.</small></td>
-                                                    <td>
-                                                        <button class="btn btn-action btn-review me-1" data-id="<?= $entrega['id'] ?>" data-tipo="produccion">
-                                                            <i class="fas fa-search me-1"></i> Revisar
-                                                        </button>
-                                                        <button class="btn btn-action btn-validate-production" data-id="<?= $entrega['id'] ?>">
-                                                            <i class="fas fa-check me-1"></i> Validar
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <h4 class="section-title scrap-title"><i class="fas fa-trash-alt me-2"></i>Registro de Scrap</h4>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover">
                                     <thead>
@@ -120,36 +73,29 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($data['entregas_scrap'])): ?>
+                                        <?php foreach ($data['entregas_produccion'] as $entrega): ?>
                                             <tr>
-                                                <td colspan="8" class="text-center">No hay registros de scrap pendientes.</td>
+                                                <td><?= htmlspecialchars($entrega['nombre_empleado']) ?></td>
+                                                <td><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
+                                                <td><?= htmlspecialchars($entrega['item']) ?></td>
+                                                <td><?= htmlspecialchars($entrega['jtWo']) ?></td>
+                                                <td>
+                                                    <span class="badge <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'badge-final' : 'badge-parcial' ?>">
+                                                        <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
+                                                    </span>
+                                                </td>
+                                                <td><?= date('d/m/Y H:i', strtotime($entrega['fecha_registro'])) ?></td>
+                                                <td class="text-end fw-bold"><?= number_format($entrega['cantidad'], 0, ',', '.') ?> <small>unid.</small></td>
+                                                <td>
+                                                    <button class="btn btn-action btn-review me-1" data-id="<?= $entrega['id'] ?>" data-tipo="produccion">
+                                                        <i class="fas fa-search me-1"></i> Revisar
+                                                    </button>
+                                                    <button class="btn btn-action btn-validate-production" data-id="<?= $entrega['id'] ?>">
+                                                        <i class="fas fa-check me-1"></i> Validar
+                                                    </button>
+                                                </td>
                                             </tr>
-                                        <?php else: ?>
-                                            <?php foreach ($data['entregas_scrap'] as $entrega): ?>
-                                                <tr>
-                                                    <td><?= htmlspecialchars($entrega['nombre_empleado']) ?></td>
-                                                    <td><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
-                                                    <td><?= htmlspecialchars($entrega['item']) ?></td>
-                                                    <td><?= htmlspecialchars($entrega['jtWo']) ?></td>
-                                                    <td>
-                                                        <span class="badge <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'badge-final' : 'badge-parcial' ?>">
-                                                            <i class="fas fa-<?= ($entrega['tipo_boton'] == 'final_produccion') ? 'flag-checkered' : 'spinner' ?> me-1"></i>
-                                                            <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
-                                                        </span>
-                                                    </td>
-                                                    <td><?= date('d/m/Y H:i', strtotime($entrega['fecha_registro'])) ?></td>
-                                                    <td class="text-end fw-bold"><?= number_format($entrega['cantidad'], 0, ',', '.') ?> <small>unid.</small></td>
-                                                    <td>
-                                                        <button class="btn btn-action btn-review me-1" data-id="<?= $entrega['id'] ?>" data-tipo="scrap">
-                                                            <i class="fas fa-search me-1"></i> Revisar
-                                                        </button>
-                                                        <button class="btn btn-action btn-validate-scrap" data-id="<?= $entrega['id'] ?>">
-                                                            <i class="fas fa-check me-1"></i> Validar
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -158,17 +104,67 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="validadas" role="tabpanel" aria-labelledby="validadas-tab">
+            <!-- Scrap Tab -->
+            <div class="tab-pane fade" id="scrap" role="tabpanel" aria-labelledby="scrap-tab">
                 <div class="card">
                     <div class="card-header bg-success text-white py-3">
-                        <h3 class="mb-0"><i class="fas fa-check-double me-2"></i>Entregas validadas</h3>
+                        <h3 class="mb-0"><i class="fas fa-check-double me-2"></i>Entregas Pendientes - Scrap</h3>
                     </div>
                     <div class="card-body">
+                        <?php if (empty($data['entregas_scrap'])): ?>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>No hay entregas pendientes de validación en Scrap.
+                            </div>
+                        <?php else: ?>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th><i class="fas fa-user me-1"></i> Operador</th>
+                                            <th><i class="fas fa-cogs me-1"></i> Máquina</th>
+                                            <th><i class="fas fa-tag me-1"></i> Item</th>
+                                            <th><i class="fas fa-file-alt me-1"></i> JT/WO</th>
+                                            <th><i class="fas fa-info-circle me-1"></i> Tipo</th>
+                                            <th><i class="fas fa-calendar-alt me-1"></i> Fecha/Hora</th>
+                                            <th><i class="fas fa-cubes me-1"></i> Cantidad</th>
+                                            <th><i class="fas fa-tools me-1"></i> Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($data['entregas_scrap'] as $entrega): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($entrega['nombre_empleado']) ?></td>
+                                                <td><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
+                                                <td><?= htmlspecialchars($entrega['item']) ?></td>
+                                                <td><?= htmlspecialchars($entrega['jtWo']) ?></td>
+                                                <td>
+                                                    <span class="badge <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'badge-final' : 'badge-parcial' ?>">
+                                                        <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
+                                                    </span>
+                                                </td>
+                                                <td><?= date('d/m/Y H:i', strtotime($entrega['fecha_registro'])) ?></td>
+                                                <td class="text-end fw-bold"><?= number_format($entrega['cantidad'], 0, ',', '.') ?> <small>unid.</small></td>
+                                                <td>
+                                                    <button class="btn btn-action btn-review me-1" data-id="<?= $entrega['id'] ?>" data-tipo="scrap">
+                                                        <i class="fas fa-search me-1"></i> Revisar
+                                                    </button>
+                                                    <button class="btn btn-action btn-validate-scrap" data-id="<?= $entrega['id'] ?>">
+                                                        <i class="fas fa-check me-1"></i> Validar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+   
 
     <!-- Toast Container -->
     <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;">
@@ -237,9 +233,20 @@
     </div>
 
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-toast@1.0.1/dist/bootstrap-toast.min.js"></script>
+    
+     <!-- Required JavaScript -->
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap-toast@1.0.1/dist/bootstrap-toast.min.js"></script>
+    <script>
+        // Optional: Add current date and time functionality
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES');
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('es-ES');
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+    </script>
 
     <script>
         // Función para mostrar Toast
@@ -439,17 +446,6 @@
                     console.error('Error al obtener el estado:', error);
                 });
         });
-
-        function updateClock() {
-            const date = new Date();
-            const formattedDate = date.toLocaleDateString('es-ES');
-            const formattedTime = date.toLocaleTimeString('es-ES');
-            document.getElementById('current-date').textContent = formattedDate;
-            document.getElementById('current-time').textContent = formattedTime;
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock();
     </script>
 </body>
 

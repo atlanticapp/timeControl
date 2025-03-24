@@ -29,10 +29,8 @@ $router->post('/seleccionar_maquina', [MaquinaController::class, 'seleccionarMaq
 // Rutas para manejar datos de trabajo
 $router->get('/datos_trabajo', [DataController::class, 'index']);
 $router->post('/seleccionar_data', [DataController::class, 'seleccionarData']);
-
 // Espera Trabajo
 $router->post('/espera_trabajo', [DataController::class, 'esperaTrabajo']);
-
 // Control de registros
 $router->get('/control', [RegistroController::class, 'index']);
 $router->post('/registrar', [RegistroController::class, 'registrar']);
@@ -46,12 +44,12 @@ $router->get('/supervisor', [SupervisorController::class, 'index']);
 $router->post('/supervisor', [SupervisorController::class, 'index']);
 
 // Rutas QA
-$router->get('/validacion', [QaController::class, 'index']);
+$router->get('/dashboard', [QaController::class, 'index']);
+$router->get('/validacion', [QaController::class, 'validacion']);
 $router->get('/verDetalles', [QaController::class, 'verDetalles']);
 $router->post('/validarEnt', [QaController::class, 'validarEnt']);
 $router->post('/corregir', [QaController::class, 'corregir']);
 $router->get('/reporteScrapt/{empleado_id}/{maquina_id}/{item}/{jtwo}', [QaController::class, 'reporteScrapt']);
-$router->get('/dashboard', [QaController::class, 'dashboard']);
 $router->get('/historial', [QaController::class, 'historial']);
 
 // Error handling

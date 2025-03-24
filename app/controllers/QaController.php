@@ -31,24 +31,53 @@ class QaController extends Controller
     public function index()
     {
         $user = AuthHelper::getCurrentUser();
+        if (!$user) {
+            throw new \Exception("Usuario no autenticado");
+        }
+
+        if ($user->tipo_usuario !== 'qa') {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es Qa.');
+        }
+
+        $stats = $this->qa->getDashboardStats($user->area_id);
+
+        $data = [
+            'title' => 'Dashboard de Control de Calidad',
+            'stats' => $stats
+        ];
+
+        $this->view('qa/dashboard', [
+            'data' => $data
+        ]);
+    }
+
+    public function validacion()
+    {
+        $user = AuthHelper::getCurrentUser();
+        if (!$user) {
+            throw new \Exception("Usuario no autenticado");
+        }
+
+        if ($user->tipo_usuario !== 'qa') {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es Qa.');
+        }
 
         // Obtener las entregas pendientes (ahora retorna un array con dos sub-arrays)
         $entregas_pendientes = $this->qa->getEntregasPendientes($user->area_id);
 
         $data = [
-            'title' => 'Panel de QA - Validación de Entregas',
+            'title' => 'Validación de Entregas',
             'entregas_produccion' => $entregas_pendientes['entregas_produccion'],
             'entregas_scrap' => $entregas_pendientes['entregas_scrap'],
-            'entregas_validadas' => $this->qa->getEntregasValidadas()
         ];
 
-        $this->view('qa/validacionEnt', [
+        $this->view('qa/validacion', [
             'data' => $data
         ]);
     }
 
     // Validar entrega (aceptar)
-    public function validarEnt()
+    public function validar()
     {
         try {
             // Verificar si es una solicitud POST
@@ -165,7 +194,29 @@ class QaController extends Controller
         }
     }
 
-    // Generar reporte de scrap
+    // Método para ver el historial de validaciones
+    public function historial()
+    {
+        $user = AuthHelper::getCurrentUser();
+        $data = [
+            'title' => 'Historial de Validaciones',
+            'entregas_validadas' => $this->qa->getEntregasValidadas($user->codigo_empleado)
+        ];
+
+        $this->view('qa/historial', $data);
+    }
+
+    private function redirectWithMessage($url, $status, $message)
+    {
+        $_SESSION['status'] = $status;
+        $_SESSION['message'] = $message;
+        header("Location: $url");
+        exit();
+    }
+}
+
+
+// Generar reporte de scrap
     // public function reporteScrapt($empleado_id = null, $maquina_id = null, $item = null, $jtwo = null)
     // {
     //     if (!$empleado_id || !$maquina_id || !$item || !$jtwo) {
@@ -200,50 +251,3 @@ class QaController extends Controller
 
     //     $this->view('qa/reporte_scrapt', $data);
     // }
-
-    // Dashboard con resumen de estadísticas
-    public function dashboard()
-    {
-        $user = AuthHelper::getCurrentUser();
-        $area_id = $user->area_id;
-
-        // Obtener estadísticas generales del dashboard
-        $stats = $this->qa->getDashboardStats($area_id);
-
-        // Obtener estadísticas por máquina
-        $stats_maquinas = $this->qa->getEstadisticasPorMaquina();
-
-        // Obtener validaciones recientes
-        $validaciones_recientes = $this->qa->getEntregasValidadas();
-
-        $data = [
-            'title' => 'Dashboard de Control de Calidad',
-            'stats' => $stats,
-            'stats_maquinas' => $stats_maquinas,
-            'validaciones_recientes' => $validaciones_recientes
-        ];
-
-        $this->view('qa/dashboard', [
-            'data' => $data
-        ]);
-    }
-
-    // Método para ver el historial de validaciones
-    public function historial()
-    {
-        $data = [
-            'title' => 'Historial de Validaciones',
-            'entregas_validadas' => $this->qa->getEntregasValidadas()
-        ];
-
-        $this->view('qa/historial', $data);
-    }
-
-    private function redirectWithMessage($url, $status, $message)
-    {
-        $_SESSION['status'] = $status;
-        $_SESSION['message'] = $message;
-        header("Location: $url");
-        exit();
-    }
-}
