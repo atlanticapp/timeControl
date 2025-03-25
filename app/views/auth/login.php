@@ -1,5 +1,36 @@
 <?php include __DIR__ . "/../layouts/header.php"; ?>
+<style>
+    body {
+            background: linear-gradient(135deg, #585758 0%, rgb(63, 169, 215) 100%);
+            perspective: 1000px;
+            height: 100vh;
+            overflow: hidden;
+        }
 
+        .bg-3d {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%),
+                linear-gradient(45deg, #3F9ED7 0%, rgb(31, 117, 170) 100%);
+            transform: rotateX(60deg) rotateZ(-45deg);
+            animation: bg-move 20s linear infinite;
+        }
+
+        @keyframes bg-move {
+            0% {
+                transform: rotateX(60deg) rotateZ(-45deg) translateX(0) translateY(0);
+            }
+
+            100% {
+                transform: rotateX(60deg) rotateZ(-45deg) translateX(-25%) translateY(-25%);
+            }
+        }
+</style>
+<div class="bg-3d"></div>
 <section class="wrapper">
     <div class="form signup">
         <header>Registrarse</header>

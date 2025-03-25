@@ -91,7 +91,7 @@ class Qa extends Model
 
 
     // Validar entrega (aceptar)
-    public function validarEntrega($codigo_empleado_qa, $idEntrega)
+    public function validarEntregaProduccion($codigo_empleado_qa, $entregaId)
     {
         $query = "
             UPDATE registro
@@ -101,11 +101,102 @@ class Qa extends Model
             WHERE id = ?";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("ii", $codigo_empleado_qa, $idEntrega);
+        $stmt->bind_param("ii", $codigo_empleado_qa, $entregaId);
         $result = $stmt->execute();
         $stmt->close();
 
         return $result;
+    }
+
+    public function validarEntregaScrap($codigo_empleado_qa, $entregaId)
+    {
+        try {
+            // Consulta para verificar y actualizar el registro de scrap
+            $queryVerificar = "
+                SELECT * FROM registro 
+                WHERE id = ? AND estado = 'Pendiente' FOR UPDATE";
+
+            $stmtVerificar = $this->db->prepare($queryVerificar);
+            $stmtVerificar->bind_param("i", $entregaId);
+            $stmtVerificar->execute();
+            $resultVerificar = $stmtVerificar->get_result();
+
+            // Verificar si el registro existe y está pendiente
+            if ($resultVerificar->num_rows === 0) {
+                $this->db->rollBack();
+                return false;
+            }
+
+            $registroOriginal = $resultVerificar->fetch_assoc();
+
+            // Consulta para actualizar el estado del registro
+            $queryActualizar = "
+                UPDATE registro
+                SET estado = 'Validado',
+                    validado_por = ?,
+                    fecha_validacion = NOW()
+                WHERE id = ? AND estado = 'Pendiente'";
+
+            $stmtActualizar = $this->db->prepare($queryActualizar);
+            $stmtActualizar->bind_param("ii", $codigo_empleado_qa, $entregaId);
+            $resultadoActualizacion = $stmtActualizar->execute();
+
+            // Verificar si se actualizó correctamente
+            if (!$resultadoActualizacion || $stmtActualizar->affected_rows === 0) {
+                $this->db->rollBack();
+                return false;
+            }
+
+            date_default_timezone_set("America/Santo_Domingo");
+            $datosScrap = [
+                'codigo_empleado' => $registroOriginal['codigo_empleado'],
+                'maquina_id' => $registroOriginal['maquina'] ?? null,
+                'item' => $registroOriginal['item'] ?? '',
+                'jtwo' => $registroOriginal['jtWo'] ?? '',
+                'cantidad' => $registroOriginal['cantidad_scrapt'] ?? 0,
+                'aprobado_por' => $codigo_empleado_qa,
+                'fecha_aprobacion' => date("Y-m-d H:i:s")
+            ];
+
+            // Insertamos en tabla de scrap final
+            $queryScrap = "
+                INSERT INTO scrap_final (
+                    codigo_empleado, 
+                    maquina_id, 
+                    item, 
+                    jtwo, 
+                    cantidad, 
+                    aprobado_por, 
+                    fecha_aprobacion
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            $stmtScrap = $this->db->prepare($queryScrap);
+            $stmtScrap->bind_param(
+                "iissidi",
+                $datosScrap['codigo_empleado'],
+                $datosScrap['maquina_id'],
+                $datosScrap['item'],
+                $datosScrap['jtwo'],
+                $datosScrap['cantidad'],
+                $datosScrap['aprobado_por'],
+                $datosScrap['fecha_aprobacion']
+            );
+            $resultadoScrap = $stmtScrap->execute();
+
+            if (!$resultadoScrap) {
+                $this->db->rollBack();
+                return false;
+            }
+
+            // Confirmar transacción
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            // Revertir transacción en caso de error
+            $this->db->rollBack();
+            error_log('Error en validación de scrap: ' . $e->getMessage());
+            return false;
+        }
     }
 
     // Enviar corrección al operador
@@ -133,8 +224,7 @@ class Qa extends Model
     // Obtener entregas validadas para el panel principal
     public function getEntregasValidadas($userqa)
     {
-        $query = "
-      SELECT 
+        $query = "SELECT 
             id,
             tipo_boton,
             codigo_empleado,
@@ -185,7 +275,6 @@ class Qa extends Model
             return false;
         }
     }
-
     /**
      * Obtiene el conteo de entregas pendientes por área
      */

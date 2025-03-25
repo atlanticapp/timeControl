@@ -76,96 +76,49 @@ class QaController extends Controller
         ]);
     }
 
-    // Validar entrega (aceptar)
     public function validar()
     {
+        // Verificar si es una solicitud POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Método no permitido.');
+            return;
+        }
+
+        $user = AuthHelper::getCurrentUser();
+
+        if (!$user) {
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Usuario actual irreconocible');
+            return;
+        }
+
+        $entregaId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $tipo = filter_input(INPUT_POST, 'tipo', FILTER_SANITIZE_STRING);
+
+        // Verificar que existan los parámetros necesarios
+        if (!$entregaId) {
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'ID de entrega inválido');
+            return;
+        }
+
+        if (!in_array($tipo, ['produccion', 'scrap'])) {
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Tipo de entrega inválido');
+            return;
+        }
+
         try {
-            // Verificar si es una solicitud POST
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                echo json_encode(['success' => false, 'message' => 'Método no permitido']);
-                return;
-            }
+            // Validar la entrega según el tipo
+            $resultado = $tipo === 'produccion'
+                ? $this->qa->validarEntregaProduccion($user->codigo_empleado, $entregaId)
+                : $this->qa->validarEntregaScrap($user->codigo_empleado, $entregaId);
 
-            // Obtener usuario actual
-            $user = AuthHelper::getCurrentUser();
-
-            if (!$user) {
-                echo json_encode(['success' => false, 'message' => 'No se pudo obtener el usuario actual']);
-                return;
-            }
-
-            // Extraer los valores de POST
-            $idEntrega = isset($_POST['id']) ? (int)$_POST['id'] : null;
-            $tipo = isset($_POST['tipo']) ? trim($_POST['tipo']) : null;
-
-            error_log("validarEnt - ID: $idEntrega, Tipo: $tipo");
-
-            // Verificar que existan los parámetros necesarios
-            if (!$idEntrega || !$tipo) {
-                echo json_encode(['success' => false, 'message' => 'Faltan parámetros para validar la entrega']);
-                return;
-            }
-
-            // Validar la entrega
-            $validacionExitosa = $this->qa->validarEntrega($user->codigo_empleado, $idEntrega);
-
-            error_log("Resultado validación: " . ($validacionExitosa ? "Éxito" : "Fracaso"));
-
-            // Si es de tipo scrap y la validación fue exitosa, guardar en tabla scrap_final
-            if ($validacionExitosa && $tipo === 'scrap') {
-                try {
-                    // Obtener modelo y datos del registro original
-                    $registroOriginal = $this->qa->obtenerRegistroPorId($idEntrega);
-
-                    error_log("Registro original: " . ($registroOriginal ? "Encontrado" : "No encontrado"));
-
-                    if ($registroOriginal) {
-                        // Cargar modelo de Scrap
-                        $scrapModel = new Scrap();
-
-                        // Determinar el campo jtwo según disponibilidad
-                        $jtwoValue = '';
-                        if (isset($registroOriginal['jtWo'])) {
-                            $jtwoValue = $registroOriginal['jtWo'];
-                        } elseif (isset($registroOriginal['jtwo'])) {
-                            $jtwoValue = $registroOriginal['jtwo'];
-                        }
-
-                        // Preparar datos
-                        $datosScrap = [
-                            'codigo_empleado' => $registroOriginal['codigo_empleado'],
-                            'maquina_id' => $registroOriginal['maquina'],
-                            'item' => $registroOriginal['item'] ?? '',
-                            'jtwo' => $jtwoValue,
-                            'cantidad' => $registroOriginal['cantidad_scrapt'],
-                            'aprobado_por' => $user->codigo_empleado,
-                            'fecha_aprobacion' => $registroOriginal['fecha_validacion'] ?? date('Y-m-d H:i:s')
-                        ];
-
-                        error_log("Datos a guardar en scrap_final: " . json_encode($datosScrap));
-
-                        // Guardar en la tabla scrap_final
-                        $scrapGuardado = $scrapModel->guardarScrapFinal($datosScrap);
-
-                        error_log("Resultado guardado en scrap_final: " . ($scrapGuardado ? "Éxito" : "Fracaso"));
-                    }
-                } catch (Exception $e) {
-                    error_log("Error al guardar scrap_final: " . $e->getMessage());
-                    // Continuamos el flujo aunque haya un error al guardar scrap_final
-                }
-            }
-
-            if ($validacionExitosa) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Entrega de ' . ($tipo === 'produccion' ? 'producción' : 'scrap') . ' validada correctamente'
-                ]);
+            if ($resultado) {
+                $this->redirectWithMessage('/timeControl/public/validacion', 'success', 'Entrega validada correctamente');
             } else {
-                echo json_encode(['success' => false, 'message' => 'Error al validar la entrega']);
+                $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'No fue posible validar la entrega');
             }
         } catch (Exception $e) {
-            error_log("Error general en validarEnt: " . $e->getMessage());
-            echo json_encode(['success' => false, 'message' => 'Error al procesar la solicitud']);
+            error_log("Error en validación de entrega: " . $e->getMessage());
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Error al procesar la solicitud');
         }
     }
 

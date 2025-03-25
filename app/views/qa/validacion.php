@@ -15,7 +15,7 @@
 </head>
 
 <body>
-<div class="container mt-4">
+    <div class="container mt-4">
         <div class="header-container animate__animated animate__fadeIn p-3 mb-4 text-center text-md-start row align-items-center">
             <div class="col-md-8">
                 <h1 class="header-title mb-0">Sistema de Control de Calidad (QA)</h1>
@@ -164,7 +164,7 @@
         </div>
     </div>
 
-   
+
 
     <!-- Toast Container -->
     <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;">
@@ -233,10 +233,10 @@
     </div>
 
 
-    
-     <!-- Required JavaScript -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap-toast@1.0.1/dist/bootstrap-toast.min.js"></script>
+
+    <!-- Required JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-toast@1.0.1/dist/bootstrap-toast.min.js"></script>
     <script>
         // Optional: Add current date and time functionality
         function updateDateTime() {
@@ -249,181 +249,111 @@
     </script>
 
     <script>
-        // Función para mostrar Toast
-        function showToast(message, type = 'success') {
-            const toastEl = document.getElementById('toastMessage');
-            const toastBody = document.getElementById('toastBody');
+        document.addEventListener('DOMContentLoaded', function() {
+    // Manejar "Validar Producción"
+    document.addEventListener('click', function(event) {
+        const validateProductionButton = event.target.closest('.btn-validate-production');
+        if (validateProductionButton) {
+            const entregaId = validateProductionButton.getAttribute('data-id');
 
-            // Limpiar clases de tipo anteriores
-            toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
+            // Configurar el modal para validación
+            document.getElementById('validateModalLabel').textContent = 'Validar Entrega de Producción';
+            const submitValidationBtn = document.getElementById('submitValidation');
+            submitValidationBtn.setAttribute('data-id', entregaId);
+            submitValidationBtn.setAttribute('data-tipo', 'produccion');
 
-            // Añadir clase según el tipo
-            switch (type) {
-                case 'danger':
-                    toastEl.classList.add('bg-danger', 'text-white');
-                    break;
-                case 'warning':
-                    toastEl.classList.add('bg-warning');
-                    break;
-                case 'info':
-                    toastEl.classList.add('bg-info', 'text-white');
-                    break;
-                default: // success
-                    toastEl.classList.add('bg-success', 'text-white');
-            }
+            // Mostrar modal
+            const validateModal = new bootstrap.Modal(document.getElementById('validateModal'));
+            validateModal.show();
+        }
+    });
 
-            // Establecer el mensaje
-            toastBody.innerHTML = message;
+    // Manejar "Validar Scrap"
+    document.addEventListener('click', function(event) {
+        const validateScrapButton = event.target.closest('.btn-validate-scrap');
+        if (validateScrapButton) {
+            const entregaId = validateScrapButton.getAttribute('data-id');
 
-            // Mostrar el toast usando Bootstrap 5
-            const toast = new bootstrap.Toast(toastEl, {
-                autohide: true,
-                delay: 3000
-            });
-            toast.show();
+            // Configurar el modal para validación
+            document.getElementById('validateModalLabel').textContent = 'Validar Entrega de Scrap';
+            const submitValidationBtn = document.getElementById('submitValidation');
+            submitValidationBtn.setAttribute('data-id', entregaId);
+            submitValidationBtn.setAttribute('data-tipo', 'scrap');
+
+            // Mostrar modal
+            const validateModal = new bootstrap.Modal(document.getElementById('validateModal'));
+            validateModal.show();
+        }
+    });
+
+    // Enviar validación
+    document.getElementById('submitValidation').addEventListener('click', function() {
+        const entregaId = this.getAttribute('data-id');
+        const tipo = this.getAttribute('data-tipo');
+
+        // Cerrar modal de manera más segura
+        const validateModal = document.getElementById('validateModal');
+        if (validateModal && bootstrap.Modal.getInstance(validateModal)) {
+            bootstrap.Modal.getInstance(validateModal).hide();
         }
 
-        // Manejar "Revisar" - Envía una nota opcional a producción
-        document.querySelectorAll('.btn-review').forEach(button => {
-            button.addEventListener('click', function() {
-                const entregaId = this.getAttribute('data-id');
-                const tipo = this.getAttribute('data-tipo');
+        // Mostrar toast de carga
+        showToast(`Validando entrega de ${tipo}...`, 'info');
 
-                // Configurar el modal para revisión
-                const modalTitle = document.getElementById('revisionModalLabel');
-                modalTitle.textContent = `Revisar entrega de ${tipo === 'produccion' ? 'producción' : 'scrap'}`;
+        // Crear FormData para envío POST tradicional
+        const formData = new FormData();
+        formData.append('id', entregaId);
+        formData.append('tipo', tipo);
 
-                // Limpiar textarea
-                document.getElementById('notaRevision').value = '';
-
-                // Guardar ID y tipo para uso posterior
-                document.getElementById('submitRevisionBtn').setAttribute('data-id', entregaId);
-                document.getElementById('submitRevisionBtn').setAttribute('data-tipo', tipo);
-
-                // Mostrar modal
-                const revisionModal = new bootstrap.Modal(document.getElementById('revisionModal'));
-                revisionModal.show();
-            });
+        // Enviar datos a servidor
+        fetch('/timeControl/public/validar', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            // Redirigir directamente, ya que el backend usa redirectWithMessage
+            window.location.href = response.url;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Hubo un problema con la solicitud', 'danger');
         });
+    });
 
-        // Enviar revisión
-        document.getElementById('submitRevisionBtn').addEventListener('click', function() {
-            const nota = document.getElementById('notaRevision').value;
-            const entregaId = this.getAttribute('data-id');
-            const tipo = this.getAttribute('data-tipo');
+    // Función para mostrar Toast (mantenida desde el script anterior)
+    function showToast(message, type = 'success') {
+        const toastEl = document.getElementById('toastMessage');
+        const toastBody = document.getElementById('toastBody');
 
-            // Cerrar modal
-            const revisionModal = bootstrap.Modal.getInstance(document.getElementById('revisionModal'));
-            revisionModal.hide();
+        // Limpiar clases de tipo anteriores
+        toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
 
-            // Enviar datos a servidor
-            fetch('/timeControl/public/logout', {
-                    method: 'GET',
-                    body: JSON.stringify({
-                        id: entregaId,
-                        tipo: tipo,
-                        nota: nota
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showToast(`Se ha enviado la revisión de ${tipo} con éxito`, 'success');
-                    } else {
-                        showToast(data.message || 'Error al enviar la revisión', 'danger');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('Hubo un problema con la solicitud', 'danger');
-                });
+        // Añadir clase según el tipo
+        switch (type) {
+            case 'danger':
+                toastEl.classList.add('bg-danger', 'text-white');
+                break;
+            case 'warning':
+                toastEl.classList.add('bg-warning');
+                break;
+            case 'info':
+                toastEl.classList.add('bg-info', 'text-white');
+                break;
+            default: // success
+                toastEl.classList.add('bg-success', 'text-white');
+        }
 
-            // Si estás en modo de desarrollo o no tienes el endpoint listo, puedes usar este código temporal:
-            /*
-            setTimeout(() => {
-                showToast(`Se ha enviado la revisión de ${tipo} con éxito`, 'success');
-            }, 500);
-            */
+        // Establecer el mensaje
+        toastBody.innerHTML = message;
+
+        // Mostrar el toast usando Bootstrap 5
+        const toast = new bootstrap.Toast(toastEl, {
+            autohide: true,
+            delay: 3000
         });
-
-        // Manejar "Validar Producción"
-        document.querySelectorAll('.btn-validate-production').forEach(button => {
-            button.addEventListener('click', function() {
-                const entregaId = this.getAttribute('data-id');
-
-                // Configurar el modal para validación
-                document.getElementById('validateModalLabel').textContent = 'Validar Entrega de Producción';
-                document.getElementById('submitValidation').setAttribute('data-id', entregaId);
-                document.getElementById('submitValidation').setAttribute('data-tipo', 'produccion');
-
-                // Mostrar modal
-                const validateModal = new bootstrap.Modal(document.getElementById('validateModal'));
-                validateModal.show();
-            });
-        });
-
-        // Manejar "Validar Scrap"
-        document.querySelectorAll('.btn-validate-scrap').forEach(button => {
-            button.addEventListener('click', function() {
-                const entregaId = this.getAttribute('data-id');
-
-                // Configurar el modal para validación
-                document.getElementById('validateModalLabel').textContent = 'Validar Entrega de Scrap';
-                document.getElementById('submitValidation').setAttribute('data-id', entregaId);
-                document.getElementById('submitValidation').setAttribute('data-tipo', 'scrap');
-
-                // Mostrar modal
-                const validateModal = new bootstrap.Modal(document.getElementById('validateModal'));
-                validateModal.show();
-            });
-        });
-
-        // Enviar validación
-        // Función para validar producción/scrap y mostrar toast
-        document.getElementById('submitValidation').addEventListener('click', function() {
-            const entregaId = this.getAttribute('data-id');
-            const tipo = this.getAttribute('data-tipo');
-
-            // Cerrar modal
-            const validateModal = bootstrap.Modal.getInstance(document.getElementById('validateModal'));
-            validateModal.hide();
-
-            // Mostrar indicador de carga
-            const loadingToast = showToast(`Validando entrega de ${tipo}...`, 'info');
-
-            // Crear FormData para envío POST tradicional
-            const formData = new FormData();
-            formData.append('id', entregaId);
-            formData.append('tipo', tipo);
-
-            // Enviar datos a servidor usando fetch con FormData
-            fetch('/timeControl/public/validarEnt', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta del servidor: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        // Mostrar mensaje de éxito
-                        showToast(`Entrega de ${tipo === 'produccion' ? 'producción' : 'scrap'} validada correctamente`, 'success');
-                    } else {
-                        // Mostrar mensaje de error
-                        showToast(data.message || 'Error al validar la entrega', 'danger');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('Hubo un problema con la solicitud: ' + error.message, 'danger');
-                });
-        });
+        toast.show();
+    }
+});
     </script>
 
     <script>

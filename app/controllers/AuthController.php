@@ -59,8 +59,13 @@ class AuthController extends Controller
         $nombre = filter_input(INPUT_POST, 'nombre');
         $codigo_empleado = filter_input(INPUT_POST, 'codigo_empleado');
         $password = $_POST['password'] ?? null;
+        $password2 = $_POST['password2'] ?? null;
         $tipo_usuario = filter_input(INPUT_POST, 'tipo_usuario');
         $area_id = filter_input(INPUT_POST, 'area_id', FILTER_VALIDATE_INT);
+
+        if($password != $password2){
+            $this->redirectWithMessage('/timeControl/public/register', 'error', 'Las contraseñas no coinciden');
+        }
 
         if (!$nombre || !$codigo_empleado || !$password || !$tipo_usuario || !$area_id) {
             $this->redirectWithMessage('/timeControl/public/login', 'error', 'Todos los campos son obligatorios');

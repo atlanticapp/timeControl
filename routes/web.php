@@ -47,7 +47,7 @@ $router->post('/supervisor', [SupervisorController::class, 'index']);
 $router->get('/dashboard', [QaController::class, 'index']);
 $router->get('/validacion', [QaController::class, 'validacion']);
 $router->get('/verDetalles', [QaController::class, 'verDetalles']);
-$router->post('/validarEnt', [QaController::class, 'validarEnt']);
+$router->post('/validar', [QaController::class, 'validar']);
 $router->post('/corregir', [QaController::class, 'corregir']);
 $router->get('/reporteScrapt/{empleado_id}/{maquina_id}/{item}/{jtwo}', [QaController::class, 'reporteScrapt']);
 $router->get('/historial', [QaController::class, 'historial']);

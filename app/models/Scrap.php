@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Core\Model;
 use PDOException;
 
+
 class Scrap extends Model
 {
     public function guardarScrapFinal($datos)
