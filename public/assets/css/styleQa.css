@@ -102,19 +102,20 @@ body {
 }
 
 .badge-final {
-    background-color: var(--success-color);
+    background-color: #28a745;
+    color: white;
 }
 
 .badge-parcial {
-    background-color: var(--warning-color);
+    background-color: #ffc107;
+    color: black;
 }
 
 .btn-action {
-    border-radius: 5px;
-    padding: 5px 10px;
-    margin: 2px;
-    transition: all 0.2s;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
 }
+
 
 .btn-review {
     color: white;
@@ -247,4 +248,3 @@ body {
         border: none;
     }
 }
-

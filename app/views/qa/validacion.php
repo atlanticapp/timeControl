@@ -211,13 +211,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="validateModalLabel">Validar Entrega</h5>
+                    <h5 class="modal-title" id="validateModalLabel"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-success">
                         <i class="fas fa-check-circle me-2"></i>
                         Al validar esta entrega, se registrará como completa en el sistema.
+                    </div>
+                    <div class="mb-3">
+                        <label for="data-comentario" class="form-label">Comentario (opcional)</label>
+                        <textarea class="form-control" data-id="data-comentario" rows="3" placeholder="Escriba aquí sus observaciones sobre la cantidad..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -250,111 +254,111 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Manejar "Validar Producción"
-    document.addEventListener('click', function(event) {
-        const validateProductionButton = event.target.closest('.btn-validate-production');
-        if (validateProductionButton) {
-            const entregaId = validateProductionButton.getAttribute('data-id');
+            // Función auxiliar para configurar y mostrar el modal de validación
+            function showValidationModal(entregaId, tipo, title, commentDisplayStyle) {
+                const modalLabel = document.getElementById('validateModalLabel');
+                modalLabel.textContent = title;
 
-            // Configurar el modal para validación
-            document.getElementById('validateModalLabel').textContent = 'Validar Entrega de Producción';
-            const submitValidationBtn = document.getElementById('submitValidation');
-            submitValidationBtn.setAttribute('data-id', entregaId);
-            submitValidationBtn.setAttribute('data-tipo', 'produccion');
+                const submitValidationBtn = document.getElementById('submitValidation');
+                submitValidationBtn.setAttribute('data-id', entregaId);
+                submitValidationBtn.setAttribute('data-tipo', tipo);
 
-            // Mostrar modal
-            const validateModal = new bootstrap.Modal(document.getElementById('validateModal'));
-            validateModal.show();
-        }
-    });
+                const comentarioContainer = document.querySelector('#validateModal textarea[data-id="data-comentario"]')?.closest('.mb-3');
+                if (comentarioContainer) {
+                    comentarioContainer.style.display = commentDisplayStyle;
+                }
 
-    // Manejar "Validar Scrap"
-    document.addEventListener('click', function(event) {
-        const validateScrapButton = event.target.closest('.btn-validate-scrap');
-        if (validateScrapButton) {
-            const entregaId = validateScrapButton.getAttribute('data-id');
+                const modalEl = document.getElementById('validateModal');
+                const validateModal = new bootstrap.Modal(modalEl);
+                validateModal.show();
+            }
 
-            // Configurar el modal para validación
-            document.getElementById('validateModalLabel').textContent = 'Validar Entrega de Scrap';
-            const submitValidationBtn = document.getElementById('submitValidation');
-            submitValidationBtn.setAttribute('data-id', entregaId);
-            submitValidationBtn.setAttribute('data-tipo', 'scrap');
+            // Manejo de clics para botones de validación
+            document.addEventListener('click', function(event) {
+                const validateProductionButton = event.target.closest('.btn-validate-production');
+                if (validateProductionButton) {
+                    const entregaId = validateProductionButton.getAttribute('data-id');
+                    showValidationModal(entregaId, 'produccion', 'Validar Entrega de Producción', 'none');
+                    return; // Finaliza para producción
+                }
 
-            // Mostrar modal
-            const validateModal = new bootstrap.Modal(document.getElementById('validateModal'));
-            validateModal.show();
-        }
-    });
+                const validateScrapButton = event.target.closest('.btn-validate-scrap');
+                if (validateScrapButton) {
+                    const entregaId = validateScrapButton.getAttribute('data-id');
+                    showValidationModal(entregaId, 'scrap', 'Validar Entrega de Scrap', 'block');
+                }
+            });
 
-    // Enviar validación
-    document.getElementById('submitValidation').addEventListener('click', function() {
-        const entregaId = this.getAttribute('data-id');
-        const tipo = this.getAttribute('data-tipo');
+            // Envío de la validación al servidor
+            document.getElementById('submitValidation').addEventListener('click', function() {
+                const entregaId = this.getAttribute('data-id');
+                const tipo = this.getAttribute('data-tipo');
+                const comentario = document.querySelector('#validateModal textarea[data-id="data-comentario"]')?.value || '';
 
-        // Cerrar modal de manera más segura
-        const validateModal = document.getElementById('validateModal');
-        if (validateModal && bootstrap.Modal.getInstance(validateModal)) {
-            bootstrap.Modal.getInstance(validateModal).hide();
-        }
+                // Cerrar modal de forma segura
+                const modalEl = document.getElementById('validateModal');
+                if (modalEl && bootstrap.Modal.getInstance(modalEl)) {
+                    bootstrap.Modal.getInstance(modalEl).hide();
+                }
 
-        // Mostrar toast de carga
-        showToast(`Validando entrega de ${tipo}...`, 'info');
+                // Mostrar toast de carga
+                showToast(`Validando entrega de ${tipo}...`, 'info');
 
-        // Crear FormData para envío POST tradicional
-        const formData = new FormData();
-        formData.append('id', entregaId);
-        formData.append('tipo', tipo);
+                // Preparar datos para envío
+                const formData = new FormData();
+                formData.append('id', entregaId);
+                formData.append('tipo', tipo);
+                formData.append('comentario', comentario);
 
-        // Enviar datos a servidor
-        fetch('/timeControl/public/validar', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            // Redirigir directamente, ya que el backend usa redirectWithMessage
-            window.location.href = response.url;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('Hubo un problema con la solicitud', 'danger');
+                // Enviar datos al servidor
+                fetch('/timeControl/public/validar', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        // Redirigir según la URL recibida del backend
+                        window.location.href = response.url;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('Hubo un problema con la solicitud', 'danger');
+                    });
+            });
+
+            // Función para mostrar un Toast usando Bootstrap 5
+            function showToast(message, type = 'success') {
+                const toastEl = document.getElementById('toastMessage');
+                const toastBody = document.getElementById('toastBody');
+
+                // Limpiar clases de tipo anteriores
+                toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
+
+                // Añadir clase según el tipo
+                switch (type) {
+                    case 'danger':
+                        toastEl.classList.add('bg-danger', 'text-white');
+                        break;
+                    case 'warning':
+                        toastEl.classList.add('bg-warning');
+                        break;
+                    case 'info':
+                        toastEl.classList.add('bg-info', 'text-white');
+                        break;
+                    default:
+                        toastEl.classList.add('bg-success', 'text-white');
+                }
+
+                // Establecer el mensaje y mostrar el toast
+                toastBody.innerHTML = message;
+                const toast = new bootstrap.Toast(toastEl, {
+                    autohide: true,
+                    delay: 3000
+                });
+                toast.show();
+            }
         });
-    });
-
-    // Función para mostrar Toast (mantenida desde el script anterior)
-    function showToast(message, type = 'success') {
-        const toastEl = document.getElementById('toastMessage');
-        const toastBody = document.getElementById('toastBody');
-
-        // Limpiar clases de tipo anteriores
-        toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
-
-        // Añadir clase según el tipo
-        switch (type) {
-            case 'danger':
-                toastEl.classList.add('bg-danger', 'text-white');
-                break;
-            case 'warning':
-                toastEl.classList.add('bg-warning');
-                break;
-            case 'info':
-                toastEl.classList.add('bg-info', 'text-white');
-                break;
-            default: // success
-                toastEl.classList.add('bg-success', 'text-white');
-        }
-
-        // Establecer el mensaje
-        toastBody.innerHTML = message;
-
-        // Mostrar el toast usando Bootstrap 5
-        const toast = new bootstrap.Toast(toastEl, {
-            autohide: true,
-            delay: 3000
-        });
-        toast.show();
-    }
-});
     </script>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

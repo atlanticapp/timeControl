@@ -53,28 +53,35 @@ class QaController extends Controller
 
     public function validacion()
     {
+        // Obtener el usuario actual
         $user = AuthHelper::getCurrentUser();
+        
+        // Verificar si el usuario está autenticado
         if (!$user) {
             throw new \Exception("Usuario no autenticado");
         }
-
+    
+        // Verificar que el tipo de usuario sea 'qa'
         if ($user->tipo_usuario !== 'qa') {
-            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es Qa.');
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es QA.');
         }
-
-        // Obtener las entregas pendientes (ahora retorna un array con dos sub-arrays)
+    
+        // Obtener las entregas pendientes. Ahora la función retorna un array con dos sub-arrays: 'entregas_produccion' y 'entregas_scrap'
         $entregas_pendientes = $this->qa->getEntregasPendientes($user->area_id);
-
+    
+        // Preparar los datos para la vista
         $data = [
             'title' => 'Validación de Entregas',
             'entregas_produccion' => $entregas_pendientes['entregas_produccion'],
             'entregas_scrap' => $entregas_pendientes['entregas_scrap'],
         ];
-
+    
+        // Llamar a la vista con los datos necesarios
         $this->view('qa/validacion', [
             'data' => $data
         ]);
     }
+    
 
     public function validar()
     {
@@ -91,8 +98,9 @@ class QaController extends Controller
             return;
         }
 
-        $entregaId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-        $tipo = filter_input(INPUT_POST, 'tipo', FILTER_SANITIZE_STRING);
+        $entregaId = filter_input(INPUT_POST, 'id');
+        $tipo = filter_input(INPUT_POST, 'tipo');
+        $comentario = filter_input(INPUT_POST, 'comentario');
 
         // Verificar que existan los parámetros necesarios
         if (!$entregaId) {
@@ -109,7 +117,7 @@ class QaController extends Controller
             // Validar la entrega según el tipo
             $resultado = $tipo === 'produccion'
                 ? $this->qa->validarEntregaProduccion($user->codigo_empleado, $entregaId)
-                : $this->qa->validarEntregaScrap($user->codigo_empleado, $entregaId);
+                : $this->qa->validarEntregaScrap($user->codigo_empleado, $entregaId, $comentario);
 
             if ($resultado) {
                 $this->redirectWithMessage('/timeControl/public/validacion', 'success', 'Entrega validada correctamente');
