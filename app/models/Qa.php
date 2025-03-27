@@ -357,8 +357,6 @@ class Qa extends Model
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-
-
     private function getNombreEmpleado($codigo_empleado)
     {
         $query = "SELECT nombre FROM users WHERE codigo_empleado = ?";
@@ -389,35 +387,31 @@ class Qa extends Model
     public function getCountEntregasPendientes($area_id)
     {
         $query = "
-            WITH entregas_finales AS (
-            SELECT maquina, jtWo, item, codigo_empleado
-            FROM registro
-            WHERE tipo_boton = 'final_produccion'
-            AND estado_validacion = 'Pendiente'
+        SELECT 
+            SUM(
+                CASE 
+                    WHEN estado_validacion = 'Pendiente' AND cantidad_produccion > 0 THEN 1
+                    WHEN estado_validacion = 'Pendiente' AND cantidad_scrapt > 0 THEN 1
+                    WHEN estado_validacion = 'scrap_validado' AND cantidad_produccion > 0 THEN 1
+                    WHEN estado_validacion = 'produccion_validada' AND cantidad_scrapt > 0 THEN 1
+                    ELSE 0
+                END
+            ) AS total
+        FROM registro
+        WHERE estado_validacion IN ('Pendiente', 'scrap_validado', 'produccion_validada')
             AND area_id = ?
-            ),
-            entregas_parciales AS (
-            SELECT maquina, jtWo, item, codigo_empleado
-            FROM registro
-            WHERE tipo_boton = 'Producción'
-            AND descripcion = 'Parcial'
-            AND estado_validacion = 'Pendiente'
-            AND area_id = ?
-            )
-            SELECT 
-            COUNT(*) AS total_entregas
-            FROM (
-            SELECT maquina, jtWo, item, codigo_empleado FROM entregas_finales
-            UNION ALL 
-            SELECT maquina, jtWo, item, codigo_empleado FROM entregas_parciales
-            ) AS todas_entregas";
+            AND (
+                (tipo_boton = 'Producción' AND descripcion = 'Parcial') 
+                OR (tipo_boton = 'final_produccion')
+            )";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param('ii', $area_id, $area_id);
+        $stmt->bind_param('i', $area_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        return $row['total_entregas'] ?? 0;
+
+        return $row['total'] ?? 0;
     }
 
     /**
