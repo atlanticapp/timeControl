@@ -31,57 +31,84 @@ class QaController extends Controller
     public function index()
     {
         $user = AuthHelper::getCurrentUser();
+
         if (!$user) {
             throw new \Exception("Usuario no autenticado");
         }
 
         if ($user->tipo_usuario !== 'qa') {
-            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es Qa.');
+            return $this->redirectWithMessage('/timeControl/public/login', 'error', 'Acceso denegado: Solo QA permitido.');
         }
 
-        $stats = $this->qa->getDashboardStats($user->area_id);
+        try {
+            $stats = $this->qa->getDashboardStats($user->area_id);
 
-        $data = [
-            'title' => 'Dashboard de Control de Calidad',
-            'stats' => $stats
-        ];
-
-        $this->view('qa/dashboard', [
-            'data' => $data
-        ]);
+            $this->view('qa/dashboard', [
+                'data' => [
+                    'title' => 'Dashboard de Control de Calidad',
+                    'stats' => $stats
+                ]
+            ]);
+        } catch (\Exception $e) {
+            error_log('Error en el dashboard de QA: ' . $e->getMessage());
+            return $this->redirectWithMessage('/timeControl/public/login', 'error', 'Ocurrió un error al cargar el dashboard.');
+        }
     }
+
 
     public function validacion()
     {
         // Obtener el usuario actual
         $user = AuthHelper::getCurrentUser();
-        
+
         // Verificar si el usuario está autenticado
         if (!$user) {
             throw new \Exception("Usuario no autenticado");
         }
-    
+
         // Verificar que el tipo de usuario sea 'qa'
         if ($user->tipo_usuario !== 'qa') {
             $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es QA.');
         }
-    
+
         // Obtener las entregas pendientes. Ahora la función retorna un array con dos sub-arrays: 'entregas_produccion' y 'entregas_scrap'
         $entregas_pendientes = $this->qa->getEntregasPendientes($user->area_id);
-    
+
         // Preparar los datos para la vista
         $data = [
             'title' => 'Validación de Entregas',
             'entregas_produccion' => $entregas_pendientes['entregas_produccion'],
             'entregas_scrap' => $entregas_pendientes['entregas_scrap'],
         ];
-    
-        // Llamar a la vista con los datos necesarios
+
         $this->view('qa/validacion', [
             'data' => $data
         ]);
     }
-    
+
+    public function accion()
+    {
+        // Obtener el usuario actual
+        $user = AuthHelper::getCurrentUser();
+
+        // Verificar si el usuario está autenticado
+        if (!$user) {
+            throw new \Exception("Usuario no autenticado");
+        }
+
+        // Verificar que el tipo de usuario sea 'qa'
+        if ($user->tipo_usuario !== 'qa') {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es QA.');
+        }
+
+        $data = [
+            'entregas_validadas' => $this->qa->getEntregasValidadas($user->codigo_empleado)
+        ];
+
+        $this->view('qa/accion', [
+            'data' => $data
+        ]);
+    }
 
     public function validar()
     {

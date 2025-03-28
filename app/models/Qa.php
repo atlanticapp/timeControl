@@ -390,15 +390,12 @@ class Qa extends Model
         SELECT 
             SUM(
                 CASE 
-                    WHEN estado_validacion = 'Pendiente' AND cantidad_produccion > 0 THEN 1
-                    WHEN estado_validacion = 'Pendiente' AND cantidad_scrapt > 0 THEN 1
-                    WHEN estado_validacion = 'scrap_validado' AND cantidad_produccion > 0 THEN 1
-                    WHEN estado_validacion = 'produccion_validada' AND cantidad_scrapt > 0 THEN 1
+                    WHEN estado_validacion = 'Pendiente' AND (cantidad_produccion > 0 OR cantidad_scrapt > 0) THEN 1
                     ELSE 0
                 END
             ) AS total
         FROM registro
-        WHERE estado_validacion IN ('Pendiente', 'scrap_validado', 'produccion_validada')
+        WHERE estado_validacion IN ('Pendiente')
             AND area_id = ?
             AND (
                 (tipo_boton = 'Producción' AND descripcion = 'Parcial') 
@@ -419,22 +416,19 @@ class Qa extends Model
      */
     public function getCountEntregasValidadas($area_id)
     {
-        $query = "
-            SELECT 
-                SUM(
-                    CASE 
-                        WHEN estado_validacion = 'Validado' THEN 2
-                        WHEN estado_validacion = 'scrap_validado' THEN 1
-                        WHEN estado_validacion = 'produccion_validada' THEN 1
-                        ELSE 0 
-                    END
-                ) AS total
-            FROM registro
-            WHERE area_id = ?
-            AND (
-                (tipo_boton = 'final_produccion') 
-                OR (descripcion = 'Parcial')
-            )";
+        $query = "  SELECT 
+             SUM(
+            CASE 
+                WHEN estado_validacion = 'validado' THEN 1
+                ELSE 0
+            END
+        ) AS total
+    FROM registro
+    WHERE area_id = ?
+    AND (
+        (tipo_boton = 'final_produccion') 
+        OR (tipo_boton = 'Producción' AND descripcion = 'Parcial')
+    )";
 
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $area_id);
@@ -445,39 +439,36 @@ class Qa extends Model
         return $row['total'] ?? 0;
     }
 
+    public function getEntregasProduccionValidadas($userqa)
+    {
+        $query = "SELECT 
+        r.id,
+        r.codigo_empleado,
+        u.nombre AS nombre_empleado,
+        r.maquina,
+        m.nombre AS nombre_maquina,
+        r.item,
+        r.jtWo,
+        r.cantidad_produccion,
+        r.fecha_validacion,
+        r.estado_validacion
+    FROM registro r
+    LEFT JOIN users u ON r.codigo_empleado = u.codigo_empleado
+    LEFT JOIN maquinas m ON r.maquina = m.id
+    WHERE 
+        r.estado_validacion = 'Validado' 
+        AND r.validado_por = ?
+        AND r.cantidad_produccion > 0
+    ORDER BY 
+        r.fecha_validacion DESC";
 
-    // /**
-    //  * Obtiene estadísticas de producción por máquina
-    //  */
-    // public function getEstadisticasPorMaquina()
-    // {
-    //     $query = "
-    //         SELECT 
-    //             r.maquina,
-    //             m.nombre AS nombre_maquina,
-    //             r.jtWo,
-    //             SUM(r.cantidad_produccion) AS produccion,
-    //             SUM(r.cantidad_scrapt) AS scrapt,
-    //             COUNT(DISTINCT CONCAT(r.codigo_empleado, r.jtWo, r.item)) AS entregas
-    //         FROM registro r
-    //         JOIN maquinas m ON r.maquina = m.id
-    //         WHERE (r.tipo_boton = 'final_produccion' OR (r.tipo_boton = 'Producción' AND r.descripcion = 'Parcial'))
-    //         AND r.estado = 'Pendiente'
-    //         GROUP BY r.maquina, m.nombre, r.jtWo
-    //         ORDER BY produccion DESC";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $userqa);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    //     $stmt = $this->db->prepare($query);
-    //     $stmt->execute();
-    //     $result = $stmt->get_result();
-    //     $stats = [];
-
-    //     while ($row = $result->fetch_assoc()) {
-    //         $stats[] = $row;
-    //     }
-
-    //     return $stats;
-    // }
-
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 
 
     /**

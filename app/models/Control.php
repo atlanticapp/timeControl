@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Model;
+use PDOException;
 
 class Control extends Model
 {
@@ -100,50 +101,122 @@ class Control extends Model
         return $active_button_id;
     }
 
-    public function insertRegistro($registroData)
+    public function insertRegistro(array $registroData): bool
     {
-        // Extraer los valores del arreglo $registroData
-        $tipo_boton = $registroData['tipo_boton'];
-        $codigo_empleado = $registroData['codigo_empleado'];
-        $item = $registroData['item'];
-        $maquina = $registroData['maquina'];
-        $area_id = $registroData['area_id'];
-        $descripcion = $registroData['descripcion'];
-        $jtWo = $registroData['jtWo'];
-        $cantidad_scrapt = $registroData['cantidad_scrapt'];
-        $cantidad_produccion = $registroData['cantidad_produccion'];
-        $fecha_registro = $registroData['fecha_registro'];
-        $fecha_fin = $registroData['fecha_fin'];
+        $this->db->begin_transaction();
 
-        // Sentencia SQL para insertar en la base de datos
-        $sql = "INSERT INTO registro (tipo_boton, codigo_empleado, item, maquina, area_id, descripcion, jtWo, cantidad_scrapt, cantidad_produccion, fecha_registro, fecha_fin) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            $success = true;
 
-        // Preparar la consulta
-        $stmt = $this->db->prepare($sql);
-        $stmt->bind_param(
-            "sssssssssss",
-            $tipo_boton,
-            $codigo_empleado,
-            $item,
-            $maquina,
-            $area_id,
-            $descripcion,
-            $jtWo,
-            $cantidad_scrapt,
-            $cantidad_produccion,
-            $fecha_registro,
-            $fecha_fin
-        );
+            // Insertar registro de producción si hay cantidad
+            if (!empty($registroData['cantidad_produccion']) && $registroData['cantidad_produccion'] > 0) {
+                $success = $this->insertProductionRecord($registroData) && $success;
+            }
 
-        // Ejecutar la consulta y devolver el resultado
-        if ($stmt->execute()) {
-            $stmt->close();
-            return true;
-        } else {
-            $stmt->close();
+            // Insertar registro de scrap si hay cantidad
+            if (!empty($registroData['cantidad_scrapt']) && $registroData['cantidad_scrapt'] > 0) {
+                $success = $this->insertScrapRecord($registroData) && $success;
+            }
+
+            // Si no hay cantidades, insertar registro base
+            if (empty($registroData['cantidad_produccion']) && empty($registroData['cantidad_scrapt'])) {
+                $success = $this->insertBaseRecord($registroData) && $success;
+            }
+
+            if ($success) {
+                $this->db->commit();
+                return true;
+            }
+
+            $this->db->rollback();
+            return false;
+        } catch (PDOException $e) {
+            $this->db->rollback();
+            error_log("Error al insertar registro: " . $e->getMessage());
             return false;
         }
+    }
+
+    private function insertProductionRecord(array $data): bool
+    {
+        $sql = "INSERT INTO registro (
+                tipo_boton, codigo_empleado, item, maquina, area_id, 
+                descripcion, jtWo, cantidad_produccion, cantidad_scrapt,
+                fecha_registro, fecha_fin, estado_validacion
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $data['tipo_boton'],
+                $data['codigo_empleado'],
+                $data['item'],
+                $data['maquina'],
+                $data['area_id'],
+                $data['descripcion'],
+                $data['jtWo'],
+                $data['cantidad_produccion'],
+                0, // cantidad_scrapt para producción
+                $data['fecha_registro'],
+                $data['fecha_fin'] ?? null
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error al insertar en registro: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function insertScrapRecord(array $data): bool
+    {
+        $sql = "INSERT INTO registro (
+                    tipo_boton, codigo_empleado, item, maquina, area_id, 
+                    descripcion, jtWo, cantidad_scrapt, cantidad_produccion,
+                    fecha_registro, fecha_fin, estado_validacion
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $data['tipo_boton'],
+                $data['codigo_empleado'],
+                $data['item'],
+                $data['maquina'],
+                $data['area_id'],
+                $data['descripcion'],
+                $data['jtWo'],
+                $data['cantidad_scrapt'],
+                0, // cantidad_produccion para scrap
+                $data['fecha_registro'],
+                $data['fecha_fin'] ?? null
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error al insertar en registro: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function insertBaseRecord(array $data): bool
+    {
+        $sql = "INSERT INTO registro (
+                    tipo_boton, codigo_empleado, item, maquina, area_id, 
+                    descripcion, jtWo, cantidad_scrapt, cantidad_produccion,
+                    fecha_registro, fecha_fin
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            $data['tipo_boton'],
+            $data['codigo_empleado'],
+            $data['item'],
+            $data['maquina'],
+            $data['area_id'],
+            $data['descripcion'],
+            $data['jtWo'],
+            0, // cantidad_scrapt
+            0, // cantidad_produccion
+            $data['fecha_registro'],
+            $data['fecha_fin'] ?? null
+        ]);
     }
 
 

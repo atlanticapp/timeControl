@@ -68,8 +68,8 @@ class RegistroController extends Controller
     public function registrar()
     {
         try {
-           $this->validateRequestMethod('POST');
-
+            // 1. Validación inicial
+            $this->validateRequestMethod('POST');
             $user = AuthHelper::getCurrentUser();
             if (!$user) {
                 throw new \Exception("Usuario no autenticado");
@@ -77,112 +77,121 @@ class RegistroController extends Controller
 
             $this->startSessionIfNeeded();
 
-            $control = new Control();
-            $usuario = new Usuario();
+            // 2. Cargar modelos y datos básicos
+            $controlModel = new Control();
+            $usuarioModel = new Usuario();
+            $userData = $usuarioModel->findByCodigo($user->codigo_empleado);
 
-            // Obtener información del usuario
-            $data = $usuario->findByCodigo($user->codigo_empleado);
-            if (!$data) {
+            if (!$userData) {
                 $this->redirectWithMessage('/timeControl/public/control', 'error', 'No se encontró información del usuario.');
             }
 
-            // Recibir y validar datos del formulario
-            $tipo_boton = $_POST['tipo_boton'] ?? null;
-            $item = $data['item'];
-            $jtWo = $data['jtWo'];
-            $cantidad_scrapt = $_POST['finalScraptAmount'] ?? 'Unknown';
-            $cantidad_produccion = $_POST['finalProductionValue'] ?? 'Unknown';
-            $descripcion = $_POST['badCopy'] ?? 'Unknown';
-            $codigo_empleado = $user->codigo_empleado;
-            $maquina = $data['maquina_id'] ?? null;
-            $area_id = $user->area_id ?? null;
-
-            if (!$tipo_boton || !$item || !$jtWo || !$maquina) {
-                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Datos insuficientes para registrar.');
-            }
-
-            // Obtener la fecha y hora actual
-            date_default_timezone_set("America/Santo_Domingo");
-            $fecha_actual = date("Y-m-d H:i:s");
-
-            // Cerrar registro previo si existe
-            $control->updatePreviousRegistro($codigo_empleado, $fecha_actual);
-
-            // Crear el array con los datos comunes para el registro
-            $registroData = [
-                'codigo_empleado' => $codigo_empleado,
-                'item' => $item,
-                'maquina' => $maquina,
-                'area_id' => $area_id,
-                'descripcion' => $descripcion,
-                'jtWo' => $jtWo,
-                'cantidad_scrapt' => $cantidad_scrapt,
-                'cantidad_produccion' => $cantidad_produccion,
-                'fecha_registro' => $fecha_actual,
-                'fecha_fin' => null // Se cierra con `updatePreviousRegistro()`
+            // 3. Validar campos requeridos
+            $requiredFields = [
+                'tipo_boton' => $_POST['tipo_boton'] ?? null,
+                'item' => $userData['item'] ?? null,
+                'jtWo' => $userData['jtWo'] ?? null,
+                'maquina' => $userData['maquina_id'] ?? null
             ];
 
-            // Dependiendo del tipo de botón, manejar diferentes lógicas
-            switch ($tipo_boton) {
-                case 'Preparación':
-                    // Lógica para preparación (si aplica)
-                    $registroData['tipo_boton'] = 'Preparación';
-                    break;
+            foreach ($requiredFields as $field => $value) {
+                if (empty($value)) {
+                    $this->redirectWithMessage('/timeControl/public/control', 'error', "Campo requerido faltante: {$field}");
+                }
+            }
 
-                case 'Producción':
-                    // Lógica para producción (si aplica)
-                    $registroData['tipo_boton'] = 'Producción';
-                    break;
+            // 4. Configurar zona horaria y fecha
+            date_default_timezone_set("America/Santo_Domingo");
+            $currentDateTime = date("Y-m-d H:i:s");
 
-                case 'Contratiempos':
-                    // Lógica para contratiempos
-                    $registroData['tipo_boton'] = 'Contratiempos';
-                    $registroData['descripcion'] = $_POST['badCopy'] ?? ''; // Ejemplo de dato extra para contratiempos
-                    break;
+            // 5. Cerrar registro previo si existe
+            $controlModel->updatePreviousRegistro($user->codigo_empleado, $currentDateTime);
 
-                case 'Velocidad':
-                    // Lógica para velocidad
-                    $registroData['tipo_boton'] = 'Velocidad';
-                    break;
+            // 6. Preparar datos base del registro
+            $registroData = [
+                'tipo_boton' => $requiredFields['tipo_boton'],
+                'codigo_empleado' => $user->codigo_empleado,
+                'item' => $requiredFields['item'],
+                'maquina' => $requiredFields['maquina'],
+                'area_id' => $user->area_id,
+                'jtWo' => $requiredFields['jtWo'],
+                'descripcion' => $_POST['badCopy'] ?? 'Unknown',
+                'fecha_registro' => $currentDateTime,
+                'fecha_fin' => null,
+                'cantidad_produccion' => $this->parseQuantity($_POST['finalProductionValue'] ?? $_POST['parcialProductionValue'] ?? 0),
+                'cantidad_scrapt' => $this->parseQuantity($_POST['finalScraptAmount'] ?? $_POST['parcialScraptAmount'] ?? 0)
+            ];
 
+            // 7. Manejo específico por tipo de botón
+            switch ($registroData['tipo_boton']) {
                 case 'final_produccion':
-                    // Lógica para fin de producción
-                    $registroData['tipo_boton'] = 'final_produccion';
-                    $registroData['fecha_fin'] = $fecha_actual;
+                    $registroData['fecha_fin'] = $currentDateTime;
                     unset($_SESSION['data_entered']);
-                    $control->resetUserData($codigo_empleado);
+                    $controlModel->resetUserData($user->codigo_empleado);
                     break;
 
                 case 'Parcial':
-                    // Lógica para entrega parcial
                     $registroData['tipo_boton'] = 'Producción';
                     $registroData['descripcion'] = 'Parcial';
-                    $registroData['cantidad_produccion'] = $_POST['parcialProductionValue'] ?? 'Unknown';
-                    $registroData['cantidad_scrapt'] = $_POST['parcialScraptAmount'] ?? 'Unknown';
                     break;
 
-                default:
-                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Tipo de botón no reconocido.');
+                case 'Contratiempos':
+                    $registroData['descripcion'] = $_POST['badCopy'] ?? 'Incidente reportado';
+                    $registroData['cantidad_produccion'] = 0;
+                    $registroData['cantidad_scrapt'] = 0;
+                    break;
+
+                case 'Velocidad':
+                case 'Preparación':
+                    $registroData['cantidad_produccion'] = 0;
+                    $registroData['cantidad_scrapt'] = 0;
+                    break;
             }
 
-            // Insertar el registro en la base de datos
-            $registroExitoso = $control->insertRegistro($registroData);
+            // 8. Procesamiento del registro con transacción
 
-            if (!$registroExitoso) {
-                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Error al guardar el registro.');
+
+            try {
+                // Insertar registro
+                $registroExitoso = $controlModel->insertRegistro($registroData);
+                if (!$registroExitoso) {
+                    throw new \Exception("Error al guardar el registro");
+                }
+
+                // Actualizar estado del botón
+                $estadoBotonExitoso = $controlModel->actualizarEstadoBoton(
+                    $user->codigo_empleado,
+                    $registroData['tipo_boton']
+                );
+                if (!$estadoBotonExitoso) {
+                    throw new \Exception("Error al actualizar el estado del botón");
+                }
+
+
+                $this->redirectWithMessage('/timeControl/public/control', 'success', 'Registro guardado correctamente.');
+            } catch (\Exception $e) {
+
+                throw $e;
             }
-
-            // Llamada al método que actualiza el estado del botón del usuario
-            $estadoBotonExitoso = $control->actualizarEstadoBoton($codigo_empleado, $registroData['tipo_boton']);
-            if (!$estadoBotonExitoso) {
-                $this->redirectWithMessage('/timeControl/public/control', 'error', 'Error al actualizar el estado del botón.');
-            }
-
-            $this->redirectWithMessage('/timeControl/public/control', 'success', 'Registro guardado correctamente.');
         } catch (\Exception $e) {
-           $this->redirectWithMessage('/timeControl/public/error', 'error', 'Ocurrió un error inesperado.');
-
+            error_log("Error en RegistroController::registrar - " . $e->getMessage());
+            $this->redirectWithMessage(
+                '/timeControl/public/error',
+                'error',
+                'Ocurrió un error inesperado: ' . $e->getMessage()
+            );
         }
+    }
+
+    /**
+     * Método auxiliar para parsear cantidades numéricas
+     */
+    private function parseQuantity($value)
+    {
+        if ($value === 'Unknown' || $value === '' || $value === null) {
+            return 0;
+        }
+        return is_numeric($value) ? (float)$value : 0;
     }
 
     private function validateRequestMethod($method)
