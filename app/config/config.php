@@ -3,7 +3,7 @@
 $db_host = 'localhost';
 $db_user = 'root';
 $db_password = '';
-$db_name = 'control';
+$db_name = 'contro';
 
 // Crear conexión
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);

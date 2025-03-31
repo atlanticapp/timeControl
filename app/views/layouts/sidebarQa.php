@@ -60,7 +60,7 @@
  </div>
 
  <!-- Panel de Notificaciones Optimizado -->
- <div id="notificationDropdown" class="notification-dropdown-transition fixed lg:absolute opacity-0 scale-95 -translate-y-2 hidden right-4 lg:right-auto top-16 lg:top-auto lg:mt-2 w-[calc(100%-2rem)] max-w-sm bg-white shadow-2xl border border-gray-100 rounded-lg overflow-hidden z-50">
+ <div id="notificationDropdown" class="notification-dropdown-transition fixed lg:absolute opacity-0 scale-95 -translate-y-2 hidden left-4 lg:right-auto top-16 lg:top-auto lg:mt-2 w-[calc(100%-2rem)] max-w-sm bg-white shadow-2xl border border-gray-100 rounded-lg overflow-hidden z-50">
      <div class="py-3 px-4 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 font-semibold flex justify-between items-center border-b border-gray-100">
          <div class="flex items-center">
              <i class="fas fa-bell mr-2"></i>
@@ -155,13 +155,11 @@
          }
 
          initEventListeners() {
-             // Botón de escritorio
              this.elements.toggleButtonDesktop.addEventListener("click", (e) => {
                  e.stopPropagation();
                  this.toggleDropdown(this.elements.toggleButtonDesktop);
              });
 
-             // Botón móvil
              this.elements.toggleButtonMobile.addEventListener("click", (e) => {
                  e.stopPropagation();
                  this.toggleDropdown(this.elements.toggleButtonMobile);
@@ -174,9 +172,16 @@
 
              document.addEventListener('click', (e) => this.handleDocumentClick(e));
 
-             if ("Notification" in window && Notification.permission !== "granted") {
-                 Notification.requestPermission();
+             if ("Notification" in window) {
+                 Notification.requestPermission().then(permission => {
+                     if (permission === "granted") {
+                         console.log("Permiso otorgado para notificaciones.");
+                     } else {
+                         console.log("Permiso denegado o no otorgado.");
+                     }
+                 });
              }
+
          }
 
          handleDocumentClick(e) {
@@ -193,7 +198,6 @@
              if (isHidden) {
                  this.positionDropdown(button);
                  this.elements.dropdown.classList.remove("hidden");
-                 // Use setTimeout to ensure the transition works properly
                  setTimeout(() => {
                      this.elements.dropdown.classList.remove("opacity-0", "scale-95", "-translate-y-2");
                  }, 10);
@@ -203,12 +207,10 @@
          }
 
          positionDropdown(button) {
-             // Para versión móvil, el dropdown es fijo
              if (window.innerWidth < 1024) {
                  return;
              }
 
-             // Para versión desktop, posicionar dropdown relativo al botón
              const buttonRect = button.getBoundingClientRect();
              const sidebar = this.elements.sidebar;
              const sidebarRect = sidebar.getBoundingClientRect();
@@ -228,40 +230,14 @@
 
          async fetchNotifications() {
              try {
-                 // Simulando notificaciones para demo
-                 this.processNotifications(this.getDemoNotifications());
-
-                 // En producción usar esto:
-                 // const response = await fetch("/timeControl/public/checkNewNotifications");
-                 // const data = await response.json();
-                 // if (data.success) this.processNotifications(data.notificaciones);
+                 // Realizar la consulta de notificaciones en producción
+                 const response = await fetch("/timeControl/public/checkNewNotifications");
+                 const data = await response.json();
+                 if (data.success) this.processNotifications(data.notificaciones);
              } catch (error) {
                  console.error("Error fetching notifications:", error);
              }
          }
-
-        //  // Función solo para demostración, eliminar en producción
-        //  getDemoNotifications() {
-        //      return [{
-        //              id: "1",
-        //              mensaje: "Nueva entrega validada: Proyecto ABC",
-        //              created_at: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-        //              redirectUrl: "#entrega1"
-        //          },
-        //          {
-        //              id: "2",
-        //              mensaje: "Reporte semanal disponible",
-        //              created_at: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-        //              redirectUrl: "#reporte"
-        //          },
-        //          {
-        //              id: "3",
-        //              mensaje: "Tarea asignada por el supervisor",
-        //              created_at: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
-        //              redirectUrl: "#tarea"
-        //          }
-        //      ];
-        //  }
 
          processNotifications(notifications) {
              let newCount = 0;
@@ -287,7 +263,6 @@
                  this.createNotificationItem(notif, isRead);
              });
 
-             // Actualizar información
              this.updateNotificationInfo(newCount);
              this.elements.countBadgeDesktop.textContent = newCount;
              this.elements.countBadgeDesktop.classList.toggle("hidden", newCount === 0);
@@ -310,11 +285,11 @@
 
          showEmptyState() {
              this.elements.list.innerHTML = `
-                    <li class="py-8 text-center">
-                        <i class="fas fa-bell-slash text-3xl text-gray-300 mb-3 block"></i>
-                        <p class="text-gray-500">No hay notificaciones</p>
-                    </li>
-                `;
+            <li class="py-8 text-center">
+                <i class="fas fa-bell-slash text-3xl text-gray-300 mb-3 block"></i>
+                <p class="text-gray-500">No hay notificaciones</p>
+            </li>
+        `;
              this.elements.notificationInfo.classList.add("hidden");
              this.elements.notificationFooter.classList.add("hidden");
          }
@@ -322,61 +297,27 @@
          createNotificationItem(notif, isRead) {
              const timeAgo = this.formatTimeAgo(notif.created_at || new Date());
              const item = document.createElement("li");
-             item.className = `p-3 hover:bg-gray-50 ${isRead ? '' : 'bg-blue-50/40'}`;
+             item.classList.add("p-3", "cursor-pointer", isRead ? "bg-gray-100" : "bg-blue-50");
              item.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <div class="text-sm mb-1 relative pl-2">
-                                ${!isRead ? '<span class="absolute left-0 top-2 w-1 h-1 bg-blue-500 rounded-full"></span>' : ''}
-                                ${notif.mensaje}
-                            </div>
-                            <div class="text-xs text-gray-500">
-                                <i class="far fa-clock mr-1"></i>${timeAgo}
-                            </div>
-                        </div>
-                        ${!isRead ? `<button class="text-xs text-blue-500 hover:text-blue-600 hover:bg-blue-50 py-1 px-2 rounded transition-colors duration-200" 
-                                data-id="${notif.id}">
-                                <i class="fas fa-check mr-1"></i>Leído
-                            </button>` : ''}
-                    </div>
-                `;
-
-             if (!isRead) {
-                 const markButton = item.querySelector("button");
-                 if (markButton) {
-                     markButton.addEventListener("click", (e) => {
-                         e.preventDefault();
-                         e.stopPropagation();
-                         this.markAsRead(notif.id);
-                     });
-                 }
-             }
-
-             item.addEventListener("click", () => {
-                 if (!isRead) this.markAsRead(notif.id);
-                 if (notif.redirectUrl) window.location.href = notif.redirectUrl;
-             });
-
+            <a href="${notif.redirectUrl}" class="flex justify-between items-center">
+                <span class="text-sm text-gray-700">${notif.mensaje}</span>
+                <span class="text-xs text-gray-500">${timeAgo}</span>
+            </a>
+        `;
+             item.addEventListener("click", () => this.markAsRead(notif.id));
              this.elements.list.appendChild(item);
          }
 
-         formatTimeAgo(dateStr) {
-             const date = new Date(dateStr);
-             const now = new Date();
-             const seconds = Math.floor((now - date) / 1000);
+         markAsRead(notificationId) {
+             this.readNotifications.add(notificationId);
+             localStorage.setItem("readNotifications", JSON.stringify(Array.from(this.readNotifications)));
+             this.processNotifications([]); // Re-fetch to update UI
+         }
 
-             if (seconds < 60) return "Hace un momento";
-
-             const minutes = Math.floor(seconds / 60);
-             if (minutes < 60) return `Hace ${minutes} min`;
-
-             const hours = Math.floor(minutes / 60);
-             if (hours < 24) return `Hace ${hours}h`;
-
-             const days = Math.floor(hours / 24);
-             if (days < 7) return `Hace ${days}d`;
-
-             return date.toLocaleDateString();
+         startAutoRefresh() {
+             setInterval(() => {
+                 this.fetchNotifications(); // Auto-refresh every 30 seconds
+             }, 30000);
          }
 
          showBrowserNotification(notif) {
@@ -419,49 +360,22 @@
                  e.stopPropagation();
                  toast.remove();
              });
-
-             // Añadir interactividad al toast
-             toast.addEventListener('click', () => {
-                 if (notif.redirectUrl) window.location.href = notif.redirectUrl;
-                 this.markAsRead(notif.id);
-                 toast.remove();
-             });
-
-             this.elements.toastContainer.appendChild(toast);
-
-             setTimeout(() => {
-                 toast.style.opacity = '0';
-                 setTimeout(() => toast.remove(), 500);
-             }, 4500);
          }
 
-         markAsRead(id) {
-             if (!this.readNotifications.has(id)) {
-                 this.readNotifications.add(id);
-                 localStorage.setItem("readNotifications", JSON.stringify([...this.readNotifications]));
-                 this.fetchNotifications();
-             }
-         }
+         formatTimeAgo(dateString) {
+             const now = new Date();
+             const date = new Date(dateString);
+             const diff = Math.floor((now - date) / 1000);
+             const minutes = Math.floor(diff / 60);
+             const hours = Math.floor(diff / 3600);
+             const days = Math.floor(diff / 86400);
 
-         markAllRead() {
-             const unreadItems = this.elements.list.querySelectorAll('li:not(.py-8)');
-             unreadItems.forEach(item => {
-                 const markButton = item.querySelector('button[data-id]');
-                 if (markButton) {
-                     const id = markButton.getAttribute('data-id');
-                     this.readNotifications.add(id);
-                 }
-             });
-
-             localStorage.setItem("readNotifications", JSON.stringify([...this.readNotifications]));
-             this.fetchNotifications();
-         }
-
-         startAutoRefresh() {
-             setInterval(() => this.fetchNotifications(), 30000);
-             this.fetchNotifications();
+             if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+             if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+             return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
          }
      }
+
 
      // Inicialización
      document.addEventListener("DOMContentLoaded", () => {

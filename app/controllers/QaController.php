@@ -50,7 +50,7 @@ class QaController extends Controller
 
             // Obtener notificaciones pendientes
             $notificationModel = new Notificacion();
-            $notificaciones = $notificationModel->getPendingNotificationsForUser($user->codigo_empleado);
+            $notificaciones = $notificationModel->getPendingNotifications($user->area_id);
 
             $validacionesRecientes = $this->qa->getValidacionesRecientes($user->area_id);
 

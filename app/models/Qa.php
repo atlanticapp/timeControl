@@ -304,7 +304,7 @@ class Qa extends Model
     {
         $query = "
             UPDATE registro
-            SET estado_validacion = 'Correccion',
+            SET estado_validacion = 'Corregir',
                 comentario_qa = ?
             WHERE codigo_empleado = ?
             AND maquina = ?

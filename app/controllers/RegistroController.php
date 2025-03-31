@@ -187,26 +187,12 @@ class RegistroController extends Controller
         }
     }
     // Método para enviar la notificación a los QA del área
-    private function sendNotificationToQA($areaId, $title, $message)
-    {
-        // 1. Obtener todos los usuarios QA del área
-        $usuarioModel = new Usuario();
-        $qaUsuarios = $usuarioModel->findQAUsersByArea($areaId);  // Asumimos que este método existe
-    
-        if (empty($qaUsuarios)) {
-            // Si no hay usuarios QA en el área, no hacemos nada
-            return;
-        }
-    
-        // 2. Preparar el modelo de notificaciones
-        $notificationModel = new Notificacion();  
-    
-        // 3. Enviar la notificación a cada usuario QA
-        foreach ($qaUsuarios as $qaUsuario) {
-            // Intentamos insertar la notificación
-            $notificationModel->createNotification($qaUsuario['codigo_empleado'], $message, 'info');
-        }
-    }
+   private function sendNotificationToQA($areaId, $title, $message)
+{
+    $notificationModel = new Notificacion();  
+    $notificationModel->createNotification($areaId, $message, 'info');
+}
+
     
 
 

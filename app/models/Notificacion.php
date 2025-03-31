@@ -12,79 +12,25 @@ class Notificacion extends Model
     protected $table = 'notificaciones';
 
     // Insertar una notificación en la base de datos
-    public function createNotification($codigo_empleado, $mensaje, $tipo = 'info', $fecha = null)
+    public function createNotification($area_id, $mensaje, $tipo = 'info', $fecha = null)
     {
-        $fecha = $fecha ?? date('Y-m-d H:i:s');
+        $fecha = $fecha ?? date('Y-m-d H:i:s'); // Si no se pasa fecha, usa la actual
 
-        $sql = "INSERT INTO {$this->table} (codigo_empleado, mensaje, tipo, fecha, estado) 
+        $sql = "INSERT INTO {$this->table} (area_id, mensaje, tipo, fecha, estado) 
                 VALUES (?, ?, ?, ?, 'pendiente')";
 
         try {
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([$codigo_empleado, $mensaje, $tipo, $fecha]);
+            return $stmt->execute([$area_id, $mensaje, $tipo, $fecha]);
         } catch (PDOException $e) {
-            error_log("Error al insertar notificación: " . $e->getMessage());
+            error_log("❌ Error al insertar notificación: " . $e->getMessage());
             return false;
         }
     }
 
-    // Obtener las notificaciones pendientes para un empleado
-    public function getPendingNotifications($codigo_empleado)
+    public function getPendingNotifications($area_id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE codigo_empleado = ? AND estado = 'pendiente' ORDER BY fecha DESC";
-
-        try {
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([$codigo_empleado]);
-
-            $notifications = [];
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $notifications[] = $row;
-            }
-
-            return $notifications;
-        } catch (PDOException $e) {
-            error_log("Error al obtener notificaciones pendientes: " . $e->getMessage());
-            return [];
-        }
-    }
-
-    // Contar las notificaciones pendientes para un empleado
-    public function countPendingNotifications($codigo_empleado)
-    {
-        $sql = "SELECT COUNT(*) as count FROM {$this->table} WHERE codigo_empleado = ? AND estado = 'pendiente'";
-
-        try {
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([$codigo_empleado]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return isset($result['count']) ? (int)$result['count'] : 0;
-        } catch (PDOException $e) {
-            error_log("Error al contar notificaciones pendientes: " . $e->getMessage());
-            return 0;
-        }
-    }
-
-    // Marcar una notificación como leída
-    public function markNotificationsAsSeen($codigo_empleado)
-    {
-        $sql = "UPDATE {$this->table} SET estado = 'leído' 
-                WHERE codigo_empleado = ? AND estado = 'pendiente'";
-
-        try {
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([$codigo_empleado]);
-        } catch (PDOException $e) {
-            error_log("Error al actualizar notificaciones: " . $e->getMessage());
-        }
-    }
-
-
-    public function getPendingNotificationsForUser($codigo_empleado)
-    {
-        $sql = "SELECT id, mensaje, tipo, fecha FROM {$this->table} 
-                WHERE codigo_empleado = ? AND estado = 'pendiente' 
-                ORDER BY fecha DESC";
+        $sql = "SELECT * FROM {$this->table} WHERE area_id = ? AND estado = 'pendiente' ORDER BY fecha DESC";
 
         try {
             $stmt = $this->db->prepare($sql);
@@ -92,21 +38,34 @@ class Notificacion extends Model
                 throw new Exception("Error en la preparación de la consulta: " . $this->db->error);
             }
 
-            $stmt->bind_param("s", $codigo_empleado); // Enlaza el parámetro
+            $stmt->bind_param("i", $area_id); // Corrección en la vinculación de parámetros
             $stmt->execute();
+            $result = $stmt->get_result(); // Obtener resultado en MySQLi
 
-            $result = $stmt->get_result();
-            $notificaciones = [];
-
+            $notifications = [];
             while ($row = $result->fetch_assoc()) {
-                $notificaciones[] = $row;
+                $notifications[] = $row;
             }
 
             $stmt->close();
-            return $notificaciones;
+            return $notifications;
         } catch (Exception $e) {
             error_log("Error al obtener notificaciones pendientes: " . $e->getMessage());
             return [];
+        }
+    }
+
+    // Marcar una notificación como leída
+    public function markNotificationsAsSeen($area_id)
+    {
+        $sql = "UPDATE {$this->table} SET estado = 'leído' 
+                WHERE area_id = ? AND estado = 'pendiente'";
+
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$area_id]);
+        } catch (PDOException $e) {
+            error_log("❌ Error al actualizar notificaciones: " . $e->getMessage());
         }
     }
 }
