@@ -63,7 +63,7 @@ class AuthController extends Controller
         $tipo_usuario = filter_input(INPUT_POST, 'tipo_usuario');
         $area_id = filter_input(INPUT_POST, 'area_id', FILTER_VALIDATE_INT);
 
-        if($password != $password2){
+        if ($password != $password2) {
             $this->redirectWithMessage('/timeControl/public/register', 'error', 'Las contraseñas no coinciden');
         }
 
@@ -152,6 +152,7 @@ class AuthController extends Controller
 
         exit(); // Finalizar el script después de enviar la respuesta
     }
+
 
     private function redirectWithMessage($url, $status, $message)
     {

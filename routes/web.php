@@ -5,11 +5,13 @@ use App\Controllers\ComentarioController;
 use App\Core\Router;
 use App\Controllers\MaquinaController;
 use App\Controllers\DataController;
+use App\Controllers\NotificacionController;
 use App\Controllers\QaController;
 use App\Helpers\AuthHelper;
 use App\Controllers\RegistroController;
 use App\Controllers\SaveVelocidad;
 use App\Controllers\SupervisorController;
+
 
 // Instancia del router
 $router = new Router();
@@ -45,6 +47,7 @@ $router->post('/supervisor', [SupervisorController::class, 'index']);
 
 // Rutas QA
 $router->get('/dashboard', [QaController::class, 'index']);
+$router->get('/checkNewNotifications', [NotificacionController::class, 'checkNewNotifications']);
 $router->get('/validacion', [QaController::class, 'validacion']);
 $router->post('/validar', [QaController::class, 'validar']);
 $router->post('/corregir', [QaController::class, 'corregir']);

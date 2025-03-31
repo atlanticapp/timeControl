@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel QA - Entregas de Producción</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/styleQa.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
         }
+
         .table-hover tr:hover {
             background-color: rgba(59, 130, 246, 0.05);
             transition: background-color 0.3s ease;
         }
+
         .sidebar-scroll::-webkit-scrollbar {
             width: 6px;
         }
+
         .sidebar-scroll::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
+
         .sidebar-scroll::-webkit-scrollbar-thumb {
             background: #3B82F6;
             border-radius: 3px;
         }
     </style>
 </head>
+
 <body class="bg-gray-100 flex">
     <!-- Sidebar Navigation -->
     <?php include __DIR__ . "/../layouts/sidebarQa.php"; ?>
@@ -60,7 +69,6 @@
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">JT WO</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Empleado</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Producción</th>
-                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Scrap</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Fecha</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Acciones</th>
                                 </tr>
@@ -93,23 +101,16 @@
                                                 <?php echo $entrega['cantidad_produccion']; ?> Lb
                                             </span>
                                         </td>
-                                        <td class="px-4 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                <?php echo $entrega['cantidad_scrapt']; ?> Lb
-                                            </span>
-                                        </td>
                                         <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <?php echo date('d/m/Y H:i', strtotime($entrega['fecha_validacion'])); ?>
                                         </td>
-                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div class="flex items-center space-x-2">
-                                                <a href="#" class="text-blue-600 hover:text-blue-900 transition-colors">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="#" class="text-green-600 hover:text-green-900 transition-colors">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            </div>
+                                        <td>
+                                            <button class="btn btn-action btn-review me-1" data-id="<?= $entrega['id'] ?>" data-tipo="scrap">
+                                                <i class="fas fa-search me-1"></i> Revisar
+                                            </button>
+                                            <button class="btn btn-action btn-validate-scrap" data-id="<?= $entrega['id'] ?>">
+                                                <i class="fas fa-check me-1"></i> Validar
+                                            </button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -121,4 +122,5 @@
         </div>
     </div>
 </body>
+
 </html>

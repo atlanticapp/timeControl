@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Helpers\AuthHelper;
+use App\Models\Notificacion;
 use App\Models\Qa;
-use App\Models\Scrap;
 use Exception;
 
 class QaController extends Controller
@@ -30,6 +30,7 @@ class QaController extends Controller
     // Mostrar panel principal de QA
     public function index()
     {
+        // Obtener el usuario actual
         $user = AuthHelper::getCurrentUser();
 
         if (!$user) {
@@ -40,18 +41,31 @@ class QaController extends Controller
             return $this->redirectWithMessage('/timeControl/public/login', 'error', 'Acceso denegado: Solo QA permitido.');
         }
 
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
         try {
-            $stats = $this->qa->getDashboardStats($user->area_id);
+            $entregasPendientes = $this->qa->getEntregasPendientes($user->area_id);
+
+            // Obtener notificaciones pendientes
+            $notificationModel = new Notificacion();
+            $notificaciones = $notificationModel->getPendingNotificationsForUser($user->codigo_empleado);
+
+            $validacionesRecientes = $this->qa->getValidacionesRecientes($user->area_id);
 
             $this->view('qa/dashboard', [
                 'data' => [
                     'title' => 'Dashboard de Control de Calidad',
-                    'stats' => $stats
+                    'stats' => $this->qa->getDashboardStats($user->area_id),
+                    'entregasPendientes' => $entregasPendientes,
+                    'notificaciones' => $notificaciones,
+                    'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado)
                 ]
             ]);
         } catch (\Exception $e) {
             error_log('Error en el dashboard de QA: ' . $e->getMessage());
-            return $this->redirectWithMessage('/timeControl/public/login', 'error', 'Ocurrió un error al cargar el dashboard.');
+            return $this->redirectWithMessage('/timeControl/public/login', 'error', 'Ocurrió un error al cargar el dashboard. Intente nuevamente.');
         }
     }
 
@@ -102,7 +116,7 @@ class QaController extends Controller
         }
 
         $data = [
-            'entregas_validadas' => $this->qa->getEntregasValidadas($user->codigo_empleado)
+            'entregas_validadas' => $this->qa->getValidacionesRecientes($user->codigo_empleado)
         ];
 
         $this->view('qa/accion', [
@@ -148,6 +162,7 @@ class QaController extends Controller
 
             if ($resultado) {
                 $this->redirectWithMessage('/timeControl/public/validacion', 'success', 'Entrega validada correctamente');
+                $_SESSION['notificacion_pendientes_mostrada'] = false;
             } else {
                 $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'No fue posible validar la entrega');
             }
@@ -188,7 +203,7 @@ class QaController extends Controller
         $user = AuthHelper::getCurrentUser();
         $data = [
             'title' => 'Historial de Validaciones',
-            'entregas_validadas' => $this->qa->getEntregasValidadas($user->codigo_empleado)
+            'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado)
         ];
 
         $this->view('qa/historial', $data);
@@ -202,40 +217,3 @@ class QaController extends Controller
         exit();
     }
 }
-
-
-// Generar reporte de scrap
-    // public function reporteScrapt($empleado_id = null, $maquina_id = null, $item = null, $jtwo = null)
-    // {
-    //     if (!$empleado_id || !$maquina_id || !$item || !$jtwo) {
-    //         $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Parámetros incorrectos para generar el reporte');
-    //     }
-
-    //     // Obtener los detalles de la entrega
-    //     $detalles = $this->qa->getDetallesEntrega($empleado_id, $maquina_id, $item, $jtwo);
-
-    //     if (empty($detalles)) {
-    //         $this->redirectWithMessage('/timeControl/public/qa', 'error', 'No se encontraron detalles para generar el reporte');
-    //     }
-
-    //     // Calcular el total de scrap
-    //     $total_scrapt = 0;
-    //     foreach ($detalles as $detalle) {
-    //         $total_scrapt += $detalle['cantidad_scrapt'];
-    //     }
-
-    //     $data = [
-    //         'title' => 'Reporte de Scrapt Final',
-    //         'detalles' => $detalles,
-    //         'empleado_id' => $empleado_id,
-    //         'maquina_id' => $maquina_id,
-    //         'nombre_maquina' => $detalles[0]['nombre_maquina'],
-    //         'item' => $item,
-    //         'jtwo' => $jtwo,
-    //         'total_scrapt' => $total_scrapt,
-    //         'qa_nombre' => $_SESSION['usuario_nombre'],
-    //         'qa_id' => $_SESSION['usuario_id']
-    //     ];
-
-    //     $this->view('qa/reporte_scrapt', $data);
-    // }

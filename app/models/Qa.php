@@ -28,7 +28,7 @@ class Qa extends Model
             cantidad_scrapt,
             estado_validacion
         FROM registro
-        WHERE estado_validacion IN ('Pendiente', 'scrap_validado', 'produccion_validada')
+        WHERE estado_validacion IN ('Pendiente')
             AND area_id = ?
             AND (
                 (tipo_boton = 'Producción' AND descripcion = 'Parcial') 
@@ -64,26 +64,6 @@ class Qa extends Model
                             'cantidad' => $row['cantidad_scrapt'],
                             'tipo_registro' => 'scrap',
                             'estado_validacion' => 'Pendiente'
-                        ]);
-                    }
-                    break;
-
-                case 'scrap_validado':
-                    if ($row['cantidad_produccion'] > 0) {
-                        $entregas['entregas_produccion'][] = array_merge($datosComunes, [
-                            'cantidad' => $row['cantidad_produccion'],
-                            'tipo_registro' => 'produccion',
-                            'estado_validacion' => 'scrap_validado'
-                        ]);
-                    }
-                    break;
-
-                case 'produccion_validada':
-                    if ($row['cantidad_scrapt'] > 0) {
-                        $entregas['entregas_scrap'][] = array_merge($datosComunes, [
-                            'cantidad' => $row['cantidad_scrapt'],
-                            'tipo_registro' => 'scrap',
-                            'estado_validacion' => 'produccion_validada'
                         ]);
                     }
                     break;
@@ -138,9 +118,9 @@ class Qa extends Model
             // Obtener el estado actual de la entrega
             $estado_actual = $registroOriginal['estado_validacion'];
 
-            // Si el estado actual es 'Pendiente', se puede validar
+            // Procesar según el estado actual
             if ($estado_actual === 'Pendiente') {
-                $nuevo_estado = 'produccion_validada';
+                $nuevo_estado = 'Validado';
 
                 // Actualizar el estado de validación
                 $queryActualizar = "UPDATE registro SET estado_validacion = ?, validado_por = ?, fecha_validacion = NOW() WHERE id = ?";
@@ -155,29 +135,12 @@ class Qa extends Model
                     return false;
                 }
                 $stmtActualizar->close();
-            } elseif ($estado_actual === 'scrap_validado') {
-                // Si el estado es 'scrap_validado', actualizar a 'Validado'
-                $nuevo_estado = 'Validado';
-
-                // Actualizar el estado a 'Validado'
-                $queryActualizar = "UPDATE registro SET estado_validacion = ?, validado_por = ?, fecha_validacion = NOW() WHERE id = ?";
-                $stmtActualizar = $this->db->prepare($queryActualizar);
-                $stmtActualizar->bind_param("sii", $nuevo_estado, $codigo_empleado_qa, $entregaId);
-                $resultadoActualizacion = $stmtActualizar->execute();
-
-                // Verificar si la actualización fue exitosa
-                if (!$resultadoActualizacion || $stmtActualizar->affected_rows === 0) {
-                    $stmtActualizar->close();
-                    $this->db->rollback();
-                    return false;
-                }
-                $stmtActualizar->close();
-            } elseif ($estado_actual === 'produccion_validada') {
-                // Si ya está validado como producción, no hacer nada
+            } elseif ($estado_actual === 'Validado') {
+                // Si ya está validado como producción o totalmente validado, no hacer nada
                 $this->db->rollback();
                 return false;
             } else {
-                // Si el estado no es 'Pendiente', 'scrap_validado' ni 'produccion_validada', no se puede validar
+                // Si el estado no es uno de los esperados, no se puede validar
                 $this->db->rollback();
                 return false;
             }
@@ -192,8 +155,6 @@ class Qa extends Model
             return false;
         }
     }
-
-
     public function validarEntregaScrap($codigo_empleado_qa, $entregaId, $comentario)
     {
         try {
@@ -210,7 +171,7 @@ class Qa extends Model
             if ($resultVerificar->num_rows === 0) {
                 $stmtVerificar->close();
                 $this->db->rollback();
-                return false;
+                return ["estado" => false, "mensaje" => "No se encontró el registro", "scrap_guardado" => false];
             }
 
             $registroOriginal = $resultVerificar->fetch_assoc();
@@ -218,10 +179,12 @@ class Qa extends Model
 
             // Verificar el estado actual y proceder según el tipo de entrega
             $estado_actual = $registroOriginal['estado_validacion'];
+            $nuevo_estado = null;
+            $validacion_actualizada = false;
 
-            // Si el estado es 'Pendiente', proceder con la validación de scrap
+            // Procesar según el estado actual
             if ($estado_actual === 'Pendiente') {
-                $nuevo_estado = 'scrap_validado';
+                $nuevo_estado = 'Validado';
 
                 // Actualizar el estado de validación a 'scrap_validado'
                 $queryActualizar = "UPDATE registro SET estado_validacion = ?, validado_por = ?, fecha_validacion = NOW() WHERE id = ?";
@@ -232,16 +195,15 @@ class Qa extends Model
                 if (!$resultadoActualizacion || $stmtActualizar->affected_rows === 0) {
                     $stmtActualizar->close();
                     $this->db->rollback();
-                    return false;
+                    return ["estado" => false, "mensaje" => "Error al actualizar el estado a scrap_validado", "scrap_guardado" => false];
                 }
                 $stmtActualizar->close();
-            } elseif ($estado_actual === 'scrap_validado') {
-                // Si el estado ya es 'scrap_validado', no hacer nada
-                $this->db->rollback();
-                return false;
+                $validacion_actualizada = true;
             } elseif ($estado_actual === 'produccion_validada') {
-                // Si el estado es 'produccion_validada', actualizar a 'Validado' y guardar en scrap_final
+                // Si el estado es 'produccion_validada', actualizar a 'Validado'
                 $nuevo_estado = 'Validado';
+
+                // Actualizar el estado a 'Validado'
                 $queryActualizar = "UPDATE registro SET estado_validacion = ?, validado_por = ?, fecha_validacion = NOW() WHERE id = ?";
                 $stmtActualizar = $this->db->prepare($queryActualizar);
                 $stmtActualizar->bind_param("sii", $nuevo_estado, $codigo_empleado_qa, $entregaId);
@@ -250,16 +212,34 @@ class Qa extends Model
                 if (!$resultadoActualizacion || $stmtActualizar->affected_rows === 0) {
                     $stmtActualizar->close();
                     $this->db->rollback();
-                    return false;
+                    return ["estado" => false, "mensaje" => "Error al actualizar a estado Validado", "scrap_guardado" => false];
                 }
                 $stmtActualizar->close();
+                $validacion_actualizada = true;
+            } elseif ($estado_actual === 'Validado') {
+                // Si ya está totalmente validado, indicar que no se actualizó el estado pero continuar con el registro de scrap
+                $validacion_actualizada = false;
+                $nuevo_estado = $estado_actual;
             } else {
-                // Si el estado es 'Validado' o cualquier otro estado no permitido, no hacer nada
+                // Si el estado no es uno de los esperados, no se puede validar
                 $this->db->rollback();
-                return false;
+                return ["estado" => false, "mensaje" => "Estado actual no permite validación de scrap: " . $estado_actual, "scrap_guardado" => false];
             }
 
-            // Preparar los datos para la tabla scrap_final (se ejecuta en todos los casos)
+            // Verificar que haya datos válidos para el scrap
+            if (empty($registroOriginal['cantidad_scrapt']) || $registroOriginal['cantidad_scrapt'] <= 0) {
+                // Si no hay cantidad de scrap válida y no se actualizó validación, cancelamos todo
+                if ($validacion_actualizada) {
+                    $this->db->rollback();
+                    return ["estado" => false, "mensaje" => "No hay cantidad de scrap válida para registrar", "scrap_guardado" => false];
+                } else {
+                    // Si no se actualizó la validación, podemos confirmar la transacción vacía
+                    $this->db->commit();
+                    return ["estado" => true, "mensaje" => "No hay scrap para registrar", "scrap_guardado" => false, "nuevo_estado" => $nuevo_estado];
+                }
+            }
+
+            // Preparar los datos para la tabla scrap_final
             $datosScrap = [
                 'codigo_empleado' => $registroOriginal['codigo_empleado'],
                 'maquina_id' => $registroOriginal['maquina'] ?? null,
@@ -291,18 +271,29 @@ class Qa extends Model
             if (!$resultadoScrap) {
                 $stmtScrap->close();
                 $this->db->rollback();
-                return false;
+                return ["estado" => false, "mensaje" => "Error al guardar el registro de scrap en la base de datos", "scrap_guardado" => false];
             }
             $stmtScrap->close();
 
             // Confirmar la transacción
             $this->db->commit();
-            return true;
+
+            // Determinar el mensaje de respuesta basado en si se actualizó la validación o solo se guardó el scrap
+            $mensajeRespuesta = $validacion_actualizada ?
+                "Validación de scrap exitosa y registro guardado correctamente" :
+                "Registro de scrap guardado correctamente (validación no requerida)";
+
+            return [
+                "estado" => true,
+                "mensaje" => $mensajeRespuesta,
+                "scrap_guardado" => true,
+                "nuevo_estado" => $nuevo_estado
+            ];
         } catch (PDOException $e) {
             // Revertir la transacción en caso de error
             $this->db->rollback();
             error_log('Error en validación de scrap: ' . $e->getMessage());
-            return false;
+            return ["estado" => false, "mensaje" => "Error en el proceso: " . $e->getMessage(), "scrap_guardado" => false];
         }
     }
 
@@ -330,24 +321,13 @@ class Qa extends Model
         return $result;
     }
 
-    public function getEntregasValidadas($userqa)
+    public function getEntregasValidadasProduccion($userqa)
     {
-        $query = "SELECT 
-            id,
-            tipo_boton,
-            codigo_empleado,
-            maquina,
-            item,
-            jtWo,
-            cantidad_produccion,
-            cantidad_scrapt,
-            fecha_validacion,
-            validado_por,
-            descripcion,
-            estado_validacion
-        FROM registro
-        WHERE estado_validacion = 'Validado'
-            AND validado_por = ?";
+        $query = "SELECT *
+    FROM registro
+    WHERE estado_validacion = 'Validado'
+        AND validado_por = ?
+        AND cantidad_produccion > 0";
 
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("i", $userqa);
@@ -356,6 +336,7 @@ class Qa extends Model
 
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+
 
     private function getNombreEmpleado($codigo_empleado)
     {
@@ -386,20 +367,22 @@ class Qa extends Model
      */
     public function getCountEntregasPendientes($area_id)
     {
-        $query = "
-        SELECT 
-            SUM(
-                CASE 
-                    WHEN estado_validacion = 'Pendiente' AND (cantidad_produccion > 0 OR cantidad_scrapt > 0) THEN 1
-                    ELSE 0
-                END
-            ) AS total
-        FROM registro
-        WHERE estado_validacion IN ('Pendiente')
+        $query = "SELECT 
+                SUM(CASE 
+                    WHEN estado_validacion = 'Pendiente' AND cantidad_produccion > 0 THEN 1 
+                    ELSE 0 
+                END) AS total_produccion,
+                SUM(CASE 
+                    WHEN estado_validacion = 'Pendiente' AND cantidad_scrapt > 0 THEN 1 
+                    ELSE 0 
+                END) AS total_scrap,
+                COUNT(*) AS total
+            FROM registro
+            WHERE estado_validacion = 'Pendiente'
             AND area_id = ?
             AND (
                 (tipo_boton = 'Producción' AND descripcion = 'Parcial') 
-                OR (tipo_boton = 'final_produccion')
+                OR tipo_boton = 'final_produccion'
             )";
 
         $stmt = $this->db->prepare($query);
@@ -408,8 +391,38 @@ class Qa extends Model
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
 
-        return $row['total'] ?? 0;
+        return [
+            'total' => $row['total'] ?? 0,
+            'total_scrap' => $row['total_scrap'] ?? 0,
+            'total_produccion' => $row['total_produccion'] ?? 0
+        ];
     }
+
+    public function getCountEntregasEnProceso($area_id)
+    {
+        $query = "SELECT 
+                SUM(CASE 
+                        WHEN estado_validacion = 'Corregir' THEN 1 
+                        ELSE 0 
+                        END) AS total
+                FROM registro
+                WHERE area_id = ?";
+
+        try {
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([$area_id]);
+            $result = $stmt->fetch();  // Sin usar PDO::FETCH_ASSOC
+
+            return $result['total'] ?? 0;  // Retorna el total o 0 si no hay datos
+        } catch (PDOException $e) {
+            // En caso de error, loguea el error y retorna 0
+            error_log("Error en getCountEntregasEnProceso: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+
+
 
     /**
      * Obtiene el conteo de entregas validadas
@@ -417,15 +430,15 @@ class Qa extends Model
     public function getCountEntregasValidadas($area_id)
     {
         $query = "  SELECT 
-             SUM(
+            SUM(
             CASE 
                 WHEN estado_validacion = 'validado' THEN 1
                 ELSE 0
             END
         ) AS total
-    FROM registro
-    WHERE area_id = ?
-    AND (
+            FROM registro
+            WHERE area_id = ?
+        AND (
         (tipo_boton = 'final_produccion') 
         OR (tipo_boton = 'Producción' AND descripcion = 'Parcial')
     )";
@@ -476,11 +489,49 @@ class Qa extends Model
      */
     public function getDashboardStats($area_id)
     {
+        // Obtener las estadísticas de entregas pendientes
+        $pendientes = $this->getCountEntregasPendientes($area_id);
+
+        // Obtener las entregas en proceso
+        $en_proceso = $this->getCountEntregasEnProceso($area_id);
+
+        // Recopilar estadísticas para el dashboard
         $stats = [
-            'pendientes' => $this->getCountEntregasPendientes($area_id),
-            'validadas' => $this->getCountEntregasValidadas($area_id)
+            'pendientes' => $pendientes['total'],
+            'scrap_pendientes' => $pendientes['total_scrap'],
+            'produccion_pendiente' => $pendientes['total_produccion'],
+            'validadas' => $this->getCountEntregasValidadas($area_id),
+            'en_proceso' => $en_proceso // Número de entregas en proceso (estado 'Corregir')
         ];
 
         return $stats;
+    }
+
+    public function getValidacionesRecientes($userqa)
+    {
+        $query = "SELECT 
+            r.id,
+            r.codigo_empleado,
+            u.nombre AS nombre_empleado,
+            r.maquina,
+            m.nombre AS nombre_maquina,
+            r.item,
+            r.jtWo,
+            r.cantidad_produccion,
+            r.fecha_validacion
+        FROM registro r
+        LEFT JOIN users u ON r.codigo_empleado = u.codigo_empleado
+        LEFT JOIN maquinas m ON r.maquina = m.id
+        WHERE 
+            r.validado_por = ?
+        ORDER BY 
+            r.fecha_validacion DESC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("i", $userqa);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 }

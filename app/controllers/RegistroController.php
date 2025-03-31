@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Helpers\AuthHelper;
 use App\Models\Usuario;
 use App\Models\Control;
+use App\Models\Notificacion;
 
 class RegistroController extends Controller
 {
@@ -149,8 +150,6 @@ class RegistroController extends Controller
             }
 
             // 8. Procesamiento del registro con transacción
-
-
             try {
                 // Insertar registro
                 $registroExitoso = $controlModel->insertRegistro($registroData);
@@ -167,10 +166,15 @@ class RegistroController extends Controller
                     throw new \Exception("Error al actualizar el estado del botón");
                 }
 
+                // 9. Notificar a los QA del área
+                $this->sendNotificationToQA(
+                    $user->area_id, 
+                    "Nueva entrega de producción o scrap registrada", 
+                    "Se ha registrado una nueva cantidad de producción o scrap en la máquina {$registroData['maquina']}."
+                );
 
                 $this->redirectWithMessage('/timeControl/public/control', 'success', 'Registro guardado correctamente.');
             } catch (\Exception $e) {
-
                 throw $e;
             }
         } catch (\Exception $e) {
@@ -182,6 +186,31 @@ class RegistroController extends Controller
             );
         }
     }
+    // Método para enviar la notificación a los QA del área
+    private function sendNotificationToQA($areaId, $title, $message)
+    {
+        // 1. Obtener todos los usuarios QA del área
+        $usuarioModel = new Usuario();
+        $qaUsuarios = $usuarioModel->findQAUsersByArea($areaId);  // Asumimos que este método existe
+    
+        if (empty($qaUsuarios)) {
+            // Si no hay usuarios QA en el área, no hacemos nada
+            return;
+        }
+    
+        // 2. Preparar el modelo de notificaciones
+        $notificationModel = new Notificacion();  
+    
+        // 3. Enviar la notificación a cada usuario QA
+        foreach ($qaUsuarios as $qaUsuario) {
+            // Intentamos insertar la notificación
+            $notificationModel->createNotification($qaUsuario['codigo_empleado'], $message, 'info');
+        }
+    }
+    
+
+
+
 
     /**
      * Método auxiliar para parsear cantidades numéricas

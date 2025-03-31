@@ -5,13 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Calidad - Constructor(Qa)</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Consolidated CSS libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <link rel="stylesheet" href="assets/css/styleQa.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-toast@1.0.1/dist/bootstrap-toast.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -164,15 +162,14 @@
         </div>
     </div>
 
-
-
     <!-- Toast Container -->
-    <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+    <div class="toast-container position-fixed top-0 end-0 p-3">
         <div id="toastMessage" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" id="toastBody"></div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            <div class="toast-header">
+                <strong class="me-auto">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
+            <div id="toastBody" class="toast-body"></div>
         </div>
     </div>
 
@@ -220,8 +217,8 @@
                         Al validar esta entrega, se registrará como completa en el sistema.
                     </div>
                     <div class="mb-3">
-                        <label for="data-comentario" class="form-label">Comentario (opcional)</label>
-                        <textarea class="form-control" data-id="data-comentario" rows="3" placeholder="Escriba aquí sus observaciones sobre la cantidad..."></textarea>
+                        <label for="comentarioValidacion" class="form-label">Comentario (opcional)</label>
+                        <textarea class="form-control" id="comentarioValidacion" data-id="data-comentario" rows="3" placeholder="Escriba aquí sus observaciones sobre la cantidad..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -236,25 +233,26 @@
         </div>
     </div>
 
-
-
-    <!-- Required JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-toast@1.0.1/dist/bootstrap-toast.min.js"></script>
-    <script>
-        // Optional: Add current date and time functionality
-        function updateDateTime() {
-            const now = new Date();
-            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES');
-            document.getElementById('current-time').textContent = now.toLocaleTimeString('es-ES');
-        }
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <script>
+        // Helper function to show toasts without interference
+        function showToast(message, type = 'success') {
+            const toastrFunction = type === 'success' ? toastr.success :
+                type === 'error' ? toastr.error :
+                type === 'warning' ? toastr.warning : toastr.info;
+            toastrFunction(message, '', {
+                timeOut: 3000,
+                closeButton: true,
+                progressBar: true
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Función auxiliar para configurar y mostrar el modal de validación
+            
+            // Function to handle validation modal display
             function showValidationModal(entregaId, tipo, title, commentDisplayStyle) {
                 const modalLabel = document.getElementById('validateModalLabel');
                 modalLabel.textContent = title;
@@ -268,18 +266,27 @@
                     comentarioContainer.style.display = commentDisplayStyle;
                 }
 
-                const modalEl = document.getElementById('validateModal');
-                const validateModal = new bootstrap.Modal(modalEl);
+                const validateModal = new bootstrap.Modal(document.getElementById('validateModal'));
                 validateModal.show();
             }
 
-            // Manejo de clics para botones de validación
+            // Event delegation for validation buttons
             document.addEventListener('click', function(event) {
+                const reviewButton = event.target.closest('.btn-review');
+                if (reviewButton) {
+                    const entregaId = reviewButton.getAttribute('data-id');
+                    const tipo = reviewButton.getAttribute('data-tipo');
+                    document.getElementById('submitRevisionBtn').setAttribute('data-id', entregaId);
+                    document.getElementById('submitRevisionBtn').setAttribute('data-tipo', tipo);
+                    new bootstrap.Modal(document.getElementById('revisionModal')).show();
+                    return;
+                }
+
                 const validateProductionButton = event.target.closest('.btn-validate-production');
                 if (validateProductionButton) {
                     const entregaId = validateProductionButton.getAttribute('data-id');
                     showValidationModal(entregaId, 'produccion', 'Validar Entrega de Producción', 'none');
-                    return; // Finaliza para producción
+                    return;
                 }
 
                 const validateScrapButton = event.target.closest('.btn-validate-scrap');
@@ -289,35 +296,32 @@
                 }
             });
 
-            // Envío de la validación al servidor
-            document.getElementById('submitValidation').addEventListener('click', function() {
+            // Handle revision submission
+            document.getElementById('submitRevisionBtn').addEventListener('click', function() {
                 const entregaId = this.getAttribute('data-id');
                 const tipo = this.getAttribute('data-tipo');
-                const comentario = document.querySelector('#validateModal textarea[data-id="data-comentario"]')?.value || '';
+                const nota = document.getElementById('notaRevision').value;
 
-                // Cerrar modal de forma segura
-                const modalEl = document.getElementById('validateModal');
+                const modalEl = document.getElementById('revisionModal');
                 if (modalEl && bootstrap.Modal.getInstance(modalEl)) {
                     bootstrap.Modal.getInstance(modalEl).hide();
                 }
 
-                // Mostrar toast de carga
-                showToast(`Validando entrega de ${tipo}...`, 'info');
+                showToast('Enviando revisión...', 'info');
 
-                // Preparar datos para envío
                 const formData = new FormData();
                 formData.append('id', entregaId);
                 formData.append('tipo', tipo);
-                formData.append('comentario', comentario);
+                formData.append('nota', nota);
 
-                // Enviar datos al servidor
-                fetch('/timeControl/public/validar', {
+                fetch('/timeControl/public/revisar', {
                         method: 'POST',
                         body: formData
                     })
-                    .then(response => {
-                        // Redirigir según la URL recibida del backend
-                        window.location.href = response.url;
+                    .then(response => response.json())
+                    .then(data => {
+                        showToast(data.message || 'Revisión enviada con éxito', 'success');
+                        setTimeout(() => location.reload(), 1500);
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -325,62 +329,40 @@
                     });
             });
 
-            // Función para mostrar un Toast usando Bootstrap 5
-            function showToast(message, type = 'success') {
-                const toastEl = document.getElementById('toastMessage');
-                const toastBody = document.getElementById('toastBody');
+            // Handle validation submission
+            document.getElementById('submitValidation').addEventListener('click', function() {
+                const entregaId = this.getAttribute('data-id');
+                const tipo = this.getAttribute('data-tipo');
+                const comentario = document.getElementById('comentarioValidacion').value || '';
 
-                // Limpiar clases de tipo anteriores
-                toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
-
-                // Añadir clase según el tipo
-                switch (type) {
-                    case 'danger':
-                        toastEl.classList.add('bg-danger', 'text-white');
-                        break;
-                    case 'warning':
-                        toastEl.classList.add('bg-warning');
-                        break;
-                    case 'info':
-                        toastEl.classList.add('bg-info', 'text-white');
-                        break;
-                    default:
-                        toastEl.classList.add('bg-success', 'text-white');
+                const modalEl = document.getElementById('validateModal');
+                if (modalEl && bootstrap.Modal.getInstance(modalEl)) {
+                    bootstrap.Modal.getInstance(modalEl).hide();
                 }
 
-                // Establecer el mensaje y mostrar el toast
-                toastBody.innerHTML = message;
-                const toast = new bootstrap.Toast(toastEl, {
-                    autohide: true,
-                    delay: 3000
-                });
-                toast.show();
-            }
+                showToast(`Validando entrega de ${tipo}...`, 'info');
+
+                const formData = new FormData();
+                formData.append('id', entregaId);
+                formData.append('tipo', tipo);
+                formData.append('comentario', comentario);
+
+                fetch('/timeControl/public/validar', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        window.location.href = response.url;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showToast('Hubo un problema con la solicitud', 'danger');
+                    });
+            });
         });
     </script>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Llama al endpoint para obtener el estado y mensaje
-            fetch('/timeControl/public/getStatus')
-                .then(response => response.json())
-                .then(data => {
-                    // Asegúrate de que el 'status' y 'message' estén presentes
-                    if (data.status && data.message) {
-                        const toastrFunction = data.status === "success" ? toastr.success : toastr.error;
-
-                        // Muestra el mensaje usando toastr
-                        toastrFunction(data.message, '', {
-                            timeOut: 2000 // El mensaje desaparece después de 2 segundos
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al obtener el estado:', error);
-                });
-        });
-    </script>
 </body>
 
 </html>
