@@ -4,215 +4,272 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Helpers\AuthHelper;
+use App\Helpers\Logger;
 use App\Models\Notificacion;
 use App\Models\Qa;
-use Exception;
+use App\Models\ValidacionModel;
 
 class QaController extends Controller
 {
     private $qa;
+    private $validacionModel;
 
     public function __construct()
     {
         $this->qa = new Qa();
+        $this->validacionModel = new ValidacionModel();
 
         if (!AuthHelper::isAuthenticated()) {
-            header('Location: /timeControl/public/login');
-            exit();
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Debes iniciar sesión.');
         }
+
         $user = AuthHelper::getCurrentUser();
         if (!$user || $user->tipo_usuario !== 'qa') {
-            header('Location: /timeControl/public/login');
-            exit();
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Acceso denegado.');
         }
     }
 
-    // Mostrar panel principal de QA
     public function index()
     {
-        // Obtener el usuario actual
         $user = AuthHelper::getCurrentUser();
 
-        if (!$user) {
-            throw new \Exception("Usuario no autenticado");
-        }
-
-        if ($user->tipo_usuario !== 'qa') {
-            return $this->redirectWithMessage('/timeControl/public/login', 'error', 'Acceso denegado: Solo QA permitido.');
-        }
-
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
         try {
-            $entregasPendientes = $this->qa->getEntregasPendientes($user->area_id);
-
-            // Obtener notificaciones pendientes
-            $notificationModel = new Notificacion();
-            $notificaciones = $notificationModel->getPendingNotifications($user->area_id);
-
-            $validacionesRecientes = $this->qa->getValidacionesRecientes($user->area_id);
+            $notificaciones = (new Notificacion())->getPendingNotifications($user->area_id);
 
             $this->view('qa/dashboard', [
                 'data' => [
                     'title' => 'Dashboard de Control de Calidad',
                     'stats' => $this->qa->getDashboardStats($user->area_id),
-                    'entregasPendientes' => $entregasPendientes,
+                    'entregasPendientes' => $this->qa->getEntregasPendientes($user->area_id),
                     'notificaciones' => $notificaciones,
                     'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado)
                 ]
             ]);
         } catch (\Exception $e) {
-            error_log('Error en el dashboard de QA: ' . $e->getMessage());
-            return $this->redirectWithMessage('/timeControl/public/login', 'error', 'Ocurrió un error al cargar el dashboard. Intente nuevamente.');
+            error_log('Error en dashboard QA: ' . $e->getMessage());
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Error al cargar el dashboard.');
         }
     }
-
 
     public function validacion()
     {
-        // Obtener el usuario actual
         $user = AuthHelper::getCurrentUser();
 
-        // Verificar si el usuario está autenticado
-        if (!$user) {
-            throw new \Exception("Usuario no autenticado");
-        }
-
-        // Verificar que el tipo de usuario sea 'qa'
-        if ($user->tipo_usuario !== 'qa') {
-            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es QA.');
-        }
-
-        // Obtener las entregas pendientes. Ahora la función retorna un array con dos sub-arrays: 'entregas_produccion' y 'entregas_scrap'
         $entregas_pendientes = $this->qa->getEntregasPendientes($user->area_id);
 
-        // Preparar los datos para la vista
-        $data = [
-            'title' => 'Validación de Entregas',
-            'entregas_produccion' => $entregas_pendientes['entregas_produccion'],
-            'entregas_scrap' => $entregas_pendientes['entregas_scrap'],
-        ];
-
         $this->view('qa/validacion', [
-            'data' => $data
+            'data' => [
+                'title' => 'Validación de Entregas',
+                'entregas_produccion' => $entregas_pendientes['entregas_produccion'] ?? [],
+                'entregas_scrap' => $entregas_pendientes['entregas_scrap'] ?? []
+            ]
         ]);
     }
 
-    public function accion()
+    /**
+     * Procesa la validación de scrap
+     * @return void
+     */
+    public function validarScrap()
     {
-        // Obtener el usuario actual
-        $user = AuthHelper::getCurrentUser();
-
-        // Verificar si el usuario está autenticado
-        if (!$user) {
-            throw new \Exception("Usuario no autenticado");
-        }
-
-        // Verificar que el tipo de usuario sea 'qa'
-        if ($user->tipo_usuario !== 'qa') {
-            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es QA.');
-        }
-
-        $data = [
-            'entregas_validadas' => $this->qa->getValidacionesRecientes($user->codigo_empleado)
-        ];
-
-        $this->view('qa/accion', [
-            'data' => $data
-        ]);
-    }
-
-    public function validar()
-    {
-        // Verificar si es una solicitud POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Método no permitido.');
+            $this->logAndRedirect(
+                'warning',
+                'Intento de acceso a validarScrap con método no permitido',
+                ['method' => $_SERVER['REQUEST_METHOD']],
+                'error',
+                'Método no permitido'
+            );
             return;
         }
 
         $user = AuthHelper::getCurrentUser();
+        $registroId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $cantidad = filter_input(INPUT_POST, 'cantidad', FILTER_VALIDATE_FLOAT);
+        $observaciones = trim($_POST['comentario'] ?? '');
 
-        if (!$user) {
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Usuario actual irreconocible');
+        Logger::info('Solicitud de validación de scrap recibida', compact('registroId', 'cantidad') + ['user_id' => $user->codigo_empleado]);
+
+        if (!$registroId) {
+            $this->logAndRedirect(
+                'warning',
+                'ID de registro inválido al validar scrap',
+                ['user_id' => $user->codigo_empleado, 'registro_id' => $_POST['id'] ?? 'no-id'],
+                'error',
+                'ID de registro inválido'
+            );
             return;
         }
 
-        $entregaId = filter_input(INPUT_POST, 'id');
-        $tipo = filter_input(INPUT_POST, 'tipo');
-        $comentario = filter_input(INPUT_POST, 'comentario');
-
-        // Verificar que existan los parámetros necesarios
-        if (!$entregaId) {
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'ID de entrega inválido');
-            return;
-        }
-
-        if (!in_array($tipo, ['produccion', 'scrap'])) {
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Tipo de entrega inválido');
+        if ($cantidad <= 0) {
+            $this->logAndRedirect(
+                'warning',
+                'Cantidad inválida al validar scrap',
+                compact('registroId', 'cantidad') + ['user_id' => $user->codigo_empleado],
+                'error',
+                'La cantidad debe ser mayor que cero'
+            );
             return;
         }
 
         try {
-            // Validar la entrega según el tipo
-            $resultado = $tipo === 'produccion'
-                ? $this->qa->validarEntregaProduccion($user->codigo_empleado, $entregaId)
-                : $this->qa->validarEntregaScrap($user->codigo_empleado, $entregaId, $comentario);
+            $resultado = $this->validacionModel->validarScrap($registroId, $cantidad, $observaciones, $user->codigo_empleado);
 
-            if ($resultado) {
-                $this->redirectWithMessage('/timeControl/public/validacion', 'success', 'Entrega validada correctamente');
-                $_SESSION['notificacion_pendientes_mostrada'] = false;
-            } else {
-                $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'No fue posible validar la entrega');
-            }
-        } catch (Exception $e) {
-            error_log("Error en validación de entrega: " . $e->getMessage());
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Error al procesar la solicitud');
+            $logLevel = $resultado['success'] ? 'info' : 'warning';
+            $logMessage = $resultado['success'] ? 'Validación de scrap exitosa' : 'Error en validación de scrap';
+            Logger::$logLevel($logMessage, compact('registroId', 'cantidad') + ['user_id' => $user->codigo_empleado, 'mensaje' => $resultado['message']]);
+
+            $this->redirectWithMessage('/timeControl/public/validacion', $resultado['success'] ? 'success' : 'error', $resultado['message']);
+        } catch (\Exception $e) {
+            Logger::exception($e, [
+                'controller' => 'QaController',
+                'method' => 'validarScrap',
+                'user_id' => $user->codigo_empleado,
+                'registro_id' => $registroId,
+                'cantidad' => $cantidad
+            ]);
+
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Error al procesar la validación: ' . $e->getMessage());
         }
     }
 
-    // Enviar corrección al operador
-    public function corregir()
+
+    /**
+     * Procesa la validación de producción
+     * @return void
+     */
+    public function validarProduccion()
     {
-        // Verificar si es una solicitud POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Método no permitido');
+            Logger::warning('Intento de acceso a validarProduccion con método no permitido', [
+                'method' => $_SERVER['REQUEST_METHOD']
+            ]);
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Método no permitido');
+            return;
         }
 
-        $codigo_empleado = isset($_POST['empleado_id']) ? $_POST['empleado_id'] : null;
-        $maquina_id = isset($_POST['maquina_id']) ? $_POST['maquina_id'] : null;
-        $item = isset($_POST['item']) ? $_POST['item'] : null;
-        $jtwo = isset($_POST['jtwo']) ? $_POST['jtwo'] : null;
-        $comentario = isset($_POST['comentario']) ? $_POST['comentario'] : '';
+        $registroId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $user = AuthHelper::getCurrentUser();
 
-        if (!$codigo_empleado || !$maquina_id || !$item || !$jtwo || empty($comentario)) {
-            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Faltan parámetros para enviar la corrección');
+        // Log de solicitud recibida
+        Logger::info('Solicitud de validación de producción recibida', [
+            'user_id' => $user->codigo_empleado,
+            'registro_id' => $registroId
+        ]);
+
+        if (!$registroId) {
+            Logger::warning('Intento de validar producción con ID inválido', [
+                'user_id' => $user->codigo_empleado,
+                'registro_id' => $_POST['id'] ?? 'no-id'
+            ]);
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'ID de registro inválido');
+            return;
         }
 
-        if ($this->qa->enviarCorreccion($codigo_empleado, $maquina_id, $item, $jtwo, $comentario)) {
-            $this->redirectWithMessage('/timeControl/public/qa', 'success', 'Solicitud de corrección enviada al operador');
-        } else {
-            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Error al enviar la solicitud de corrección');
+        try {
+            $resultado = $this->validacionModel->validarProduccion($registroId, $user->codigo_empleado);
+
+            if ($resultado['success']) {
+                // Registrar la acción en historial si es necesario
+                $this->registrarHistorialValidacion($registroId, 'produccion', $user->codigo_empleado);
+
+                Logger::info('Validación de producción exitosa', [
+                    'user_id' => $user->codigo_empleado,
+                    'registro_id' => $registroId,
+                    'validacion_id' => $resultado['validacion_id'] ?? null
+                ]);
+
+                $this->redirectWithMessage('/timeControl/public/validacion', 'success', $resultado['message']);
+            } else {
+                Logger::warning('Error en validación de producción', [
+                    'user_id' => $user->codigo_empleado,
+                    'registro_id' => $registroId,
+                    'error' => $resultado['message']
+                ]);
+
+                $this->redirectWithMessage('/timeControl/public/validacion', 'error', $resultado['message']);
+            }
+        } catch (\Exception $e) {
+            Logger::exception($e, [
+                'controller' => 'QaController',
+                'method' => 'validarProduccion',
+                'user_id' => $user->codigo_empleado,
+                'registro_id' => $registroId
+            ]);
+            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Error al procesar la validación: ' . $e->getMessage());
         }
     }
 
-    // Método para ver el historial de validaciones
+    /**
+     * Registra una entrada en el historial de validaciones
+     * @param int $registroId ID del registro
+     * @param string $tipo Tipo de validación (produccion/scrap)
+     * @param string $usuarioId ID del usuario que realiza la validación
+     * @return void
+     */
+    private function registrarHistorialValidacion($registroId, $tipo, $usuarioId)
+    {
+        try {
+            // Si tienes una tabla de historial, aquí puedes registrar la acción
+            // Este método es opcional y depende de tu implementación específica
+            Logger::info('Registrando historial de validación', [
+                'registro_id' => $registroId,
+                'tipo' => $tipo,
+                'usuario_id' => $usuarioId
+            ]);
+        } catch (\Exception $e) {
+            Logger::warning('Error al registrar historial de validación', [
+                'error' => $e->getMessage(),
+                'registro_id' => $registroId,
+                'tipo' => $tipo,
+                'usuario_id' => $usuarioId
+            ]);
+        }
+    }
+
+    public function accion()
+    {
+        $user = AuthHelper::getCurrentUser();
+
+        $this->view('qa/accion', [
+            'data' => [
+                'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado)
+            ]
+        ]);
+    }
+
     public function historial()
     {
         $user = AuthHelper::getCurrentUser();
-        $data = [
+
+        $this->view('qa/historial', [
             'title' => 'Historial de Validaciones',
             'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado)
-        ];
-
-        $this->view('qa/historial', $data);
+        ]);
     }
 
+    private function logAndRedirect($logLevel, $logMessage, array $context, $type, $message)
+    {
+        Logger::$logLevel($logMessage, $context);
+        $this->redirectWithMessage('/timeControl/public/validacion', $type, $message);
+    }
+
+    /**
+     * Redirige a una URL con un mensaje de estado
+     * @param string $url URL de destino
+     * @param string $status Estado del mensaje (success/error/info/warning)
+     * @param string $message Texto del mensaje
+     * @return void
+     */
     private function redirectWithMessage($url, $status, $message)
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $_SESSION['status'] = $status;
         $_SESSION['message'] = $message;
+
         header("Location: $url");
         exit();
     }

@@ -1,0 +1,54 @@
+.btn-primary {
+    background-color: #3f9ed7;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #585758;
+}
+
+.logout-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.logout-button:hover {
+    background-color: #c9302c;
+}
+
+.wait_button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.wait_button:hover {
+    background-color: #ec971f;
+}
+
+.active-button {
+    position: relative;
+    background-color: #4ac84a !important;
+    color: #ffffff;
+    font-weight: bold;
+    animation: activeGlow 1.5s infinite ease-in-out;
+}
+
+/* Animaciones */
+@keyframes activeGlow {
+    0%, 100% { box-shadow: 0 0 10px #39ff14; }
+    50% { box-shadow: 0 0 20px #39ff14, 0 0 30px #39ff14; }
+}

@@ -7,7 +7,7 @@
             <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required autocomplete="off">
             <input type="text" class="form-control" id="codigo_empleado" name="codigo_empleado" placeholder="Codigo Empleado" required autocomplete="off">
             <input type="password" class="form-control" id="pwd" name="password" placeholder="Contraseña" required autocomplete="new-password">
-            <input type="password" class="form-control" id="confirm_pwd" name="confirm_password" placeholder="Confirmar Contraseña" required autocomplete="new-password">
+            <input type="password" class="form-control" id="confirm_pwd" name="confirm_pwd" placeholder="Confirmar Contraseña" required autocomplete="new-password">
             <div class="relative group rounded-lg md:w-[409.99px] md:h-[60px] bg-gray-50 overflow-hidden before:absolute before:w-12 before:h-12 before:content[''] before:right-0 before:bg-blue-500 before:rounded-full before:blur-lg before:[box-shadow:-60px_20px_10px_10px_#b0d4f9]">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-8 h-8 absolute right-0 -rotate-45 stroke-blue-600 top-1.5 group-hover:rotate-0 duration-300">
                     <path stroke-width="4" stroke-linejoin="round" stroke-linecap="round" fill="none" d="M60.7,53.6,50,64.3m0,0L39.3,53.6M50,64.3V35.7m0,46.4A32.1,32.1,0,1,1,82.1,50,32.1,32.1,0,0,1,50,82.1Z" class="svg-stroke-primary"></path>

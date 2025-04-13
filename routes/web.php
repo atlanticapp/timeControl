@@ -2,6 +2,8 @@
 
 use App\Controllers\AuthController;
 use App\Controllers\ComentarioController;
+use App\Controllers\CorreccionController;
+use App\Controllers\CorreccionesOperadorController;
 use App\Core\Router;
 use App\Controllers\MaquinaController;
 use App\Controllers\DataController;
@@ -31,15 +33,23 @@ $router->post('/seleccionar_maquina', [MaquinaController::class, 'seleccionarMaq
 // Rutas para manejar datos de trabajo
 $router->get('/datos_trabajo', [DataController::class, 'index']);
 $router->post('/seleccionar_data', [DataController::class, 'seleccionarData']);
+
 // Espera Trabajo
 $router->post('/espera_trabajo', [DataController::class, 'esperaTrabajo']);
+
 // Control de registros
 $router->get('/control', [RegistroController::class, 'index']);
 $router->post('/registrar', [RegistroController::class, 'registrar']);
+
 // Velocidad
 $router->post('/saveVelocidad', [SaveVelocidad::class, 'saveVelocidad']);
+
 // Comentario
 $router->post('/addComentario', [ComentarioController::class, 'addComentario']);
+
+// Correcciones Operador
+$router->get('/correcciones', [CorreccionesOperadorController::class, 'correccionesPendientes']);
+$router->post('/procesarCorreccion', [CorreccionesOperadorController::class, 'procesarCorreccion']);
 
 // Rutas de supervisor
 $router->get('/supervisor', [SupervisorController::class, 'index']);
@@ -49,8 +59,9 @@ $router->post('/supervisor', [SupervisorController::class, 'index']);
 $router->get('/dashboard', [QaController::class, 'index']);
 $router->get('/checkNewNotifications', [NotificacionController::class, 'checkNewNotifications']);
 $router->get('/validacion', [QaController::class, 'validacion']);
-$router->post('/validar', [QaController::class, 'validar']);
-$router->post('/corregir', [QaController::class, 'corregir']);
+$router->post('/validarScrap', [QaController::class, 'validarScrap']);
+$router->post('/validarProduccion', [QaController::class, 'validarProduccion']);
+$router->post('/revisar', [CorreccionController::class, 'revisar']);
 $router->get('/accion', [QaController::class, 'accion']);
 
 // Error handling

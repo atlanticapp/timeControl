@@ -3,8 +3,8 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Helpers\JWTHelper;
 use App\Models\Usuario;
-use Firebase\JWT\JWT;
 
 class AuthController extends Controller
 {
@@ -25,7 +25,8 @@ class AuthController extends Controller
             $user = $usuario->findByCodigo($codigo_empleado);
 
             if ($user && password_verify($password, $user['password'])) {
-                $this->createAndStoreJWT($user);
+                $jwt = new JWTHelper();
+                $jwt->createAndStoreJWT($user);
 
                 if (!empty($user['item']) && !empty($user['jtWo'])) {
                     $_SESSION['data_entered'] = true;
@@ -59,12 +60,12 @@ class AuthController extends Controller
         $nombre = filter_input(INPUT_POST, 'nombre');
         $codigo_empleado = filter_input(INPUT_POST, 'codigo_empleado');
         $password = $_POST['password'] ?? null;
-        $password2 = $_POST['password2'] ?? null;
+        $password2 = $_POST['confirm_pwd'] ?? null;
         $tipo_usuario = filter_input(INPUT_POST, 'tipo_usuario');
         $area_id = filter_input(INPUT_POST, 'area_id', FILTER_VALIDATE_INT);
 
         if ($password != $password2) {
-            $this->redirectWithMessage('/timeControl/public/register', 'error', 'Las contraseñas no coinciden');
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Las contraseñas no coinciden');
         }
 
         if (!$nombre || !$codigo_empleado || !$password || !$tipo_usuario || !$area_id) {
@@ -94,33 +95,6 @@ class AuthController extends Controller
 
         $this->redirectWithMessage('/timeControl/public/login', $mensaje[0], $mensaje[1]);
         exit;
-    }
-
-
-    private function createAndStoreJWT($user)
-    {
-        global $jwt_secret;
-
-        $payload = [
-            "iat" => time(),
-            "exp" => time() + (60 * 60 * 15), // 15 horas de expiración
-            "data" => [
-                "id" => $user['id'],
-                "nombre" => $user['nombre'],
-                "codigo_empleado" => $user['codigo_empleado'],
-                "tipo_usuario" => $user['tipo_usuario'],
-                "area_id" => $user['area_id']
-            ]
-        ];
-
-        try {
-            $new_jwt = JWT::encode($payload, $jwt_secret, 'HS256');
-            setcookie('jwt', $new_jwt, time() + (60 * 60 * 15), '/', '', false, true);
-            return true;
-        } catch (\Exception $e) {
-            error_log("Error al generar el token JWT: " . $e->getMessage());
-            return false;
-        }
     }
 
     public function getStatus()

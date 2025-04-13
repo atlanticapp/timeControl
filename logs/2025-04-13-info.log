@@ -1,0 +1,34 @@
+[2025-04-13 07:15:11] [INFO] Corrección procesada con éxito {"solicitud_id":4,"registro_id":135,"tipo":"scrap","cantidad":500,"comentario":"Ya","user_id":0}
+[2025-04-13 07:17:01] [INFO] Corrección procesada con éxito {"solicitud_id":3,"registro_id":134,"tipo":"produccion","cantidad":60000,"comentario":"Ahora si","user_id":0}
+[2025-04-13 07:19:51] [INFO] Corrección enviada con éxito {"registro_id":137,"tipo":"produccion","nota":"Eso ta mal","user_id":1212}
+[2025-04-13 07:23:07] [INFO] Corrección procesada con éxito {"solicitud_id":5,"registro_id":137,"tipo":"produccion","cantidad":55,"comentario":"dd","user_id":0}
+[2025-04-13 07:27:06] [INFO] Corrección enviada con éxito {"registro_id":134,"tipo":"produccion","nota":"tghn","user_id":1212}
+[2025-04-13 07:33:08] [INFO] Corrección procesada con éxito {"solicitud_id":6,"registro_id":134,"tipo":"produccion","cantidad":5666,"comentario":"Seguro si","user_id":0}
+[2025-04-13 07:35:51] [INFO] Corrección enviada con éxito {"registro_id":134,"tipo":"produccion","nota":"sIGUE MAL QUE FUE","user_id":1212}
+[2025-04-13 07:41:53] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:42:08] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:44:39] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:45:57] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:50:31] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:50:40] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:50:57] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:53:49] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:54:29] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:54:33] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:54:35] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:54:36] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:54:52] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:55:01] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:55:02] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:55:07] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:55:17] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:55:18] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:55:29] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 07:59:12] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-04-13 08:00:12] [INFO] Corrección procesada exitosamente {"solicitud_id":7,"registro_id":134}
+[2025-04-13 08:00:12] [INFO] Corrección procesada con éxito {"solicitud_id":7,"registro_id":134,"tipo":"produccion","cantidad":50236,"comentario":"Ya","user_id":0}
+[2025-04-13 08:00:12] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-04-13 08:01:01] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-04-13 08:01:05] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-04-13 08:01:16] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-04-13 08:01:19] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}

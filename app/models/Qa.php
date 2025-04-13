@@ -91,236 +91,6 @@ class Qa extends Model
         ];
     }
 
-    // Validar entrega (aceptar)
-    public function validarEntregaProduccion($codigo_empleado_qa, $entregaId)
-    {
-        try {
-            // Iniciar transacción
-            $this->db->begin_transaction();
-
-            // Consultar el estado actual de la entrega
-            $queryVerificar = "SELECT estado_validacion FROM registro WHERE id = ? FOR UPDATE";
-            $stmtVerificar = $this->db->prepare($queryVerificar);
-            $stmtVerificar->bind_param("i", $entregaId);
-            $stmtVerificar->execute();
-            $resultVerificar = $stmtVerificar->get_result();
-
-            // Si no se encuentra el registro, cancelar la transacción
-            if ($resultVerificar->num_rows === 0) {
-                $stmtVerificar->close();
-                $this->db->rollback();
-                return false;
-            }
-
-            $registroOriginal = $resultVerificar->fetch_assoc();
-            $stmtVerificar->close();
-
-            // Obtener el estado actual de la entrega
-            $estado_actual = $registroOriginal['estado_validacion'];
-
-            // Procesar según el estado actual
-            if ($estado_actual === 'Pendiente') {
-                $nuevo_estado = 'Validado';
-
-                // Actualizar el estado de validación
-                $queryActualizar = "UPDATE registro SET estado_validacion = ?, validado_por = ?, fecha_validacion = NOW() WHERE id = ?";
-                $stmtActualizar = $this->db->prepare($queryActualizar);
-                $stmtActualizar->bind_param("sii", $nuevo_estado, $codigo_empleado_qa, $entregaId);
-                $resultadoActualizacion = $stmtActualizar->execute();
-
-                // Verificar si la actualización fue exitosa
-                if (!$resultadoActualizacion || $stmtActualizar->affected_rows === 0) {
-                    $stmtActualizar->close();
-                    $this->db->rollback();
-                    return false;
-                }
-                $stmtActualizar->close();
-            } elseif ($estado_actual === 'Validado') {
-                // Si ya está validado como producción o totalmente validado, no hacer nada
-                $this->db->rollback();
-                return false;
-            } else {
-                // Si el estado no es uno de los esperados, no se puede validar
-                $this->db->rollback();
-                return false;
-            }
-
-            // Confirmar la transacción si todo fue bien
-            $this->db->commit();
-            return true;
-        } catch (PDOException $e) {
-            // En caso de error, revertir la transacción
-            $this->db->rollback();
-            error_log('Error en validación de producción: ' . $e->getMessage());
-            return false;
-        }
-    }
-    public function validarEntregaScrap($codigo_empleado_qa, $entregaId, $comentario)
-    {
-        try {
-            // Iniciar transacción
-            $this->db->begin_transaction();
-
-            // Consultar el estado actual de la entrega
-            $queryVerificar = "SELECT * FROM registro WHERE id = ? FOR UPDATE";
-            $stmtVerificar = $this->db->prepare($queryVerificar);
-            $stmtVerificar->bind_param("i", $entregaId);
-            $stmtVerificar->execute();
-            $resultVerificar = $stmtVerificar->get_result();
-
-            if ($resultVerificar->num_rows === 0) {
-                $stmtVerificar->close();
-                $this->db->rollback();
-                return ["estado" => false, "mensaje" => "No se encontró el registro", "scrap_guardado" => false];
-            }
-
-            $registroOriginal = $resultVerificar->fetch_assoc();
-            $stmtVerificar->close();
-
-            // Verificar el estado actual y proceder según el tipo de entrega
-            $estado_actual = $registroOriginal['estado_validacion'];
-            $nuevo_estado = null;
-            $validacion_actualizada = false;
-
-            // Procesar según el estado actual
-            if ($estado_actual === 'Pendiente') {
-                $nuevo_estado = 'Validado';
-
-                // Actualizar el estado de validación a 'scrap_validado'
-                $queryActualizar = "UPDATE registro SET estado_validacion = ?, validado_por = ?, fecha_validacion = NOW() WHERE id = ?";
-                $stmtActualizar = $this->db->prepare($queryActualizar);
-                $stmtActualizar->bind_param("sii", $nuevo_estado, $codigo_empleado_qa, $entregaId);
-                $resultadoActualizacion = $stmtActualizar->execute();
-
-                if (!$resultadoActualizacion || $stmtActualizar->affected_rows === 0) {
-                    $stmtActualizar->close();
-                    $this->db->rollback();
-                    return ["estado" => false, "mensaje" => "Error al actualizar el estado a scrap_validado", "scrap_guardado" => false];
-                }
-                $stmtActualizar->close();
-                $validacion_actualizada = true;
-            } elseif ($estado_actual === 'produccion_validada') {
-                // Si el estado es 'produccion_validada', actualizar a 'Validado'
-                $nuevo_estado = 'Validado';
-
-                // Actualizar el estado a 'Validado'
-                $queryActualizar = "UPDATE registro SET estado_validacion = ?, validado_por = ?, fecha_validacion = NOW() WHERE id = ?";
-                $stmtActualizar = $this->db->prepare($queryActualizar);
-                $stmtActualizar->bind_param("sii", $nuevo_estado, $codigo_empleado_qa, $entregaId);
-                $resultadoActualizacion = $stmtActualizar->execute();
-
-                if (!$resultadoActualizacion || $stmtActualizar->affected_rows === 0) {
-                    $stmtActualizar->close();
-                    $this->db->rollback();
-                    return ["estado" => false, "mensaje" => "Error al actualizar a estado Validado", "scrap_guardado" => false];
-                }
-                $stmtActualizar->close();
-                $validacion_actualizada = true;
-            } elseif ($estado_actual === 'Validado') {
-                // Si ya está totalmente validado, indicar que no se actualizó el estado pero continuar con el registro de scrap
-                $validacion_actualizada = false;
-                $nuevo_estado = $estado_actual;
-            } else {
-                // Si el estado no es uno de los esperados, no se puede validar
-                $this->db->rollback();
-                return ["estado" => false, "mensaje" => "Estado actual no permite validación de scrap: " . $estado_actual, "scrap_guardado" => false];
-            }
-
-            // Verificar que haya datos válidos para el scrap
-            if (empty($registroOriginal['cantidad_scrapt']) || $registroOriginal['cantidad_scrapt'] <= 0) {
-                // Si no hay cantidad de scrap válida y no se actualizó validación, cancelamos todo
-                if ($validacion_actualizada) {
-                    $this->db->rollback();
-                    return ["estado" => false, "mensaje" => "No hay cantidad de scrap válida para registrar", "scrap_guardado" => false];
-                } else {
-                    // Si no se actualizó la validación, podemos confirmar la transacción vacía
-                    $this->db->commit();
-                    return ["estado" => true, "mensaje" => "No hay scrap para registrar", "scrap_guardado" => false, "nuevo_estado" => $nuevo_estado];
-                }
-            }
-
-            // Preparar los datos para la tabla scrap_final
-            $datosScrap = [
-                'codigo_empleado' => $registroOriginal['codigo_empleado'],
-                'maquina_id' => $registroOriginal['maquina'] ?? null,
-                'item' => $registroOriginal['item'] ?? '',
-                'jtwo' => $registroOriginal['jtWo'] ?? '',
-                'cantidad' => $registroOriginal['cantidad_scrapt'] ?? 0,
-                'aprobado_por' => $codigo_empleado_qa,
-                'comentario' => $comentario
-            ];
-
-            // Insertar en la tabla scrap_final
-            $queryScrap = "
-                INSERT INTO scrap_final (codigo_empleado, maquina_id, item, jtwo, cantidad, aprobado_por, fecha_aprobacion, comentario) 
-                VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)";
-
-            $stmtScrap = $this->db->prepare($queryScrap);
-            $stmtScrap->bind_param(
-                "iissiis",
-                $datosScrap['codigo_empleado'],
-                $datosScrap['maquina_id'],
-                $datosScrap['item'],
-                $datosScrap['jtwo'],
-                $datosScrap['cantidad'],
-                $datosScrap['aprobado_por'],
-                $datosScrap['comentario']
-            );
-            $resultadoScrap = $stmtScrap->execute();
-
-            if (!$resultadoScrap) {
-                $stmtScrap->close();
-                $this->db->rollback();
-                return ["estado" => false, "mensaje" => "Error al guardar el registro de scrap en la base de datos", "scrap_guardado" => false];
-            }
-            $stmtScrap->close();
-
-            // Confirmar la transacción
-            $this->db->commit();
-
-            // Determinar el mensaje de respuesta basado en si se actualizó la validación o solo se guardó el scrap
-            $mensajeRespuesta = $validacion_actualizada ?
-                "Validación de scrap exitosa y registro guardado correctamente" :
-                "Registro de scrap guardado correctamente (validación no requerida)";
-
-            return [
-                "estado" => true,
-                "mensaje" => $mensajeRespuesta,
-                "scrap_guardado" => true,
-                "nuevo_estado" => $nuevo_estado
-            ];
-        } catch (PDOException $e) {
-            // Revertir la transacción en caso de error
-            $this->db->rollback();
-            error_log('Error en validación de scrap: ' . $e->getMessage());
-            return ["estado" => false, "mensaje" => "Error en el proceso: " . $e->getMessage(), "scrap_guardado" => false];
-        }
-    }
-
-
-
-    // Enviar corrección al operador
-    public function enviarCorreccion($codigo_empleado, $maquina_id, $item, $jtwo, $comentario)
-    {
-        $query = "
-            UPDATE registro
-            SET estado_validacion = 'Corregir',
-                comentario_qa = ?
-            WHERE codigo_empleado = ?
-            AND maquina = ?
-            AND item = ?
-            AND jtWo = ?
-            AND tipo_boton = 'final_produccion'
-            AND descripcion = 'Parcial'";
-
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param("siiss", $comentario, $codigo_empleado, $maquina_id, $item, $jtwo);
-        $result = $stmt->execute();
-        $stmt->close();
-
-        return $result;
-    }
-
     public function getEntregasValidadasProduccion($userqa)
     {
         $query = "SELECT *
@@ -421,9 +191,6 @@ class Qa extends Model
         }
     }
 
-
-
-
     /**
      * Obtiene el conteo de entregas validadas
      */
@@ -463,7 +230,6 @@ class Qa extends Model
         r.item,
         r.jtWo,
         r.cantidad_produccion,
-        r.fecha_validacion,
         r.estado_validacion
     FROM registro r
     LEFT JOIN users u ON r.codigo_empleado = u.codigo_empleado
@@ -473,7 +239,7 @@ class Qa extends Model
         AND r.validado_por = ?
         AND r.cantidad_produccion > 0
     ORDER BY 
-        r.fecha_validacion DESC";
+        r.fecha_registro DESC";
 
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("i", $userqa);
@@ -505,33 +271,5 @@ class Qa extends Model
         ];
 
         return $stats;
-    }
-
-    public function getValidacionesRecientes($userqa)
-    {
-        $query = "SELECT 
-            r.id,
-            r.codigo_empleado,
-            u.nombre AS nombre_empleado,
-            r.maquina,
-            m.nombre AS nombre_maquina,
-            r.item,
-            r.jtWo,
-            r.cantidad_produccion,
-            r.fecha_validacion
-        FROM registro r
-        LEFT JOIN users u ON r.codigo_empleado = u.codigo_empleado
-        LEFT JOIN maquinas m ON r.maquina = m.id
-        WHERE 
-            r.validado_por = ?
-        ORDER BY 
-            r.fecha_validacion DESC";
-
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param("i", $userqa);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        return $result->fetch_all(MYSQLI_ASSOC);
     }
 }

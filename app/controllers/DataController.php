@@ -13,7 +13,6 @@ class DataController extends Controller
 
     public function __construct()
     {
-        // Verificar autenticación y redirigir si no está autenticado
         if (!AuthHelper::isAuthenticated()) {
             header('Location: /timeControl/public/login');
         }
@@ -31,28 +30,44 @@ class DataController extends Controller
                 $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es operador.');
             }
 
-            // Iniciar sesión si no está iniciada
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
 
-            // Verificar si ya se ingresaron datos
-            if (!empty($_SESSION['data_entered'])) {
-                header('Location: /timeControl/public/control');
-                exit();
-            }
-            // Obtener el ID del botón activo
+            // Obtener el ID de la máquina seleccionada
+            $maquinaSeleccionada = $user->maquina_id ?? null;
 
+            // Verificar correcciones pendientes solo si hay máquina seleccionada
+            if ($maquinaSeleccionada) {
+                $correccionesModel = new \App\Models\CorreccionesOperador();
+                $correccionesPendientes = $correccionesModel->getCorreccionesPendientes($user->maquina_id);
+
+                // Si hay correcciones pendientes, mostrar botón/modal en datos_trabajo
+                if (!empty($correccionesPendientes)) {
+                    $control = new Control();
+                    $active_button_id = $control->getActiveButton($user->codigo_empleado);
+
+                    $this->view('operador/datos_trabajo', [
+                        'usuario' => $user,
+                        'active_button_id' => $active_button_id,
+                        'correcciones_pendientes' => $correccionesPendientes,
+                        'mostrar_correcciones' => true
+                    ]);
+                    return;
+                }
+            }
+
+            // Vista normal de datos_trabajo sin correcciones
             $control = new Control();
             $active_button_id = $control->getActiveButton($user->codigo_empleado);
 
-            // Renderizar la vista con la información del usuario
             $this->view('operador/datos_trabajo', [
                 'usuario' => $user,
-                'active_button_id' => $active_button_id
+                'active_button_id' => $active_button_id,
+                'mostrar_correcciones' => false
             ]);
         } catch (\Exception $e) {
-            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Error al cargar la página de datos de trabajo.');
+            $this->redirectWithMessage('/timeControl/public/error', 'error', 'Error al cargar la página de datos de trabajo.');
         }
     }
 

@@ -147,7 +147,7 @@
                                                     <button class="btn btn-action btn-review me-1" data-id="<?= $entrega['id'] ?>" data-tipo="scrap">
                                                         <i class="fas fa-search me-1"></i> Revisar
                                                     </button>
-                                                    <button class="btn btn-action btn-validate-scrap" data-id="<?= $entrega['id'] ?>">
+                                                    <button class="btn btn-action btn-validate-scrap" data-id="<?= $entrega['id'] ?>" data-entrega="<?= $entrega['cantidad'] ?>">
                                                         <i class="fas fa-check me-1"></i> Validar
                                                     </button>
                                                 </td>
@@ -237,141 +237,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script>
-        // Optional: Add current date and time functionality
-        function updateDateTime() {
-            const now = new Date();
-            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES');
-            document.getElementById('current-time').textContent = now.toLocaleTimeString('es-ES');
-        }
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-    </script>
-
-    <script>
-        // Helper function to show toasts without interference
-        function showToast(message, type = 'success') {
-            const toastrFunction = type === 'success' ? toastr.success :
-                type === 'error' ? toastr.error :
-                type === 'warning' ? toastr.warning : toastr.info;
-            toastrFunction(message, '', {
-                timeOut: 3000,
-                closeButton: true,
-                progressBar: true
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-
-            // Function to handle validation modal display
-            function showValidationModal(entregaId, tipo, title, commentDisplayStyle) {
-                const modalLabel = document.getElementById('validateModalLabel');
-                modalLabel.textContent = title;
-
-                const submitValidationBtn = document.getElementById('submitValidation');
-                submitValidationBtn.setAttribute('data-id', entregaId);
-                submitValidationBtn.setAttribute('data-tipo', tipo);
-
-                const comentarioContainer = document.querySelector('#validateModal textarea[data-id="data-comentario"]')?.closest('.mb-3');
-                if (comentarioContainer) {
-                    comentarioContainer.style.display = commentDisplayStyle;
-                }
-
-                const validateModal = new bootstrap.Modal(document.getElementById('validateModal'));
-                validateModal.show();
-            }
-
-            // Event delegation for validation buttons
-            document.addEventListener('click', function(event) {
-                const reviewButton = event.target.closest('.btn-review');
-                if (reviewButton) {
-                    const entregaId = reviewButton.getAttribute('data-id');
-                    const tipo = reviewButton.getAttribute('data-tipo');
-                    document.getElementById('submitRevisionBtn').setAttribute('data-id', entregaId);
-                    document.getElementById('submitRevisionBtn').setAttribute('data-tipo', tipo);
-                    new bootstrap.Modal(document.getElementById('revisionModal')).show();
-                    return;
-                }
-
-                const validateProductionButton = event.target.closest('.btn-validate-production');
-                if (validateProductionButton) {
-                    const entregaId = validateProductionButton.getAttribute('data-id');
-                    showValidationModal(entregaId, 'produccion', 'Validar Entrega de Producción', 'none');
-                    return;
-                }
-
-                const validateScrapButton = event.target.closest('.btn-validate-scrap');
-                if (validateScrapButton) {
-                    const entregaId = validateScrapButton.getAttribute('data-id');
-                    showValidationModal(entregaId, 'scrap', 'Validar Entrega de Scrap', 'block');
-                }
-            });
-
-            // Handle revision submission
-            document.getElementById('submitRevisionBtn').addEventListener('click', function() {
-                const entregaId = this.getAttribute('data-id');
-                const tipo = this.getAttribute('data-tipo');
-                const nota = document.getElementById('notaRevision').value;
-
-                const modalEl = document.getElementById('revisionModal');
-                if (modalEl && bootstrap.Modal.getInstance(modalEl)) {
-                    bootstrap.Modal.getInstance(modalEl).hide();
-                }
-
-                showToast('Enviando revisión...', 'info');
-
-                const formData = new FormData();
-                formData.append('id', entregaId);
-                formData.append('tipo', tipo);
-                formData.append('nota', nota);
-
-                fetch('/timeControl/public/revisar', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        showToast(data.message || 'Revisión enviada con éxito', 'success');
-                        setTimeout(() => location.reload(), 1500);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showToast('Hubo un problema con la solicitud', 'danger');
-                    });
-            });
-
-            // Handle validation submission
-            document.getElementById('submitValidation').addEventListener('click', function() {
-                const entregaId = this.getAttribute('data-id');
-                const tipo = this.getAttribute('data-tipo');
-                const comentario = document.getElementById('comentarioValidacion').value || '';
-
-                const modalEl = document.getElementById('validateModal');
-                if (modalEl && bootstrap.Modal.getInstance(modalEl)) {
-                    bootstrap.Modal.getInstance(modalEl).hide();
-                }
-
-                showToast(`Validando entrega de ${tipo}...`, 'info');
-
-                const formData = new FormData();
-                formData.append('id', entregaId);
-                formData.append('tipo', tipo);
-                formData.append('comentario', comentario);
-
-                fetch('/timeControl/public/validar', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        window.location.href = response.url;
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        showToast('Hubo un problema con la solicitud', 'danger');
-                    });
-            });
-        });
-    </script>
+    <script src="assets/js/appValidacion.js"></script>
 
 
 </body>
