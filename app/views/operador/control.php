@@ -242,200 +242,121 @@
             </tbody>
         </table>
     </div>
+    <!-- Librerías -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Llama al endpoint para obtener el estado y mensaje
             fetch('/timeControl/public/getStatus')
                 .then(response => response.json())
                 .then(data => {
-                    // Asegúrate de que el 'status' y 'message' estén presentes
                     if (data.status && data.message) {
                         const toastrFunction = data.status === "success" ? toastr.success : toastr.error;
-
-                        // Muestra el mensaje usando toastr
                         toastrFunction(data.message, '', {
-                            timeOut: 2000 // El mensaje desaparece después de 2 segundos
+                            timeOut: 2000
                         });
                     }
                 })
-                .catch(error => {
-                    console.error('Error al obtener el estado:', error);
-                });
+                .catch(error => console.error('Error al obtener el estado:', error));
         });
 
+        function numberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
 
-        // Validar Contratiempos
+        // Validación moderna para Final de Producción
+        function validateFinalProduction() {
+            const prodInput = document.getElementById("finalProductionValue").value.trim();
+            const scrapInput = document.getElementById("finalScraptAmount").value.trim();
+
+            const prod = prodInput !== '' ? parseFloat(prodInput).toFixed(2) : '0.00';
+            const scrap = scrapInput !== '' ? parseFloat(scrapInput).toFixed(2) : '0.00';
+
+            Swal.fire({
+                title: 'Confirmación de Final de Producción',
+                html: `
+            <p><strong>Cantidad producida:</strong> ${prod} lb</p>
+            <p><strong>Cantidad de scrap:</strong> ${scrap} lb</p>
+            <p style='color: red;'>¿Está seguro de que desea ingresar el Final de producción? Se cerrará la sesión...</p>
+        `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, confirmar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#f44336',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("finForm").submit();
+                }
+            });
+
+            return false;
+        }
+
+
+        // Validación moderna para Entrega Parcial
+        function validateParcial() {
+            const prodInput = document.getElementById("parcialProductionValue").value.trim();
+            const scrapInput = document.getElementById("parcialScraptAmount").value.trim();
+
+            if (prodInput === '' && scrapInput === '') {
+                alert("Debes ingresar al menos un valor en Producción o Scrap.");
+                return false;
+            }
+
+            const prod = prodInput !== '' ? parseFloat(prodInput).toFixed(2) : '0.00';
+            const scrap = scrapInput !== '' ? parseFloat(scrapInput).toFixed(2) : '0.00';
+
+            Swal.fire({
+                title: 'Confirmación de Parcial',
+                html: `
+                    <p><strong>Cantidad producida:</strong> ${prod} lb</p>
+                    <p><strong>Cantidad de scrap:</strong> ${scrap} lb</p>
+                    <p style='color: red;'>¿Está seguro de que desea ingresar el Parcial?</p>
+                    `,
+
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, confirmar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#4CAF50',
+                cancelButtonColor: '#f44336',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("parcialForm").submit();
+                }
+            });
+
+            return false;
+        }
+
+
+
+        // Validación simple de contratiempos
         function validateBadCopyForm() {
-            var badCopySelect = document.getElementById("badCopy");
-            var selectedOption = badCopySelect.options[badCopySelect.selectedIndex].value;
-            if (selectedOption === "") {
-                alert("Por favor, seleccione una opción válida para Contratiempos.");
+            const val = document.getElementById("badCopy").value;
+            if (val === "") {
+                toastr.warning("Por favor, seleccione una opción válida para Contratiempos.");
                 return false;
             }
             return confirm('¿Está seguro de que desea realizar "Contratiempos"?');
         }
 
-        // Final de Producción
-        function validateFinalProduction() {
-            var finalProductionValue = document.getElementById("finalProductionValue").value.trim();
-            var finalScraptAmount = document.getElementById("finalScraptAmount").value.trim();
-
-            // Convertir los valores a formato con separador de miles
-            finalProductionValue = numberWithCommas(finalProductionValue);
-            finalScraptAmount = numberWithCommas(finalScraptAmount);
-
-            // Construir el mensaje de alerta personalizado
-            var alertMessage = "<div style='padding: 20px; background-color: #f2f2f2; border: 1px solid #ccc; border-radius: 5px;'>";
-            alertMessage += "<h2 style='margin-top: 0;'>Confirmación de Final de Producción</h2>";
-            alertMessage += "<p><strong>Cantidad producida:</strong> " + finalProductionValue + "</p>";
-            alertMessage += "<p><strong>Cantidad de scrap:</strong> " + finalScraptAmount + " Lb</p>";
-            alertMessage += "<p style='color: red;'>¿Está seguro de que desea ingresar el Final de producción? Se cerrará la sesión...</p>";
-            alertMessage += "<div style='text-align: center; margin-top: 20px;'>";
-            alertMessage += "<button id='confirmButton' style='padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;'>Sí, confirmar</button>";
-            alertMessage += "<button id='cancelButton' style='padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;'>Cancelar</button>";
-            alertMessage += "</div></div>";
-
-            // Mostrar la alerta personalizada
-            showCustomAlert(alertMessage);
-
-            // Agregar eventos de clic a los botones de la alerta
-            document.getElementById("confirmButton").addEventListener("click", confirmFinalProduction);
-            document.getElementById("cancelButton").addEventListener("click", cancelFinalProduction);
-
-            // Evitar el envío automático del formulario
-            return false;
-        }
-
-        // Función para mostrar la alerta personalizada
-        function showCustomAlert(message) {
-            // Crear un div para mostrar la alerta
-            var alertContainer = document.createElement("div");
-            alertContainer.innerHTML = message;
-            alertContainer.style.position = "fixed";
-            alertContainer.style.top = "50%";
-            alertContainer.style.left = "50%";
-            alertContainer.style.transform = "translate(-50%, -50%)";
-            alertContainer.style.zIndex = "9999";
-            alertContainer.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-            alertContainer.style.padding = "20px";
-            alertContainer.style.color = "#000";
-            alertContainer.style.maxWidth = "400px";
-            alertContainer.style.borderRadius = "5px";
-
-            // Agregar la alerta al body del documento
-            document.body.appendChild(alertContainer);
-        }
-
-        // Función para cerrar la alerta y confirmar la acción
-        function confirmFinalProduction() {
-            // Cerrar la alerta
-            document.querySelector("div[style*='rgba(0, 0, 0, 0.5)']").remove();
-
-            // Enviar el formulario
-            document.getElementById("finForm").submit();
-
-        }
-
-        // Función para cerrar la alerta y cancelar la acción
-        function cancelFinalProduction() {
-            // Cerrar la alerta
-            document.querySelector("div[style*='rgba(0, 0, 0, 0.5)']").remove();
-        }
-
-        // Función para agregar separadores de miles a un número
-        function numberWithCommas(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
+        // Toggle visibilidad
         function toggleFinalProductionInput() {
-            var finalProductionInput = document.getElementById("finalProductionInput");
-            if (finalProductionInput.style.display === "none") {
-                finalProductionInput.style.display = "block";
-            } else {
-                finalProductionInput.style.display = "none";
-            }
+            const el = document.getElementById("finalProductionInput");
+            el.style.display = (el.style.display === "none") ? "block" : "none";
         }
 
-        // Validar Formulario de Parcial
-        function validateParcial() {
-            var parcialProductionValue = document.getElementById("parcialProductionValue").value.trim();
-            var parcialScraptAmount = document.getElementById("parcialScraptAmount").value.trim();
-
-            // Convertir los valores a formato con separador de miles
-            parcialProductionValue = numberWithCommas(parcialProductionValue);
-            parcialScraptAmount = numberWithCommas(parcialScraptAmount);
-
-            // Construir el mensaje de alerta personalizado
-            var alertMessage = "<div style='padding: 20px; background-color: #f2f2f2; border: 1px solid #ccc; border-radius: 5px;'>";
-            alertMessage += "<h2 style='margin-top: 0;'>Confirmación de Parcial</h2>";
-            alertMessage += "<p><strong>Cantidad producida:</strong> " + parcialProductionValue + "</p>";
-            alertMessage += "<p><strong>Cantidad de scrap:</strong> " + parcialScraptAmount + " Lb</p>";
-            alertMessage += "<p style='color: red;'>¿Está seguro de que desea ingresar el Parcial? Se cerrará la sesión...</p>";
-            alertMessage += "<div style='text-align: center; margin-top: 20px;'>";
-            alertMessage += "<button id='confirmParcialButton' style='padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;'>Sí, confirmar</button>";
-            alertMessage += "<button id='cancelParcialButton' style='padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;'>Cancelar</button>";
-            alertMessage += "</div></div>";
-
-            // Mostrar la alerta personalizada
-            showCustomParcialAlert(alertMessage);
-
-            // Agregar eventos de clic a los botones de la alerta
-            document.getElementById("confirmParcialButton").addEventListener("click", confirmParcial);
-            document.getElementById("cancelParcialButton").addEventListener("click", cancelParcial);
-
-            // Evitar el envío automático del formulario
-            return false;
-        }
-
-        // Función para mostrar la alerta personalizada de Parcial
-        function showCustomParcialAlert(message) {
-            // Crear un div para mostrar la alerta de Parcial
-            var parcialAlertContainer = document.createElement("div");
-            parcialAlertContainer.innerHTML = message;
-            parcialAlertContainer.style.position = "fixed";
-            parcialAlertContainer.style.top = "50%";
-            parcialAlertContainer.style.left = "50%";
-            parcialAlertContainer.style.transform = "translate(-50%, -50%)";
-            parcialAlertContainer.style.zIndex = "9999";
-            parcialAlertContainer.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-            parcialAlertContainer.style.padding = "20px";
-            parcialAlertContainer.style.color = "#000";
-            parcialAlertContainer.style.maxWidth = "400px";
-            parcialAlertContainer.style.borderRadius = "5px";
-
-            // Agregar la alerta de Parcial al body del documento
-            document.body.appendChild(parcialAlertContainer);
-        }
-
-        // Función para cerrar la alerta de Parcial y confirmar la acción
-        function confirmParcial() {
-            // Cerrar la alerta de Parcial
-            document.querySelector("div[style*='rgba(0, 0, 0, 0.5)']").remove();
-
-            // Enviar el formulario de Parcial
-            document.getElementById("parcialForm").submit();
-        }
-
-        // Función para cerrar la alerta de Parcial y cancelar la acción
-        function cancelParcial() {
-            // Cerrar la alerta de Parcial
-            document.querySelector("div[style*='rgba(0, 0, 0, 0.5)']").remove();
-        }
-
-        // Función para alternar la visibilidad de los campos de entrada para Parcial
         function toggleParcialInput() {
-            var parcialInput = document.getElementById("parcialInput");
-            if (parcialInput.style.display === "none" || parcialInput.style.display === "") {
-                parcialInput.style.display = "block";
-            } else {
-                parcialInput.style.display = "none";
-            }
+            const el = document.getElementById("parcialInput");
+            el.style.display = (el.style.display === "none" || el.style.display === "") ? "block" : "none";
         }
 
-
-
+        // Confirmaciones generales
         function confirmMakeReady() {
             return confirm('¿Está seguro de que desea realizar "Preparación"?');
         }
@@ -445,11 +366,11 @@
         }
 
         function validateVelocidad() {
-            velocidadPro = document.getElementById("velocidadProduccion").value.trim();
-            velocidadPro = numberWithCommas(velocidadPro);
-            return confirm('¿Está seguro de que desea Ingresar ' + velocidadPro + " de velocidad?");
+            const velocidad = numberWithCommas(document.getElementById("velocidadProduccion").value.trim());
+            return confirm(`¿Está seguro de que desea Ingresar ${velocidad} de velocidad?`);
         }
     </script>
+
 </body>
 
 </html>

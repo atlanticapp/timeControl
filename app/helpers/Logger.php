@@ -14,7 +14,7 @@ class Logger
     const DEBUG = 'DEBUG';
 
     // Directorio donde se guardarán los logs
-    private static $logDir = 'c:/xampp/htdocs/timeControl/logs/';
+    private static $logDir = 'c:/xampp/htdocs/timeControl/storage/logs/';
 
     /**
      * Escribe un mensaje en el archivo de log

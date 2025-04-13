@@ -54,134 +54,123 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // Helper functions
-    function updateDateTime() {
+    const updateDateTime = () => {
         const now = new Date();
         if (elements.dateElement) elements.dateElement.textContent = now.toLocaleDateString('es-ES');
         if (elements.timeElement) elements.timeElement.textContent = now.toLocaleTimeString('es-ES');
-    }
+    };
 
-    function showModal(modalElement) {
+    const showModal = (modalElement) => {
         if (!modalElement) return;
         const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
         modalInstance.show();
-    }
+    };
 
-    function hideModal(modalElement) {
+    const hideModal = (modalElement) => {
         if (!modalElement) return;
         const modalInstance = bootstrap.Modal.getInstance(modalElement);
         if (modalInstance) modalInstance.hide();
-    }
+    };
 
-    function showFieldError(field, message) {
+    const showFieldError = (field, message) => {
         if (!field) return;
         field.classList.add('is-invalid');
-        
-        // Remove existing error messages
         const existingError = field.parentNode.querySelector('.invalid-feedback');
         if (existingError) existingError.remove();
-        
-        // Create new error message
+
         const errorDiv = document.createElement('div');
         errorDiv.className = 'invalid-feedback';
         errorDiv.innerText = message;
         field.parentNode.appendChild(errorDiv);
-        
+
         setTimeout(() => {
             field.classList.remove('is-invalid');
             if (errorDiv.parentNode === field.parentNode) {
                 field.parentNode.removeChild(errorDiv);
             }
         }, 3000);
-    }
+    };
 
-    function showValidationModal(entregaId, tipo, title, commentDisplayStyle, cantidad = 0) {
+    const showValidationModal = (entregaId, tipo, title, commentDisplayStyle, cantidad = 0) => {
         if (elements.validateModalLabel) elements.validateModalLabel.textContent = title;
-
         if (elements.submitValidationBtn) {
             elements.submitValidationBtn.setAttribute('data-id', entregaId);
             elements.submitValidationBtn.setAttribute('data-tipo', tipo);
-
             if (cantidad > 0) {
                 elements.submitValidationBtn.setAttribute('data-entrega', cantidad);
             }
         }
 
-        // Show/hide comment field
         const comentarioContainer = document.querySelector('#validateModal textarea[data-id="data-comentario"]')?.closest('.mb-3');
         if (comentarioContainer) {
             comentarioContainer.style.display = commentDisplayStyle;
         }
 
-        // Reset comment field
         if (elements.comentarioValidacion) elements.comentarioValidacion.value = '';
-
-        // Show modal
         showModal(elements.validateModal);
-    }
+    };
 
-    async function fetchData(url, method = 'GET', formData = null) {
+    const fetchData = async (url, method = 'GET', formData = null) => {
         try {
-            const options = {
-                method: method
-            };
-            
-            if (formData) {
-                options.body = formData;
-            }
-            
+            const options = { method: method };
+            if (formData) options.body = formData;
             const response = await fetch(url, options);
-            
+
             if (response.redirected) {
                 window.location.href = response.url;
                 return { redirected: true };
             }
-            
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Error in request');
             }
-            
+
             return await response.json();
         } catch (error) {
             console.error('Fetch error:', error);
             return { success: false, message: error.message };
         }
-    }
+    };
 
     // Initialize
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
+    const entregaIdToHide = sessionStorage.getItem('ocultarEntregaId');
+    if (entregaIdToHide) {
+        const entregaRow = document.querySelector(`[data-id="${entregaIdToHide}"]`)?.closest('tr');
+        if (entregaRow) {
+            entregaRow.style.transition = 'opacity 0.5s ease-out';
+            entregaRow.style.opacity = '0';
+            setTimeout(() => entregaRow.remove(), 600);
+        }
+        sessionStorage.removeItem('ocultarEntregaId');
+    }
+
     // Fetch initial status
-    fetchData(URLS.getStatus)
-        .then(data => {
-            if (data.status && data.message) {
-                const toastrFunction = data.status === "success" ? TOAST_TYPES.success : TOAST_TYPES.error;
-                toastrFunction(data.message, '', { timeOut: 2000 });
-            }
-        });
+    fetchData(URLS.getStatus).then(data => {
+        if (data.status && data.message) {
+            const toastrFunction = data.status === "success" ? TOAST_TYPES.success : TOAST_TYPES.error;
+            toastrFunction(data.message, '', { timeOut: 2000 });
+        }
+    });
 
     // Event delegation for buttons
     document.addEventListener('click', function (event) {
-        // Review button
         const reviewButton = event.target.closest('.btn-review');
         if (reviewButton) {
             const entregaId = reviewButton.getAttribute('data-id');
             const tipo = reviewButton.getAttribute('data-tipo');
-            
             if (elements.submitRevisionBtn) {
                 elements.submitRevisionBtn.setAttribute('data-id', entregaId);
                 elements.submitRevisionBtn.setAttribute('data-tipo', tipo);
             }
-
-            // Clear note field
             if (elements.notaRevision) elements.notaRevision.value = '';
-
             showModal(elements.revisionModal);
             return;
         }
 
-        // Production validation button
         const validateProductionButton = event.target.closest('.btn-validate-production');
         if (validateProductionButton) {
             const entregaId = validateProductionButton.getAttribute('data-id');
@@ -189,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Scrap validation button
         const validateScrapButton = event.target.closest('.btn-validate-scrap');
         if (validateScrapButton) {
             const entregaId = validateScrapButton.getAttribute('data-id');
@@ -205,32 +193,27 @@ document.addEventListener("DOMContentLoaded", function () {
             const tipo = this.getAttribute('data-tipo');
             const nota = elements.notaRevision?.value || '';
 
-            // Basic validation
             if (!nota.trim()) {
                 showFieldError(elements.notaRevision, 'Por favor ingrese una nota para la corrección o revisión');
                 return;
             }
 
-            // Close modal
             hideModal(elements.revisionModal);
 
-            // Prepare data
             const formData = new FormData();
             formData.append('id', entregaId);
             formData.append('tipo', tipo);
             formData.append('nota', nota);
 
-            // Send request
-            fetchData(URLS.revisar, 'POST', formData)
-                .then(data => {
-                    if (data && data.message) {
-                        showBackendToast(data.message, data.success ? 'success' : 'error');
-                    }
-
-                    if (data.success) {
-                        setTimeout(() => location.reload(), 1500);
-                    }
-                });
+            fetchData(URLS.revisar, 'POST', formData).then(data => {
+                if (data && data.message) {
+                    showBackendToast(data.message, data.success ? 'success' : 'error');
+                }
+                if (data.success) {
+                    sessionStorage.setItem('ocultarEntregaId', entregaId);
+                    setTimeout(() => location.reload(), 1500);
+                }
+            });
         });
     }
 
@@ -242,44 +225,36 @@ document.addEventListener("DOMContentLoaded", function () {
             const cantidad = this.getAttribute('data-entrega') || '0';
             const comentario = elements.comentarioValidacion?.value || '';
 
-            // Type-specific validations
             if (tipo === 'scrap') {
                 const comentarioContainer = document.querySelector('#validateModal textarea[data-id="data-comentario"]')?.closest('.mb-3');
-                if (comentarioContainer && 
-                    comentarioContainer.style.display !== 'none' && 
-                    !comentario.trim()) {
+                if (comentarioContainer && comentarioContainer.style.display !== 'none' && !comentario.trim()) {
                     showFieldError(elements.comentarioValidacion, 'Por favor ingrese observaciones para el scrap');
                     return;
                 }
             }
 
-            // Close modal
             hideModal(elements.validateModal);
 
-            // Prepare data
             const formData = new FormData();
             formData.append('id', entregaId);
             formData.append('tipo', tipo);
             formData.append('comentario', comentario);
             formData.append('cantidad', cantidad);
 
-            // Determine URL by type
             const url = tipo === 'scrap' ? URLS.validarScrap : URLS.validarProduccion;
 
-            // Send request
-            fetchData(url, 'POST', formData)
-                .then(data => {
-                    if (data.redirected) return;
-
-                    if (data && data.message) {
-                        showBackendToast(data.message, data.success ? 'success' : 'error');
-                        if (data.success) {
-                            setTimeout(() => location.reload(), 1500);
-                        }
-                    } else {
-                        setTimeout(() => location.reload(), 1000);
+            fetchData(url, 'POST', formData).then(data => {
+                if (data.redirected) return;
+                if (data && data.message) {
+                    showBackendToast(data.message, data.success ? 'success' : 'error');
+                    if (data.success) {
+                        sessionStorage.setItem('ocultarEntregaId', entregaId);
+                        setTimeout(() => location.reload(), 1500);
                     }
-                });
+                } else {
+                    setTimeout(() => location.reload(), 1000);
+                }
+            });
         });
     }
 });

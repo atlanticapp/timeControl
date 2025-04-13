@@ -1,2 +1,0 @@
-[2025-04-13 07:55:29] [ERROR] Error al procesar corrección {"solicitud_id":7,"registro_id":134,"error":"You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'WHERE id = ? AND estado = 'Pendiente'' at line 7"}
-[2025-04-13 07:59:12] [ERROR] Error al procesar corrección {"solicitud_id":7,"registro_id":134,"error":"Unknown column 'fecha_procesada' in 'field list'"}
