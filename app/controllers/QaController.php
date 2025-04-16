@@ -36,17 +36,28 @@ class QaController extends Controller
         try {
             $notificaciones = (new Notificacion())->getPendingNotifications($user->area_id);
 
+            // Obtener estadísticas de destinos
+            $destinosStats = $this->qa->getDestinosStats($user->area_id, $user->codigo_empleado);
+
+            // Obtener estadísticas para el dashboard
+            $stats = $this->qa->getDashboardStats($user->area_id);
+
             $this->view('qa/dashboard', [
                 'data' => [
                     'title' => 'Dashboard de Control de Calidad',
-                    'stats' => $this->qa->getDashboardStats($user->area_id),
+                    'stats' => $stats,
                     'entregasPendientes' => $this->qa->getEntregasPendientes($user->area_id),
                     'notificaciones' => $notificaciones,
-                    'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado)
+                    'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado),
+                    'destinos' => $destinosStats,
+                    'revisiones_pendientes' => $stats['en_proceso'] ?? 0
                 ]
             ]);
         } catch (\Exception $e) {
-            error_log('Error en dashboard QA: ' . $e->getMessage());
+            Logger::error('Error en dashboard QA', [
+                'error' => $e->getMessage(),
+                'user_id' => $user->codigo_empleado
+            ]);
             $this->redirectWithMessage('/timeControl/public/login', 'error', 'Error al cargar el dashboard.');
         }
     }
@@ -54,16 +65,34 @@ class QaController extends Controller
     public function validacion()
     {
         $user = AuthHelper::getCurrentUser();
-
-        $entregas_pendientes = $this->qa->getEntregasPendientes($user->area_id);
-
-        $this->view('qa/validacion', [
-            'data' => [
-                'title' => 'Validación de Entregas',
-                'entregas_produccion' => $entregas_pendientes['entregas_produccion'] ?? [],
-                'entregas_scrap' => $entregas_pendientes['entregas_scrap'] ?? []
-            ]
-        ]);
+        
+        try {
+            // Obtener entregas pendientes separadas
+            $entregasProduccion = $this->qa->getEntregasProduccionPendientes($user->area_id);
+            $entregasScrap = $this->qa->getEntregasScrapPendientes($user->area_id);
+            
+            // Obtener estadísticas del dashboard
+            $stats = $this->qa->getDashboardStats($user->area_id);
+            
+            $this->view('qa/validacion', [
+                'data' => [
+                    'title' => 'Validación de Entregas',
+                    'entregas_produccion' => $entregasProduccion,
+                    'entregas_scrap' => $entregasScrap,
+                    'stats' => [
+                        'pendientes' => $stats['pendientes'] ?? 0,
+                        'produccion_pendiente' => $stats['produccion_pendiente'] ?? 0,
+                        'scrap_pendientes' => $stats['scrap_pendientes'] ?? 0
+                    ]
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Logger::error('Error al cargar la página de validación', [
+                'error' => $e->getMessage(),
+                'user_id' => $user->codigo_empleado
+            ]);
+            $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Error al cargar las entregas pendientes.');
+        }
     }
 
     /**
@@ -226,25 +255,14 @@ class QaController extends Controller
             ]);
         }
     }
-
-    public function accion()
+    
+    private function sendJsonResponse($success, $message, $statusCode = 200)
     {
-        $user = AuthHelper::getCurrentUser();
-
-        $this->view('qa/accion', [
-            'data' => [
-                'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado)
-            ]
-        ]);
-    }
-
-    public function historial()
-    {
-        $user = AuthHelper::getCurrentUser();
-
-        $this->view('qa/historial', [
-            'title' => 'Historial de Validaciones',
-            'entregas_validadas' => $this->qa->getEntregasValidadasProduccion($user->codigo_empleado)
+        header('Content-Type: application/json');
+        http_response_code($statusCode);
+        echo json_encode([
+            'success' => $success,
+            'message' => $message
         ]);
     }
 
@@ -254,13 +272,6 @@ class QaController extends Controller
         $this->redirectWithMessage('/timeControl/public/validacion', $type, $message);
     }
 
-    /**
-     * Redirige a una URL con un mensaje de estado
-     * @param string $url URL de destino
-     * @param string $status Estado del mensaje (success/error/info/warning)
-     * @param string $message Texto del mensaje
-     * @return void
-     */
     private function redirectWithMessage($url, $status, $message)
     {
         if (session_status() === PHP_SESSION_NONE) {

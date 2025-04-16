@@ -77,6 +77,13 @@ class MaquinaController extends Controller
                 $maquinaId
             );
 
+            $maquinaModel = new Maquina();
+            if (!$maquinaModel->actualizarMaquinaId($maquinaId, $user->codigo_empleado)) {
+                error_log("Error al actualizar maquina_id en la base de datos.");
+                header('Location: /timeControl/public/error');
+                exit();
+            }
+
             if (!empty($correccionesPendientes)) {
                 header('Location: /timeControl/public/correcciones');
                 exit();

@@ -31,22 +31,22 @@ class Notificacion extends Model
     public function getPendingNotifications($area_id)
     {
         $sql = "SELECT * FROM {$this->table} WHERE area_id = ? AND estado = 'pendiente' ORDER BY fecha DESC";
-
+    
         try {
             $stmt = $this->db->prepare($sql);
             if (!$stmt) {
                 throw new Exception("Error en la preparación de la consulta: " . $this->db->error);
             }
-
-            $stmt->bind_param("i", $area_id); // Corrección en la vinculación de parámetros
+    
+            $stmt->bind_param("i", $area_id);
             $stmt->execute();
-            $result = $stmt->get_result(); // Obtener resultado en MySQLi
-
+            $result = $stmt->get_result();
+    
             $notifications = [];
             while ($row = $result->fetch_assoc()) {
                 $notifications[] = $row;
             }
-
+    
             $stmt->close();
             return $notifications;
         } catch (Exception $e) {

@@ -34,10 +34,11 @@ class DataController extends Controller
                 session_start();
             }
 
-            // Obtener el ID de la máquina seleccionada
-            $maquinaSeleccionada = $user->maquina_id ?? null;
 
-            // Verificar correcciones pendientes solo si hay máquina seleccionada
+            $maquinaSeleccionada = $user->maquina_id;
+            $control = new Control();
+            $maquina = $control->getNameMaquina($maquinaSeleccionada);
+
             if ($maquinaSeleccionada) {
                 $correccionesModel = new \App\Models\CorreccionesOperador();
                 $correccionesPendientes = $correccionesModel->getCorreccionesPendientes($user->maquina_id);
@@ -49,6 +50,7 @@ class DataController extends Controller
 
                     $this->view('operador/datos_trabajo', [
                         'usuario' => $user,
+                        'maquina' => $maquina,
                         'active_button_id' => $active_button_id,
                         'correcciones_pendientes' => $correccionesPendientes,
                         'mostrar_correcciones' => true
@@ -63,6 +65,7 @@ class DataController extends Controller
 
             $this->view('operador/datos_trabajo', [
                 'usuario' => $user,
+                'maquina' => $maquina,
                 'active_button_id' => $active_button_id,
                 'mostrar_correcciones' => false
             ]);

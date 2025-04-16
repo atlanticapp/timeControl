@@ -1,0 +1,214 @@
+[2025-04-16 18:11:15] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":58}
+[2025-04-16 18:11:34] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":58}
+[2025-04-16 18:11:39] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":56}
+[2025-04-16 18:13:02] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":56}
+[2025-04-16 18:13:02] [INFO] Validación de producción exitosa {"entrega_id":56,"usuario_id":1212,"validacion_id":1}
+[2025-04-16 18:13:02] [INFO] Guardado de producción exitoso {"user_id":1212,"entrega_id":56,"validacion_id":1}
+[2025-04-16 18:28:22] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":1212,"cantidad":4}
+[2025-04-16 18:28:28] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":1212,"cantidad":7}
+[2025-04-16 18:33:53] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 18:35:01] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":1212,"cantidad":4}
+[2025-04-16 18:35:49] [INFO] Corrección enviada con éxito {"registro_id":54,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 18:35:59] [INFO] Corrección cancelada {"id":8,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 18:36:01] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":1212,"cantidad":4}
+[2025-04-16 18:36:03] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":1212,"cantidad":7}
+[2025-04-16 18:36:06] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":1212,"cantidad":1}
+[2025-04-16 18:36:08] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 18:36:12] [INFO] Destino asignado exitosamente {"retencion_id":12,"tipo_destino":"retrabajo","cantidad":43,"user_id":1212,"resultado":"Destino asignado correctamente"}
+[2025-04-16 18:36:12] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":2}
+[2025-04-16 18:36:12] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":2}
+[2025-04-16 18:36:17] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":60}
+[2025-04-16 18:36:17] [INFO] Validación de producción exitosa {"entrega_id":60,"usuario_id":1212,"validacion_id":2}
+[2025-04-16 18:36:17] [INFO] Guardado de producción exitoso {"user_id":1212,"entrega_id":60,"validacion_id":2}
+[2025-04-16 18:36:21] [INFO] Solicitud de creación de retención recibida {"registro_id":58,"cantidad":55,"user_id":1212}
+[2025-04-16 18:36:21] [INFO] Retención creada exitosamente {"retencion_id":13,"registro_id":58,"cantidad":55}
+[2025-04-16 18:36:21] [INFO] Retención creada exitosamente {"retencion_id":13,"registro_id":58,"user_id":1212}
+[2025-04-16 18:36:21] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 18:36:28] [INFO] Solicitud de validación de scrap recibida {"registroId":57,"cantidad":3454,"user_id":1212}
+[2025-04-16 18:36:28] [INFO] Validación de scrap exitosa {"registroId":57,"cantidad":3454,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 19:40:09] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":0}
+[2025-04-16 19:45:43] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":0}
+[2025-04-16 19:46:42] [INFO] Correcciones pendientes consultadas {"maquina_id":0,"cantidad":0}
+[2025-04-16 19:46:42] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-04-16 19:46:57] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":63}
+[2025-04-16 19:46:57] [INFO] Registrando historial de validación {"registro_id":63,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 19:46:57] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":63,"validacion_id":null}
+[2025-04-16 19:47:01] [INFO] Solicitud de validación de scrap recibida {"registroId":64,"cantidad":44,"user_id":1212}
+[2025-04-16 19:47:01] [INFO] Validación de scrap exitosa {"registroId":64,"cantidad":44,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 19:47:13] [INFO] Solicitud de creación de retención recibida {"registro_id":63,"cantidad":44,"user_id":1212}
+[2025-04-16 19:47:13] [INFO] Retención creada exitosamente {"retencion_id":14,"registro_id":63,"cantidad":44}
+[2025-04-16 19:47:13] [INFO] Retención creada exitosamente {"retencion_id":14,"registro_id":63,"user_id":1212}
+[2025-04-16 19:47:13] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 19:47:21] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 19:47:38] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 19:51:15] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 19:52:15] [INFO] Corrección enviada con éxito {"registro_id":65,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 20:00:41] [INFO] Solicitud de validación de scrap recibida {"registroId":66,"cantidad":5,"user_id":1212}
+[2025-04-16 20:00:41] [INFO] Validación de scrap exitosa {"registroId":66,"cantidad":5,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 20:00:56] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:01:10] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":67}
+[2025-04-16 20:01:10] [INFO] Registrando historial de validación {"registro_id":67,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 20:01:10] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":67,"validacion_id":null}
+[2025-04-16 20:09:27] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:09:40] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:09:52] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:10:26] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:11:03] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:11:06] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:11:09] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:11:38] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:11:50] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:11:59] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:14:18] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:14:30] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:17:18] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:17:23] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 20:17:28] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":1212,"cantidad":0}
+[2025-04-16 20:17:31] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":1212,"cantidad":0}
+[2025-04-16 20:17:33] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":1212,"cantidad":0}
+[2025-04-16 21:02:17] [INFO] Solicitud de validación de scrap recibida {"registroId":74,"cantidad":66,"user_id":1212}
+[2025-04-16 21:02:17] [INFO] Validación de scrap exitosa {"registroId":74,"cantidad":66,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:02:21] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":73}
+[2025-04-16 21:02:21] [INFO] Registrando historial de validación {"registro_id":73,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:02:21] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":73,"validacion_id":null}
+[2025-04-16 21:02:28] [INFO] Corrección enviada con éxito {"registro_id":80,"tipo":"scrap","nota":"","user_id":1212}
+[2025-04-16 21:02:36] [INFO] Corrección enviada con éxito {"registro_id":77,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:09:15] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":79}
+[2025-04-16 21:09:15] [INFO] Registrando historial de validación {"registro_id":79,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:09:15] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":79,"validacion_id":null}
+[2025-04-16 21:10:48] [INFO] Corrección enviada con éxito {"registro_id":70,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:10:57] [INFO] Corrección enviada con éxito {"registro_id":76,"tipo":"scrap","nota":"","user_id":1212}
+[2025-04-16 21:11:02] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":75}
+[2025-04-16 21:11:02] [INFO] Registrando historial de validación {"registro_id":75,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:11:02] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":75,"validacion_id":null}
+[2025-04-16 21:11:25] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":68}
+[2025-04-16 21:11:25] [INFO] Registrando historial de validación {"registro_id":68,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:11:25] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":68,"validacion_id":null}
+[2025-04-16 21:23:13] [INFO] Corrección enviada con éxito {"registro_id":81,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:31:05] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":71}
+[2025-04-16 21:31:05] [INFO] Registrando historial de validación {"registro_id":71,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:31:05] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":71,"validacion_id":null}
+[2025-04-16 21:31:08] [INFO] Solicitud de validación de scrap recibida {"registroId":82,"cantidad":3,"user_id":1212}
+[2025-04-16 21:31:08] [INFO] Validación de scrap exitosa {"registroId":82,"cantidad":3,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:31:16] [INFO] Solicitud de validación de scrap recibida {"registroId":69,"cantidad":44,"user_id":1212}
+[2025-04-16 21:31:16] [INFO] Validación de scrap exitosa {"registroId":69,"cantidad":44,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:31:45] [INFO] Corrección enviada con éxito {"registro_id":78,"tipo":"scrap","nota":"","user_id":1212}
+[2025-04-16 21:31:53] [INFO] Corrección cancelada {"id":5,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:31:54] [INFO] Corrección cancelada {"id":7,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:31:55] [INFO] Corrección cancelada {"id":6,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:31:56] [INFO] Corrección cancelada {"id":4,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:31:57] [INFO] Corrección cancelada {"id":3,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:31:57] [INFO] Corrección cancelada {"id":2,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:31:58] [INFO] Corrección cancelada {"id":1,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:32:07] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":81}
+[2025-04-16 21:32:07] [INFO] Registrando historial de validación {"registro_id":81,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:32:07] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":81,"validacion_id":null}
+[2025-04-16 21:32:09] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":77}
+[2025-04-16 21:32:09] [INFO] Registrando historial de validación {"registro_id":77,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:32:09] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":77,"validacion_id":null}
+[2025-04-16 21:32:11] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":70}
+[2025-04-16 21:32:11] [INFO] Registrando historial de validación {"registro_id":70,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:32:11] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":70,"validacion_id":null}
+[2025-04-16 21:32:13] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":65}
+[2025-04-16 21:32:13] [INFO] Registrando historial de validación {"registro_id":65,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:32:13] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":65,"validacion_id":null}
+[2025-04-16 21:32:15] [INFO] Solicitud de validación de scrap recibida {"registroId":80,"cantidad":34,"user_id":1212}
+[2025-04-16 21:32:15] [INFO] Validación de scrap exitosa {"registroId":80,"cantidad":34,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:32:17] [INFO] Solicitud de validación de scrap recibida {"registroId":78,"cantidad":700,"user_id":1212}
+[2025-04-16 21:32:17] [INFO] Validación de scrap exitosa {"registroId":78,"cantidad":700,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:32:19] [INFO] Solicitud de validación de scrap recibida {"registroId":76,"cantidad":4,"user_id":1212}
+[2025-04-16 21:32:19] [INFO] Validación de scrap exitosa {"registroId":76,"cantidad":4,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:32:27] [INFO] Solicitud de validación de scrap recibida {"registroId":72,"cantidad":55,"user_id":1212}
+[2025-04-16 21:32:27] [INFO] Validación de scrap exitosa {"registroId":72,"cantidad":55,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:32:55] [INFO] Corrección enviada con éxito {"registro_id":84,"tipo":"scrap","nota":"","user_id":1212}
+[2025-04-16 21:32:59] [INFO] Corrección cancelada {"id":8,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:33:04] [INFO] Corrección enviada con éxito {"registro_id":83,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:33:07] [INFO] Corrección cancelada {"id":9,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:33:11] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":83}
+[2025-04-16 21:33:11] [INFO] Registrando historial de validación {"registro_id":83,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:33:11] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":83,"validacion_id":null}
+[2025-04-16 21:33:55] [INFO] Corrección enviada con éxito {"registro_id":87,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:33:57] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":86}
+[2025-04-16 21:33:57] [INFO] Registrando historial de validación {"registro_id":86,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:33:57] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":86,"validacion_id":null}
+[2025-04-16 21:33:59] [INFO] Solicitud de validación de scrap recibida {"registroId":89,"cantidad":99,"user_id":1212}
+[2025-04-16 21:33:59] [INFO] Validación de scrap exitosa {"registroId":89,"cantidad":99,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:34:01] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":85}
+[2025-04-16 21:34:01] [INFO] Registrando historial de validación {"registro_id":85,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:34:01] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":85,"validacion_id":null}
+[2025-04-16 21:34:03] [INFO] Solicitud de validación de scrap recibida {"registroId":88,"cantidad":77,"user_id":1212}
+[2025-04-16 21:34:03] [INFO] Validación de scrap exitosa {"registroId":88,"cantidad":77,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:34:05] [INFO] Solicitud de validación de scrap recibida {"registroId":84,"cantidad":50,"user_id":1212}
+[2025-04-16 21:34:05] [INFO] Validación de scrap exitosa {"registroId":84,"cantidad":50,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:43:24] [INFO] Corrección enviada con éxito {"registro_id":98,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:43:49] [INFO] Corrección enviada con éxito {"registro_id":96,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:43:52] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":92}
+[2025-04-16 21:43:52] [INFO] Registrando historial de validación {"registro_id":92,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 21:43:52] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":92,"validacion_id":null}
+[2025-04-16 21:44:00] [INFO] Corrección enviada con éxito {"registro_id":94,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:44:01] [INFO] Solicitud de validación de scrap recibida {"registroId":99,"cantidad":55,"user_id":1212}
+[2025-04-16 21:44:01] [INFO] Validación de scrap exitosa {"registroId":99,"cantidad":55,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:44:42] [INFO] Corrección enviada con éxito {"registro_id":90,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 21:44:43] [INFO] Solicitud de validación de scrap recibida {"registroId":95,"cantidad":3,"user_id":1212}
+[2025-04-16 21:44:43] [INFO] Validación de scrap exitosa {"registroId":95,"cantidad":3,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:44:50] [INFO] Corrección enviada con éxito {"registro_id":97,"tipo":"scrap","nota":"","user_id":1212}
+[2025-04-16 21:44:51] [INFO] Solicitud de validación de scrap recibida {"registroId":91,"cantidad":1,"user_id":1212}
+[2025-04-16 21:44:51] [INFO] Validación de scrap exitosa {"registroId":91,"cantidad":1,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 21:44:53] [INFO] Corrección enviada con éxito {"registro_id":93,"tipo":"scrap","nota":"","user_id":1212}
+[2025-04-16 21:45:46] [INFO] Corrección cancelada {"id":16,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:45:47] [INFO] Corrección cancelada {"id":15,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:45:48] [INFO] Corrección cancelada {"id":14,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:45:49] [INFO] Corrección cancelada {"id":13,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:45:49] [INFO] Corrección cancelada {"id":12,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:45:50] [INFO] Corrección cancelada {"id":11,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:45:51] [INFO] Corrección cancelada {"id":10,"usuario":1212,"resultado":{"success":true,"message":"Correcci\u00f3n cancelada correctamente."}}
+[2025-04-16 21:46:35] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":86}
+[2025-04-16 21:46:35] [INFO] Validación de producción exitosa {"entrega_id":86,"usuario_id":1212,"validacion_id":1}
+[2025-04-16 21:46:35] [INFO] Guardado de producción exitoso {"user_id":1212,"entrega_id":86,"validacion_id":1}
+[2025-04-16 21:46:41] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":1}
+[2025-04-16 21:46:51] [INFO] Solicitud de creación de retención recibida {"registro_id":83,"cantidad":200,"user_id":1212}
+[2025-04-16 21:46:51] [INFO] Retención creada exitosamente {"retencion_id":15,"registro_id":83,"cantidad":200}
+[2025-04-16 21:46:51] [INFO] Retención creada exitosamente {"retencion_id":15,"registro_id":83,"user_id":1212}
+[2025-04-16 21:46:51] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":2}
+[2025-04-16 21:46:56] [INFO] Solicitud de creación de retención recibida {"registro_id":70,"cantidad":44667,"user_id":1212}
+[2025-04-16 21:46:56] [INFO] Retención creada exitosamente {"retencion_id":16,"registro_id":70,"cantidad":44667}
+[2025-04-16 21:46:56] [INFO] Retención creada exitosamente {"retencion_id":16,"registro_id":70,"user_id":1212}
+[2025-04-16 21:46:56] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:46:58] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:47:26] [INFO] Destino asignado exitosamente {"retencion_id":16,"tipo_destino":"produccion_final","cantidad":2090,"user_id":1212,"resultado":"Destino asignado correctamente"}
+[2025-04-16 21:47:26] [INFO] Destino asignado exitosamente {"retencion_id":16,"tipo_destino":"retrabajo","cantidad":2000,"user_id":1212,"resultado":"Destino asignado correctamente"}
+[2025-04-16 21:47:26] [INFO] Destino asignado exitosamente {"retencion_id":16,"tipo_destino":"destruccion","cantidad":40000,"user_id":1212,"resultado":"Destino asignado correctamente"}
+[2025-04-16 21:47:26] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:47:26] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:47:37] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":1212,"cantidad":1}
+[2025-04-16 21:47:40] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":1212,"cantidad":1}
+[2025-04-16 21:47:42] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":1212,"cantidad":1}
+[2025-04-16 21:47:46] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:50:35] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:51:41] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:53:18] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:54:03] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:56:09] [INFO] Destino asignado exitosamente {"retencion_id":16,"tipo_destino":"produccion_final","cantidad":55,"user_id":1212,"resultado":"Destino asignado correctamente"}
+[2025-04-16 21:56:09] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:56:09] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 21:56:35] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 22:00:04] [INFO] Consulta de retenciones activas {"area_id":1,"cantidad":3}
+[2025-04-16 22:00:44] [INFO] Corrección enviada con éxito {"registro_id":98,"tipo":"produccion","nota":"","user_id":1212}
+[2025-04-16 22:01:20] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":96}
+[2025-04-16 22:01:20] [INFO] Registrando historial de validación {"registro_id":96,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 22:01:20] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":96,"validacion_id":null}
+[2025-04-16 22:01:22] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":94}
+[2025-04-16 22:01:22] [INFO] Registrando historial de validación {"registro_id":94,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 22:01:22] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":94,"validacion_id":null}
+[2025-04-16 22:01:24] [INFO] Solicitud de validación de scrap recibida {"registroId":93,"cantidad":2,"user_id":1212}
+[2025-04-16 22:01:24] [INFO] Validación de scrap exitosa {"registroId":93,"cantidad":2,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 22:01:26] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":87}
+[2025-04-16 22:01:26] [INFO] Registrando historial de validación {"registro_id":87,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 22:01:26] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":87,"validacion_id":null}
+[2025-04-16 22:01:40] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":90}
+[2025-04-16 22:01:40] [INFO] Registrando historial de validación {"registro_id":90,"tipo":"produccion","usuario_id":1212}
+[2025-04-16 22:01:40] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":90,"validacion_id":null}
+[2025-04-16 22:01:42] [INFO] Solicitud de validación de scrap recibida {"registroId":97,"cantidad":4,"user_id":1212}
+[2025-04-16 22:01:42] [INFO] Validación de scrap exitosa {"registroId":97,"cantidad":4,"user_id":1212,"mensaje":"Scrap validado correctamente"}
+[2025-04-16 22:06:39] [INFO] Solicitud de validación de scrap recibida {"registroId":101,"cantidad":172005,"user_id":1212}
+[2025-04-16 22:06:39] [INFO] Validación de scrap exitosa {"registroId":101,"cantidad":172005,"user_id":1212,"mensaje":"Scrap validado correctamente"}

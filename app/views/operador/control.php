@@ -7,7 +7,7 @@
     <title>Control de Tiempos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <!-- Style.css -->
-    <link rel="stylesheet" href="./assets/css/styleControl.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/styleControl.css?v=<?php echo time(); ?>">
     <style>
         .historial {
             width: 150%;

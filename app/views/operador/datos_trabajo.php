@@ -9,11 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <link rel="stylesheet" href="assets/css/datos_trabajo.css">
     <link rel="stylesheet" href="assets/css/buttons.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
-        <h2>Datos de Operaciones</h2>
+        <h2>Datos de Operaciones - <?= htmlspecialchars($maquina) ?></h2>
 
         <!-- Formulario de datos -->
         <form class="form" method="post" action="/timeControl/public/seleccionar_data">

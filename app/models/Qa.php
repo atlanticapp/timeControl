@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Core\Model;
 use App\Models\Control;
-use PDOException;
 
 class Qa extends Model
 {
@@ -34,43 +33,53 @@ class Qa extends Model
                 (tipo_boton = 'Producción' AND descripcion = 'Parcial') 
                 OR (tipo_boton = 'final_produccion')
             )
-        ORDER BY fecha_registro DESC";
+        ORDER BY fecha_registro DESC, maquina, jtWo, item, codigo_empleado";
 
         $stmt = $this->db->prepare($query);
         $stmt->bind_param('i', $area_id);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $entregas = [
-            'entregas_produccion' => [],
-            'entregas_scrap' => []
-        ];
+        $entregasAgrupadas = [];
 
         while ($row = $result->fetch_assoc()) {
-            $datosComunes = $this->prepararDatosComunes($row);
+            // Creamos una clave única usando los campos que identifican una entrega
+            $key = $row['fecha_registro'] . '_' . $row['maquina'] . '_' . $row['jtWo'] . '_' . 
+                   $row['item'] . '_' . $row['codigo_empleado'];
 
-            switch ($row['estado_validacion']) {
-                case 'Pendiente':
-                    if ($row['cantidad_produccion'] > 0) {
-                        $entregas['entregas_produccion'][] = array_merge($datosComunes, [
-                            'cantidad' => $row['cantidad_produccion'],
-                            'tipo_registro' => 'produccion',
-                            'estado_validacion' => 'Pendiente'
-                        ]);
-                    }
+            if (!isset($entregasAgrupadas[$key])) {
+                $entregasAgrupadas[$key] = [
+                    'info_comun' => $this->prepararDatosComunes($row),
+                    'entregas' => []
+                ];
+            }
 
-                    if ($row['cantidad_scrapt'] > 0) {
-                        $entregas['entregas_scrap'][] = array_merge($datosComunes, [
-                            'cantidad' => $row['cantidad_scrapt'],
-                            'tipo_registro' => 'scrap',
-                            'estado_validacion' => 'Pendiente'
-                        ]);
-                    }
-                    break;
+            // Agregamos los registros de producción y scrap si existen
+            if ($row['cantidad_produccion'] > 0) {
+                $entregasAgrupadas[$key]['entregas'][] = [
+                    'id' => $row['id'],
+                    'tipo' => 'produccion',
+                    'cantidad' => $row['cantidad_produccion'],
+                    'estado_validacion' => 'Pendiente'
+                ];
+            }
+            
+            if ($row['cantidad_scrapt'] > 0) {
+                $entregasAgrupadas[$key]['entregas'][] = [
+                    'id' => $row['id'],
+                    'tipo' => 'scrap',
+                    'cantidad' => $row['cantidad_scrapt'],
+                    'estado_validacion' => 'Pendiente'
+                ];
             }
         }
 
-        return $entregas;
+        // Ordenar por fecha_registro de más reciente a más antigua
+        uasort($entregasAgrupadas, function($a, $b) {
+            return strtotime($b['info_comun']['fecha_registro']) - strtotime($a['info_comun']['fecha_registro']);
+        });
+
+        return array_values($entregasAgrupadas);
     }
 
     private function prepararDatosComunes($row)
@@ -97,14 +106,23 @@ class Qa extends Model
     FROM registro
     WHERE estado_validacion = 'Validado'
         AND validado_por = ?
-        AND cantidad_produccion > 0";
+        AND cantidad_produccion > 0
+    ORDER BY fecha_registro DESC";
 
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("i", $userqa);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $entregas = [];
+        $control = new Control();
+
+        while ($row = $result->fetch_assoc()) {
+            $row['nombre_maquina'] = $control->getNameMaquina($row['maquina']);
+            $entregas[] = $row;
+        }
+
+        return $entregas;
     }
 
 
@@ -171,21 +189,20 @@ class Qa extends Model
     public function getCountEntregasEnProceso($area_id)
     {
         $query = "SELECT 
-                SUM(CASE 
-                        WHEN estado_validacion = 'Corregir' THEN 1 
-                        ELSE 0 
-                        END) AS total
-                FROM registro
-                WHERE area_id = ?";
+            COUNT(*) as total
+            FROM registro 
+            WHERE estado_validacion = 'Correccion' 
+            AND area_id = ?";
 
         try {
             $stmt = $this->db->prepare($query);
-            $stmt->execute([$area_id]);
-            $result = $stmt->fetch();  // Sin usar PDO::FETCH_ASSOC
-
-            return $result['total'] ?? 0;  // Retorna el total o 0 si no hay datos
-        } catch (PDOException $e) {
-            // En caso de error, loguea el error y retorna 0
+            $stmt->bind_param('i', $area_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            
+            return $row['total'] ?? 0;
+        } catch (\Exception $e) {
             error_log("Error en getCountEntregasEnProceso: " . $e->getMessage());
             return 0;
         }
@@ -196,10 +213,10 @@ class Qa extends Model
      */
     public function getCountEntregasValidadas($area_id)
     {
-        $query = "  SELECT 
+        $query = "SELECT 
             SUM(
             CASE 
-                WHEN estado_validacion = 'validado' THEN 1
+                WHEN estado_validacion = 'validado' AND cantidad_produccion > 0 THEN 1
                 ELSE 0
             END
         ) AS total
@@ -267,9 +284,115 @@ class Qa extends Model
             'scrap_pendientes' => $pendientes['total_scrap'],
             'produccion_pendiente' => $pendientes['total_produccion'],
             'validadas' => $this->getCountEntregasValidadas($area_id),
-            'en_proceso' => $en_proceso // Número de entregas en proceso (estado 'Corregir')
+            'en_proceso' => $en_proceso 
         ];
 
         return $stats;
+    }
+
+    public function getDestinosStats($areaId = null, $userId = null)
+    {
+        try {
+            $query = "
+                SELECT 
+                    rd.tipo_destino,
+                    COUNT(*) as total,
+                    SUM(rd.cantidad) as cantidad_total
+                FROM retencion_destinos rd
+                INNER JOIN retenciones r ON rd.retencion_id = r.id
+                INNER JOIN registro reg ON r.registro_id = reg.id
+                WHERE 1=1
+                " . ($areaId ? "AND reg.area_id = ?" : "") . "
+                " . ($userId ? "AND r.usuario_id = ?" : "") . "
+                GROUP BY rd.tipo_destino";
+
+            $stmt = $this->db->prepare($query);
+            
+            // Preparar los parámetros de manera dinámica
+            $types = '';
+            $params = [];
+            
+            if ($areaId) {
+                $types .= 'i';
+                $params[] = $areaId;
+            }
+            if ($userId) {
+                $types .= 'i';
+                $params[] = $userId;
+            }
+            
+            if (!empty($params)) {
+                $stmt->bind_param($types, ...$params);
+            }
+
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $stats = [
+                'produccion' => ['total' => 0, 'cantidad' => 0],
+                'retrabajo' => ['total' => 0, 'cantidad' => 0],
+                'destruccion' => ['total' => 0, 'cantidad' => 0]
+            ];
+
+            while ($row = $result->fetch_assoc()) {
+                $tipo = $row['tipo_destino'] === 'produccion_final' ? 'produccion' : $row['tipo_destino'];
+                $stats[$tipo] = [
+                    'total' => (int)$row['total'],
+                    'cantidad' => (float)$row['cantidad_total']
+                ];
+            }
+
+            return $stats;
+
+        } catch (\Exception $e) {
+            error_log("Error en getDestinosStats: " . $e->getMessage());
+            return [
+                'produccion' => ['total' => 0, 'cantidad' => 0],
+                'retrabajo' => ['total' => 0, 'cantidad' => 0],
+                'destruccion' => ['total' => 0, 'cantidad' => 0]
+            ];
+        }
+    }
+
+    public function getEntregasProduccionPendientes($area_id)
+    {
+        $query = "
+            SELECT 
+                r.*,
+                m.nombre as nombre_maquina,
+                u.nombre as nombre_empleado
+            FROM registro r
+            LEFT JOIN maquinas m ON r.maquina = m.id
+            LEFT JOIN users u ON r.codigo_empleado = u.codigo_empleado
+            WHERE r.estado_validacion = 'Pendiente'
+            AND r.area_id = ?
+            AND r.cantidad_produccion > 0
+            ORDER BY r.fecha_registro DESC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $area_id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getEntregasScrapPendientes($area_id)
+    {
+        $query = "
+            SELECT 
+                r.*,
+                m.nombre as nombre_maquina,
+                u.nombre as nombre_empleado
+            FROM registro r
+            LEFT JOIN maquinas m ON r.maquina = m.id
+            LEFT JOIN users u ON r.codigo_empleado = u.codigo_empleado
+            WHERE r.estado_validacion = 'Pendiente'
+            AND r.area_id = ?
+            AND r.cantidad_scrapt > 0
+            ORDER BY r.fecha_registro DESC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $area_id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 }

@@ -79,13 +79,11 @@ class CorreccionesOperador extends Model
                 UPDATE registro 
                 SET 
                     $campoCantidad = ?,
-                    estado_validacion = 'Pendiente',
-                    comentario = ?,
-                    fecha_actualizacion = NOW()
+                    estado_validacion = 'Pendiente'
                 WHERE id = ?
             ";
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param('dsi', $cantidad, $comentario, $registroId);
+            $stmt->bind_param('di', $cantidad, $registroId);
 
             if (!$stmt->execute()) {
                 throw new Exception('Error al actualizar el registro: ' . $stmt->error);

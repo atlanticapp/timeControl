@@ -1,0 +1,26 @@
+|.main-content {
+    transition: margin-left 0.3s ease-in-out;
+}
+
+@media (min-width: 1024px) {
+    .main-content {
+        margin-left: 16rem;
+    }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 2px;
+}
+
+.sidebar-transition {
+    transition: transform 0.3s ease-in-out;
+}

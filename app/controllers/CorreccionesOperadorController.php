@@ -40,12 +40,12 @@ class CorreccionesOperadorController extends Controller
 
         $solicitudId = filter_input(INPUT_POST, 'solicitud_id', FILTER_VALIDATE_INT);
         $registroId = filter_input(INPUT_POST, 'registro_id', FILTER_VALIDATE_INT);
-        $tipo = filter_input(INPUT_POST, 'tipo', FILTER_SANITIZE_STRING); // 'produccion' o 'scrap'
+        $tipo = filter_input(INPUT_POST, 'tipo'); // 'produccion' o 'scrap'
         $cantidad = filter_input(INPUT_POST, 'cantidad', FILTER_VALIDATE_FLOAT);
         $comentario = trim($_POST['comentario'] ?? '');
         $user = AuthHelper::getCurrentUser();
 
-        if (!$solicitudId || !$registroId || !$tipo || $cantidad <= 0 || empty($comentario)) {
+        if (!$solicitudId || !$registroId || !$tipo || $cantidad <= 0) {
             Logger::warning('Datos inválidos al intentar procesar corrección', [
                 'solicitud_id' => $solicitudId,
                 'registro_id' => $registroId,

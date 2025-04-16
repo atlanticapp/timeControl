@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Cache DOM elements
     const elements = {
-        dateElement: document.getElementById('current-date'),
         timeElement: document.getElementById('current-time'),
         revisionModal: document.getElementById('revisionModal'),
         validateModal: document.getElementById('validateModal'),
@@ -9,10 +8,21 @@ document.addEventListener("DOMContentLoaded", function () {
         submitValidationBtn: document.getElementById('submitValidation'),
         notaRevision: document.getElementById('notaRevision'),
         comentarioValidacion: document.getElementById('comentarioValidacion'),
-        validateModalLabel: document.getElementById('validateModalLabel')
+        comentarioValidacionContainer: document.querySelector('label[for="comentarioValidacion"]').parentNode, // Referencia al div contenedor del comentario
+        tabButtons: document.querySelectorAll('.tab-btn'),
+        tabPanels: document.querySelectorAll('.tab-panel'),
+        btnReview: document.querySelectorAll('.btn-review'),
+        btnValidateProduction: document.querySelectorAll('.btn-validate-production'),
+        btnValidateScrap: document.querySelectorAll('.btn-validate-scrap'),
+        modalCloseButtons: document.querySelectorAll('.modal-close'),
+        modalBackdrops: document.querySelectorAll('.modal-backdrop')
     };
 
-    // Constants
+    // Estado temporal
+    let currentEntregaId = null;
+    let currentTipoEntrega = null;
+
+    // URLs para las peticiones AJAX
     const URLS = {
         getStatus: '/timeControl/public/getStatus',
         revisar: '/timeControl/public/revisar',
@@ -20,22 +30,15 @@ document.addEventListener("DOMContentLoaded", function () {
         validarProduccion: '/timeControl/public/validarProduccion'
     };
 
-    const TOAST_TYPES = {
-        success: toastr.success,
-        error: toastr.error,
-        warning: toastr.warning,
-        info: toastr.info
-    };
-
-    // Configure toastr
-    toastr.options = {
+    // Configuración de Toastr
+    const TOAST_CONFIG = {
         closeButton: true,
         progressBar: true,
         positionClass: "toast-top-right",
         timeOut: 3000,
         extendedTimeOut: 1000,
         preventDuplicates: true,
-        onHidden: function () {
+        onHidden: function() {
             if (window.pendingRedirect) {
                 window.location.href = window.pendingRedirect;
                 window.pendingRedirect = null;
@@ -43,218 +46,251 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Toast handling function
-    window.showBackendToast = function (message, type = "success", redirectUrl = null) {
-        const toastrFunction = TOAST_TYPES[type] || TOAST_TYPES.info;
-        toastrFunction.call(toastr, message);
+    // Inicializar toastr con la configuración
+    toastr.options = TOAST_CONFIG;
 
-        if (redirectUrl) {
-            window.pendingRedirect = redirectUrl;
-        }
-    };
-
-    // Helper functions
+    // Funciones principales
     const updateDateTime = () => {
         const now = new Date();
-        if (elements.dateElement) elements.dateElement.textContent = now.toLocaleDateString('es-ES');
-        if (elements.timeElement) elements.timeElement.textContent = now.toLocaleTimeString('es-ES');
+        const dateOptions = { dateStyle: 'medium' };
+        const timeOptions = { timeStyle: 'medium' };
+        
+        if (elements.dateElement) {
+            elements.dateElement.textContent = now.toLocaleDateString('es-ES', dateOptions);
+        }
+        if (elements.timeElement) {
+            elements.timeElement.textContent = now.toLocaleTimeString('es-ES', timeOptions);
+        }
     };
 
-    const showModal = (modalElement) => {
-        if (!modalElement) return;
-        const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-        modalInstance.show();
-    };
-
-    const hideModal = (modalElement) => {
-        if (!modalElement) return;
-        const modalInstance = bootstrap.Modal.getInstance(modalElement);
-        if (modalInstance) modalInstance.hide();
-    };
-
-    const showFieldError = (field, message) => {
-        if (!field) return;
-        field.classList.add('is-invalid');
-        const existingError = field.parentNode.querySelector('.invalid-feedback');
-        if (existingError) existingError.remove();
-
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'invalid-feedback';
-        errorDiv.innerText = message;
-        field.parentNode.appendChild(errorDiv);
-
-        setTimeout(() => {
-            field.classList.remove('is-invalid');
-            if (errorDiv.parentNode === field.parentNode) {
-                field.parentNode.removeChild(errorDiv);
-            }
-        }, 3000);
-    };
-
-    const showValidationModal = (entregaId, tipo, title, commentDisplayStyle, cantidad = 0) => {
-        if (elements.validateModalLabel) elements.validateModalLabel.textContent = title;
-        if (elements.submitValidationBtn) {
-            elements.submitValidationBtn.setAttribute('data-id', entregaId);
-            elements.submitValidationBtn.setAttribute('data-tipo', tipo);
-            if (cantidad > 0) {
-                elements.submitValidationBtn.setAttribute('data-entrega', cantidad);
-            }
+    const handleApiResponse = async (response) => {
+        if (response.redirected) {
+            window.location.href = response.url;
+            return { redirected: true };
         }
 
-        const comentarioContainer = document.querySelector('#validateModal textarea[data-id="data-comentario"]')?.closest('.mb-3');
-        if (comentarioContainer) {
-            comentarioContainer.style.display = commentDisplayStyle;
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || 'Error en la solicitud');
         }
-
-        if (elements.comentarioValidacion) elements.comentarioValidacion.value = '';
-        showModal(elements.validateModal);
+        return data;
     };
 
     const fetchData = async (url, method = 'GET', formData = null) => {
         try {
-            const options = { method: method };
-            if (formData) options.body = formData;
+            const options = {
+                method,
+                headers: method === 'GET' ? {} : {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            };
+
             const response = await fetch(url, options);
-
-            if (response.redirected) {
-                window.location.href = response.url;
-                return { redirected: true };
-            }
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Error in request');
-            }
-
-            return await response.json();
+            return await handleApiResponse(response);
         } catch (error) {
-            console.error('Fetch error:', error);
+            console.error('Error en fetch:', error);
+            toastr.error(error.message);
             return { success: false, message: error.message };
         }
     };
 
-    // Initialize
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
-
-    const entregaIdToHide = sessionStorage.getItem('ocultarEntregaId');
-    if (entregaIdToHide) {
-        const entregaRow = document.querySelector(`[data-id="${entregaIdToHide}"]`)?.closest('tr');
-        if (entregaRow) {
-            entregaRow.style.transition = 'opacity 0.5s ease-out';
-            entregaRow.style.opacity = '0';
-            setTimeout(() => entregaRow.remove(), 600);
-        }
-        sessionStorage.removeItem('ocultarEntregaId');
-    }
-
-    // Fetch initial status
-    fetchData(URLS.getStatus).then(data => {
-        if (data.status && data.message) {
-            const toastrFunction = data.status === "success" ? TOAST_TYPES.success : TOAST_TYPES.error;
-            toastrFunction(data.message, '', { timeOut: 2000 });
-        }
-    });
-
-    // Event delegation for buttons
-    document.addEventListener('click', function (event) {
-        const reviewButton = event.target.closest('.btn-review');
-        if (reviewButton) {
-            const entregaId = reviewButton.getAttribute('data-id');
-            const tipo = reviewButton.getAttribute('data-tipo');
-            if (elements.submitRevisionBtn) {
-                elements.submitRevisionBtn.setAttribute('data-id', entregaId);
-                elements.submitRevisionBtn.setAttribute('data-tipo', tipo);
+    // Funciones de UI
+    const handleModal = (modalElement, action = 'show') => {
+        if (!modalElement) return;
+        
+        if (action === 'show') {
+            modalElement.classList.remove('hidden');
+            modalElement.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+            
+            // Añadir animación de entrada
+            const modalContent = modalElement.querySelector('.bg-white');
+            if (modalContent) {
+                modalContent.classList.add('scale-100', 'opacity-100');
+                modalContent.classList.remove('scale-95', 'opacity-0');
             }
-            if (elements.notaRevision) elements.notaRevision.value = '';
-            showModal(elements.revisionModal);
-            return;
-        }
-
-        const validateProductionButton = event.target.closest('.btn-validate-production');
-        if (validateProductionButton) {
-            const entregaId = validateProductionButton.getAttribute('data-id');
-            showValidationModal(entregaId, 'produccion', 'Validar Entrega de Producción', 'none');
-            return;
-        }
-
-        const validateScrapButton = event.target.closest('.btn-validate-scrap');
-        if (validateScrapButton) {
-            const entregaId = validateScrapButton.getAttribute('data-id');
-            const cantidad = validateScrapButton.getAttribute('data-entrega');
-            showValidationModal(entregaId, 'scrap', 'Validar Entrega de Scrap', 'block', cantidad);
-        }
-    });
-
-    // Handle revision submission
-    if (elements.submitRevisionBtn) {
-        elements.submitRevisionBtn.addEventListener('click', function () {
-            const entregaId = this.getAttribute('data-id');
-            const tipo = this.getAttribute('data-tipo');
-            const nota = elements.notaRevision?.value || '';
-
-            if (!nota.trim()) {
-                showFieldError(elements.notaRevision, 'Por favor ingrese una nota para la corrección o revisión');
-                return;
+        } else {
+            // Añadir animación de salida
+            const modalContent = modalElement.querySelector('.bg-white');
+            if (modalContent) {
+                modalContent.classList.add('scale-95', 'opacity-0');
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                
+                // Esperar a que termine la animación
+                setTimeout(() => {
+                    modalElement.classList.add('hidden');
+                    modalElement.classList.remove('flex');
+                    document.body.classList.remove('overflow-hidden');
+                }, 200);
+            } else {
+                modalElement.classList.add('hidden');
+                modalElement.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
             }
+        }
+    };
 
-            hideModal(elements.revisionModal);
+    const handleRevisionModal = (event) => {
+        const button = event.currentTarget;
+        currentEntregaId = button.dataset.id;
+        currentTipoEntrega = button.dataset.tipo;
+        
+        // Actualizar campos del modal con los data attributes del botón
+        document.getElementById('revisionMaquina').textContent = button.dataset.maquina;
+        document.getElementById('revisionItem').textContent = button.dataset.item;
+        document.getElementById('revisionJtWo').textContent = button.dataset.jtwo;
+        document.getElementById('revisionCantidad').textContent = button.dataset.cantidad + ' lb.';
+        document.getElementById('revisionTipo').textContent = button.dataset.tipo === 'scrap' ? 'Scrap' : 'Producción';
 
+        elements.notaRevision.value = '';
+        handleModal(elements.revisionModal, 'show');
+    };
+
+    const handleValidationModal = (event) => {
+        const button = event.currentTarget;
+        currentEntregaId = button.dataset.id;
+        currentTipoEntrega = button.dataset.tipo;
+        
+        // Actualizar campos del modal con los data attributes del botón
+        document.getElementById('validacionMaquina').textContent = button.dataset.maquina;
+        document.getElementById('validacionItem').textContent = button.dataset.item;
+        document.getElementById('validacionJtWo').textContent = button.dataset.jtwo;
+        document.getElementById('validacionCantidad').textContent = button.dataset.cantidad + ' lb.';
+        document.getElementById('validacionTipo').textContent = currentTipoEntrega === 'scrap' ? 'Scrap' : 'Producción';
+
+        // Mostrar u ocultar el campo de comentario según el tipo
+        if (currentTipoEntrega === 'scrap') {
+            // Mostrar el campo de comentario para scrap
+            elements.comentarioValidacionContainer.style.display = 'block';
+            elements.validateModal.dataset.cantidad = button.dataset.cantidad;
+        } else {
+            // Ocultar el campo de comentario para producción
+            elements.comentarioValidacionContainer.style.display = 'none';
+        }
+        
+        // Reiniciar el valor del comentario
+        elements.comentarioValidacion.value = '';
+        
+        handleModal(elements.validateModal, 'show');
+    };
+
+    const ocultarFila = (id) => {
+        const row = document.querySelector(`[data-id="${id}"]`)?.closest('tr');
+        if (row) {
+            row.style.transition = 'opacity 0.5s ease-out';
+            row.style.opacity = '0';
+            setTimeout(() => row.remove(), 500);
+        }
+    };
+
+    // Event Handlers
+    const handleTabClick = (event) => {
+        const button = event.target.closest('.tab-btn');
+        if (!button) return;
+
+        elements.tabButtons.forEach(btn => {
+            btn.classList.remove('active', 'bg-blue-50', 'text-blue-700');
+        });
+        button.classList.add('active', 'bg-blue-50', 'text-blue-700');
+
+        elements.tabPanels.forEach(panel => {
+            panel.classList.add('hidden');
+        });
+        document.getElementById(button.dataset.target)?.classList.remove('hidden');
+    };
+
+    // Inicialización y Event Listeners
+    const init = async () => {
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // Verificar estado inicial
+        const statusData = await fetchData(URLS.getStatus);
+        if (statusData?.status && statusData?.message) {
+            toastr[statusData.status === "success" ? 'success' : 'error'](statusData.message);
+        }
+
+        // Event Listeners
+        elements.tabButtons.forEach(button => {
+            button.addEventListener('click', handleTabClick);
+        });
+
+        // Event Listeners para los botones de revisión
+        document.querySelectorAll('.btn-review').forEach(btn => {
+            btn.addEventListener('click', handleRevisionModal);
+        });
+
+        // Event Listeners para los botones de validación
+        document.querySelectorAll('.btn-validate-production, .btn-validate-scrap').forEach(btn => {
+            btn.addEventListener('click', handleValidationModal);
+        });
+
+        elements.submitRevisionBtn?.addEventListener('click', async () => {
             const formData = new FormData();
-            formData.append('id', entregaId);
-            formData.append('tipo', tipo);
-            formData.append('nota', nota);
+            formData.append('id', currentEntregaId);
+            formData.append('nota', elements.notaRevision.value);
+            formData.append('tipo', currentTipoEntrega);
 
-            fetchData(URLS.revisar, 'POST', formData).then(data => {
-                if (data && data.message) {
-                    showBackendToast(data.message, data.success ? 'success' : 'error');
-                }
-                if (data.success) {
-                    sessionStorage.setItem('ocultarEntregaId', entregaId);
-                    setTimeout(() => location.reload(), 1500);
+            const data = await fetchData(URLS.revisar, 'POST', formData);
+            if (data.success) {
+                toastr.success('Revisión enviada correctamente');
+                handleModal(elements.revisionModal, 'hide');
+                ocultarFila(currentEntregaId);
+            }
+        });
+
+        elements.submitValidationBtn?.addEventListener('click', async () => {
+            const url = currentTipoEntrega === 'scrap' ? URLS.validarScrap : URLS.validarProduccion;
+            const formData = new FormData();
+            formData.append('id', currentEntregaId);
+            
+            // Solo añadir comentario si es scrap (cuando el campo está visible)
+            if (currentTipoEntrega === 'scrap') {
+                formData.append('comentario', elements.comentarioValidacion.value);
+                
+                // Solo para scrap se envía la cantidad
+                const cantidad = elements.validateModal.dataset.cantidad;
+                formData.append('cantidad', cantidad);
+            } else {
+                // Para producción enviamos comentario vacío
+                formData.append('comentario', '');
+            }
+
+            const data = await fetchData(url, 'POST', formData);
+            if (data.success) {
+                toastr.success('Entrega validada correctamente');
+                handleModal(elements.validateModal, 'hide');
+                ocultarFila(currentEntregaId);
+            }
+        });
+
+        // Manejar entregaId almacenado
+        const entregaIdToHide = sessionStorage.getItem('ocultarEntregaId');
+        if (entregaIdToHide) {
+            ocultarFila(entregaIdToHide);
+            sessionStorage.removeItem('ocultarEntregaId');
+        }
+
+        // Agregar listeners para cerrar modales
+        elements.modalCloseButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = button.closest('.modal, #revisionModal, #validateModal');
+                handleModal(modal, 'hide');
+            });
+        });
+
+        // Cerrar modal al hacer clic fuera
+        [elements.revisionModal, elements.validateModal].forEach(modal => {
+            if (!modal) return;
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    handleModal(modal, 'hide');
                 }
             });
         });
-    }
+    };
 
-    // Handle validation submission
-    if (elements.submitValidationBtn) {
-        elements.submitValidationBtn.addEventListener('click', function () {
-            const entregaId = this.getAttribute('data-id');
-            const tipo = this.getAttribute('data-tipo');
-            const cantidad = this.getAttribute('data-entrega') || '0';
-            const comentario = elements.comentarioValidacion?.value || '';
-
-            if (tipo === 'scrap') {
-                const comentarioContainer = document.querySelector('#validateModal textarea[data-id="data-comentario"]')?.closest('.mb-3');
-                if (comentarioContainer && comentarioContainer.style.display !== 'none' && !comentario.trim()) {
-                    showFieldError(elements.comentarioValidacion, 'Por favor ingrese observaciones para el scrap');
-                    return;
-                }
-            }
-
-            hideModal(elements.validateModal);
-
-            const formData = new FormData();
-            formData.append('id', entregaId);
-            formData.append('tipo', tipo);
-            formData.append('comentario', comentario);
-            formData.append('cantidad', cantidad);
-
-            const url = tipo === 'scrap' ? URLS.validarScrap : URLS.validarProduccion;
-
-            fetchData(url, 'POST', formData).then(data => {
-                if (data.redirected) return;
-                if (data && data.message) {
-                    showBackendToast(data.message, data.success ? 'success' : 'error');
-                    if (data.success) {
-                        sessionStorage.setItem('ocultarEntregaId', entregaId);
-                        setTimeout(() => location.reload(), 1500);
-                    }
-                } else {
-                    setTimeout(() => location.reload(), 1000);
-                }
-            });
-        });
-    }
+    init();
 });

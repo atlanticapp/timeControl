@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\AccionController;
 use App\Controllers\AuthController;
 use App\Controllers\ComentarioController;
 use App\Controllers\CorreccionController;
@@ -7,10 +8,15 @@ use App\Controllers\CorreccionesOperadorController;
 use App\Core\Router;
 use App\Controllers\MaquinaController;
 use App\Controllers\DataController;
+use App\Controllers\DestinoDestruccionController;
+use App\Controllers\DestinoProdController;
+use App\Controllers\DestinoRetrabajoController;
 use App\Controllers\NotificacionController;
+use App\Controllers\ProduccionController;
 use App\Controllers\QaController;
 use App\Helpers\AuthHelper;
 use App\Controllers\RegistroController;
+use App\Controllers\RetencionController;
 use App\Controllers\SaveVelocidad;
 use App\Controllers\SupervisorController;
 
@@ -58,11 +64,26 @@ $router->post('/supervisor', [SupervisorController::class, 'index']);
 // Rutas QA
 $router->get('/dashboard', [QaController::class, 'index']);
 $router->get('/checkNewNotifications', [NotificacionController::class, 'checkNewNotifications']);
+
 $router->get('/validacion', [QaController::class, 'validacion']);
 $router->post('/validarScrap', [QaController::class, 'validarScrap']);
 $router->post('/validarProduccion', [QaController::class, 'validarProduccion']);
 $router->post('/revisar', [CorreccionController::class, 'revisar']);
-$router->get('/accion', [QaController::class, 'accion']);
+
+$router->get('/revisiones', [CorreccionController::class, 'index']);
+$router->post('/cancelar', [CorreccionController::class, 'cancelar']);
+
+$router->get('/accion', [AccionController::class, 'accion']);
+$router->post('/guardarProduccion', [AccionController::class, 'guardarProduccion']);
+
+$router->get('/retenciones', [RetencionController::class, 'index']);
+$router->post('/retener', [RetencionController::class, 'crearRetencion']);
+$router->post('/asignarDestinos', [RetencionController::class, 'asignarDestino']);
+
+$router->get('/destinos/produccion', [DestinoProdController::class, 'index']);
+$router->get('/destinos/retrabajo', [DestinoRetrabajoController::class, 'index']);
+$router->get('/destinos/destruccion', [DestinoDestruccionController::class, 'index']);
+$router->get('/produccion/guardada', [ProduccionController::class, 'index']);
 
 // Error handling
 $router->get('/error', function () {

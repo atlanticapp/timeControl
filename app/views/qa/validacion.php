@@ -6,223 +6,269 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sistema de Control de Calidad - Constructor QA">
     <title>Control de Calidad - Constructor(QA)</title>
-    <!-- Optimized CSS imports -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 </head>
 
-<body class="bg-light">
+<body class="bg-gray-50">
     <?php include __DIR__ . "/../layouts/sidebarQa.php"; ?>
-    
-    <main class="lg:ml-64 p-4 md:p-6 transition-all duration-300 min-h-screen">
-        <div class="container-fluid px-0">
+
+    <main class="lg:ml-72 p-4 md:p-6 transition-all duration-300 min-h-screen bg-gray-50">
+        <div class="container mx-auto pt-14 lg:pt-4">
             <!-- Header Section -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body py-3">
-                    <div class="row align-items-center g-0">
-                        <div class="col-md-8">
-                            <h1 class="h3 fw-bold text-primary mb-0">Sistema de Control de Calidad (QA)</h1>
-                            <p class="text-muted mb-0 mt-1">Constructor - Validación de Entregas</p>
+            <div class="bg-white rounded-xl shadow-md mb-6">
+                <div class="p-5">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                        <div class="mb-4 md:mb-0">
+                            <!-- Breadcrumb -->
+                            <nav class="text-gray-500 mb-2" aria-label="Breadcrumb">
+                                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                                    <li><a href="/timeControl/public/qa" class="hover:text-teal-600 transition-colors">Inicio</a></li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-chevron-right text-xs mx-2"></i>
+                                        <span class="text-gray-700">Validación de Entregas</span>
+                                    </li>
+                                </ol>
+                            </nav>
+                            <!-- Título -->
+                            <h1 class="text-2xl font-bold text-teal-600 flex items-center">
+                                <i class="fas fa-check-circle mr-3"></i>Validación de Entregas
+                            </h1>
+                            <p class="text-gray-500 mt-1">Control y Validación de Entregas de Producción y Scrap</p>
                         </div>
-                        <div class="col-md-4 text-md-end">
-                            <div class="d-flex align-items-center justify-content-md-end">
-                                <i class="fas fa-calendar-alt text-primary me-2 fs-5"></i>
-                                <div>
-                                    <div id="current-date" class="small text-muted"></div>
-                                    <div id="current-time" class="fs-5 fw-semibold"></div>
-                                </div>
+                        <!-- Contador de Entregas -->
+                        <div class="flex items-center">
+                            <div class="bg-teal-100 text-teal-800 px-4 py-2 rounded-lg flex items-center shadow-sm">
+                                <i class="fas fa-layer-group mr-2"></i>
+                                <span class="font-semibold">Entregas Pendientes: <?php echo count($data['entregas_produccion'] ?? []) + count($data['entregas_scrap'] ?? []); ?></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Navigation Tabs -->
-            <ul class="nav nav-pills nav-fill mb-4 bg-white shadow-sm rounded p-2" id="mainTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active d-flex align-items-center justify-content-center" id="produccion-tab" data-bs-toggle="tab" data-bs-target="#produccion" type="button" role="tab" aria-controls="produccion" aria-selected="true">
-                        <i class="fas fa-clipboard-list me-2"></i>
-                        <span>Pendientes de Producción</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link d-flex align-items-center justify-content-center" id="scrap-tab" data-bs-toggle="tab" data-bs-target="#scrap" type="button" role="tab" aria-controls="scrap" aria-selected="false">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <span>Pendientes de Scrap</span>
-                    </button>
-                </li>
-            </ul>
+            <!-- Lista de entregas pendientes -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="bg-gradient-to-r from-teal-600 to-teal-700 text-white py-4 px-5 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-clipboard-check mr-3 text-xl"></i>
+                        <h3 class="text-lg font-bold">Entregas Pendientes de Validación</h3>
+                    </div>
+                    <span class="bg-white bg-opacity-20 rounded-full px-3 py-1 text-sm font-medium">
+                        <?php echo count($data['entregas_produccion'] ?? []) + count($data['entregas_scrap'] ?? []); ?> pendientes
+                    </span>
+                </div>
 
-            <!-- Tab Content -->
-            <div class="tab-content" id="mainTabContent">
-                <!-- Production Tab -->
-                <div class="tab-pane fade show active" id="produccion" role="tabpanel" aria-labelledby="produccion-tab">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-primary bg-gradient text-white py-3 d-flex align-items-center">
-                            <i class="fas fa-tasks me-2 fs-5"></i>
-                            <h3 class="mb-0 h5 fw-bold">Entregas Pendientes de Validación - Producción</h3>
+                <?php if (empty($data['entregas_produccion']) && empty($data['entregas_scrap'])): ?>
+                    <div class="flex flex-col items-center justify-center p-12 bg-gray-50">
+                        <div class="text-teal-600 mb-4">
+                            <i class="fas fa-check-circle text-5xl"></i>
                         </div>
-                        <div class="card-body p-0">
-                            <?php if (empty($data['entregas_produccion'])): ?>
-                                <div class="alert alert-info m-3 mb-0">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-info-circle fs-4 me-3"></i>
-                                        <span>No hay entregas pendientes de validación en Producción.</span>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-striped mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th class="border-0"><i class="fas fa-user text-primary me-1"></i> Operador</th>
-                                                <th class="border-0"><i class="fas fa-cogs text-primary me-1"></i> Máquina</th>
-                                                <th class="border-0"><i class="fas fa-tag text-primary me-1"></i> Item</th>
-                                                <th class="border-0"><i class="fas fa-file-alt text-primary me-1"></i> JT/WO</th>
-                                                <th class="border-0"><i class="fas fa-info-circle text-primary me-1"></i> Tipo</th>
-                                                <th class="border-0"><i class="fas fa-calendar-alt text-primary me-1"></i> Fecha/Hora</th>
-                                                <th class="border-0 text-end"><i class="fas fa-cubes text-primary me-1"></i> Cantidad</th>
-                                                <th class="border-0 text-center"><i class="fas fa-tools text-primary me-1"></i> Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($data['entregas_produccion'] as $entrega): ?>
-                                                <tr>
-                                                    <td class="align-middle"><?= htmlspecialchars($entrega['nombre_empleado']) ?></td>
-                                                    <td class="align-middle"><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
-                                                    <td class="align-middle fw-medium"><?= htmlspecialchars($entrega['item']) ?></td>
-                                                    <td class="align-middle"><?= htmlspecialchars($entrega['jtWo']) ?></td>
-                                                    <td class="align-middle">
-                                                        <span class="badge rounded-pill <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'bg-danger' : 'bg-warning text-dark' ?>">
-                                                            <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
+                        <h4 class="text-xl font-semibold text-gray-700 mb-2">¡Todo al día!</h4>
+                        <p class="text-gray-500 text-center max-w-md">
+                            No hay entregas pendientes de validación en este momento.
+                        </p>
+                    </div>
+                <?php else: ?>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 text-left text-gray-600 text-sm">
+                                <tr>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-calendar-alt text-teal-600 mr-2"></i> Fecha/Hora</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-cogs text-teal-600 mr-2"></i> Máquina</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-teal-600 mr-2"></i> Item</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-teal-600 mr-2"></i> JT/WO</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-info-circle text-teal-600 mr-2"></i> Tipo</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-cubes text-teal-600 mr-2"></i> Detalle</th>
+                                    <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-teal-600 mr-2"></i> Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $entregas = [];
+                                foreach ($data['entregas_produccion'] as $entrega) {
+                                    $key = $entrega['fecha_registro'] . '_' . $entrega['maquina'] . '_' . $entrega['jtWo'] . '_' . $entrega['item'];
+                                    if (!isset($entregas[$key])) {
+                                        $entregas[$key] = [
+                                            'fecha_registro' => $entrega['fecha_registro'],
+                                            'nombre_maquina' => $entrega['nombre_maquina'],
+                                            'item' => $entrega['item'],
+                                            'jtWo' => $entrega['jtWo'],
+                                            'tipo_boton' => $entrega['tipo_boton'],
+                                            'entregas' => []
+                                        ];
+                                    }
+                                    $entregas[$key]['entregas'][] = [
+                                        'id' => $entrega['id'],
+                                        'tipo' => 'produccion',
+                                        'cantidad' => $entrega['cantidad_produccion']
+                                    ];
+                                }
+
+                                foreach ($data['entregas_scrap'] as $entrega) {
+                                    $key = $entrega['fecha_registro'] . '_' . $entrega['maquina'] . '_' . $entrega['jtWo'] . '_' . $entrega['item'];
+                                    if (!isset($entregas[$key])) {
+                                        $entregas[$key] = [
+                                            'fecha_registro' => $entrega['fecha_registro'],
+                                            'nombre_maquina' => $entrega['nombre_maquina'],
+                                            'item' => $entrega['item'],
+                                            'jtWo' => $entrega['jtWo'],
+                                            'tipo_boton' => $entrega['tipo_boton'],
+                                            'entregas' => []
+                                        ];
+                                    }
+                                    $entregas[$key]['entregas'][] = [
+                                        'id' => $entrega['id'],
+                                        'tipo' => 'scrap',
+                                        'cantidad' => $entrega['cantidad_scrapt']
+                                    ];
+                                }
+
+                                foreach ($entregas as $entrega): ?>
+                                    <tr class="hover:bg-gray-50/50 border-b border-gray-100">
+                                        <td class="px-4 py-3">
+                                            <div class="text-sm">
+                                                <div class="font-medium"><?= date('d/m/Y', strtotime($entrega['fecha_registro'])) ?></div>
+                                                <div class="text-gray-500"><?= date('H:i', strtotime($entrega['fecha_registro'])) ?></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
+                                        <td class="px-4 py-3 font-medium"><?= htmlspecialchars($entrega['item']) ?></td>
+                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['jtWo']) ?></td>
+                                        <td class="px-4 py-3">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold 
+                                                <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' ?>">
+                                                <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <div class="space-y-2">
+                                                <?php foreach ($entrega['entregas'] as $detalle): ?>
+                                                    <div class="flex items-center justify-between py-1.5 px-3 rounded-md <?= $detalle['tipo'] == 'scrap' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700' ?>">
+                                                        <span class="font-medium">
+                                                            <?= ucfirst($detalle['tipo']) ?>
                                                         </span>
-                                                    </td>
-                                                    <td class="align-middle small"><?= date('d/m/Y H:i', strtotime($entrega['fecha_registro'])) ?></td>
-                                                    <td class="text-end align-middle fw-bold"><?= number_format($entrega['cantidad'], 0, ',', '.') ?> <small class="text-muted">unid.</small></td>
-                                                    <td class="text-center align-middle">
-                                                        <div class="btn-group" role="group">
-                                                            <button class="btn btn-sm btn-outline-primary btn-review" data-id="<?= $entrega['id'] ?>" data-tipo="produccion" title="Revisar">
-                                                                <i class="fas fa-search"></i>
-                                                            </button>
-                                                            <button class="btn btn-sm btn-outline-success btn-validate-production" data-id="<?= $entrega['id'] ?>" title="Validar">
-                                                                <i class="fas fa-check"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scrap Tab -->
-                <div class="tab-pane fade" id="scrap" role="tabpanel" aria-labelledby="scrap-tab">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-danger bg-gradient text-white py-3 d-flex align-items-center">
-                            <i class="fas fa-exclamation-triangle me-2 fs-5"></i>
-                            <h3 class="mb-0 h5 fw-bold">Entregas Pendientes - Scrap</h3>
-                        </div>
-                        <div class="card-body p-0">
-                            <?php if (empty($data['entregas_scrap'])): ?>
-                                <div class="alert alert-info m-3 mb-0">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-info-circle fs-4 me-3"></i>
-                                        <span>No hay entregas pendientes de validación en Scrap.</span>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-striped mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th class="border-0"><i class="fas fa-user text-danger me-1"></i> Operador</th>
-                                                <th class="border-0"><i class="fas fa-cogs text-danger me-1"></i> Máquina</th>
-                                                <th class="border-0"><i class="fas fa-tag text-danger me-1"></i> Item</th>
-                                                <th class="border-0"><i class="fas fa-file-alt text-danger me-1"></i> JT/WO</th>
-                                                <th class="border-0"><i class="fas fa-info-circle text-danger me-1"></i> Tipo</th>
-                                                <th class="border-0"><i class="fas fa-calendar-alt text-danger me-1"></i> Fecha/Hora</th>
-                                                <th class="border-0 text-end"><i class="fas fa-cubes text-danger me-1"></i> Cantidad</th>
-                                                <th class="border-0 text-center"><i class="fas fa-tools text-danger me-1"></i> Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($data['entregas_scrap'] as $entrega): ?>
-                                                <tr>
-                                                    <td class="align-middle"><?= htmlspecialchars($entrega['nombre_empleado']) ?></td>
-                                                    <td class="align-middle"><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
-                                                    <td class="align-middle fw-medium"><?= htmlspecialchars($entrega['item']) ?></td>
-                                                    <td class="align-middle"><?= htmlspecialchars($entrega['jtWo']) ?></td>
-                                                    <td class="align-middle">
-                                                        <span class="badge rounded-pill <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'bg-danger' : 'bg-warning text-dark' ?>">
-                                                            <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
+                                                        <span class="font-bold">
+                                                            <?= number_format($detalle['cantidad'], 2) ?> lb.
                                                         </span>
-                                                    </td>
-                                                    <td class="align-middle small"><?= date('d/m/Y H:i', strtotime($entrega['fecha_registro'])) ?></td>
-                                                    <td class="text-end align-middle fw-bold"><?= number_format($entrega['cantidad'], 0, ',', '.') ?> <small class="text-muted">unid.</small></td>
-                                                    <td class="text-center align-middle">
-                                                        <div class="btn-group" role="group">
-                                                            <button class="btn btn-sm btn-outline-primary btn-review" data-id="<?= $entrega['id'] ?>" data-tipo="scrap" title="Revisar">
-                                                                <i class="fas fa-search"></i>
-                                                            </button>
-                                                            <button class="btn btn-sm btn-outline-success btn-validate-scrap" data-id="<?= $entrega['id'] ?>" data-entrega="<?= $entrega['cantidad'] ?>" title="Validar">
-                                                                <i class="fas fa-check"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <?php foreach ($entrega['entregas'] as $index => $detalle): ?>
+                                                <div class="flex space-x-2 <?= $index > 0 ? 'mt-2' : '' ?>">
+                                                    <button class="btn-review inline-flex items-center px-2.5 py-1.5 border border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors duration-200 text-sm w-full justify-center"
+                                                        data-id="<?= $detalle['id'] ?>"
+                                                        data-tipo="<?= $detalle['tipo'] ?>"
+                                                        data-cantidad="<?= $detalle['cantidad'] ?>"
+                                                        data-maquina="<?= htmlspecialchars($entrega['nombre_maquina']) ?>"
+                                                        data-item="<?= htmlspecialchars($entrega['item']) ?>"
+                                                        data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>">
+                                                        <i class="fas fa-search mr-1"></i>Revisar
+                                                    </button>
+                                                    <button class="<?= $detalle['tipo'] == 'scrap' ? 'btn-validate-scrap' : 'btn-validate-production' ?> 
+                                                            inline-flex items-center px-2.5 py-1.5 border border-green-600 text-green-600 rounded 
+                                                            hover:bg-green-600 hover:text-white transition-colors duration-200 text-sm w-full justify-center"
+                                                        data-id="<?= $detalle['id'] ?>"
+                                                        data-tipo="<?= $detalle['tipo'] ?>"
+                                                        data-cantidad="<?= $detalle['cantidad'] ?>"
+                                                        data-maquina="<?= htmlspecialchars($entrega['nombre_maquina']) ?>"
+                                                        data-item="<?= htmlspecialchars($entrega['item']) ?>"
+                                                        data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>">
+                                                        <i class="fas fa-check mr-1"></i>Validar
+                                                    </button>
+                                                </div>
                                             <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <?php endif; ?>
-                        </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Toast Container -->
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toastMessage" class="toast align-items-center border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body d-flex align-items-center">
-                        <i class="fas fa-info-circle me-2 fs-5"></i>
-                        <span id="toastBody"></span>
-                    </div>
-                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- Review Modal -->
-        <div class="modal fade" id="revisionModal" tabindex="-1" aria-labelledby="revisionModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 shadow">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="revisionModalLabel"><i class="fas fa-search me-2"></i>Revisar Entrega</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-info d-flex">
-                            <i class="fas fa-info-circle mt-1 me-3 fs-5"></i>
-                            <div>Envíe una nota opcional para revisar la cantidad reportada.</div>
+        <div id="revisionModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center hidden backdrop-blur-sm transition-opacity duration-300">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden transform transition-all" role="dialog" aria-labelledby="revisionModalTitle" aria-modal="true">
+                <div class="bg-blue-600 text-white px-6 py-4 flex justify-between items-center">
+                    <h2 id="revisionModalTitle" class="text-lg font-bold flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Revisar Entrega
+                    </h2>
+                    <button type="button" class="modal-close focus:outline-none text-white hover:text-gray-200 transition-colors" aria-label="Cerrar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <!-- Información de la entrega -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-5 shadow-sm">
+                        <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Detalles de la entrega:
+                        </h3>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100">
+                                <span class="font-medium text-blue-600">Máquina:</span>
+                                <span id="revisionMaquina" class="ml-1"></span>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100">
+                                <span class="font-medium text-blue-600">Item:</span>
+                                <span id="revisionItem" class="ml-1"></span>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100">
+                                <span class="font-medium text-blue-600">JT/WO:</span>
+                                <span id="revisionJtWo" class="ml-1"></span>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100">
+                                <span class="font-medium text-blue-600">Cantidad:</span>
+                                <span id="revisionCantidad" class="ml-1"></span>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100 col-span-2">
+                                <span class="font-medium text-blue-600">Tipo:</span>
+                                <span id="revisionTipo" class="ml-1"></span>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="notaRevision" class="form-label fw-medium">Nota para producción (opcional)</label>
-                            <textarea class="form-control" id="notaRevision" rows="3" placeholder="Escriba aquí sus observaciones sobre la cantidad..."></textarea>
-                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-1"></i>Cancelar
+
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-5 rounded-r flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>Especifique un motivo opcional para revisar la cantidad reportada.</div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="notaRevision" class="block text-gray-700 font-medium mb-2">Motivo de corrección (opcional)</label>
+                        <textarea class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow"
+                            id="notaRevision"
+                            rows="3"
+                            placeholder="Escriba aquí sus observaciones sobre la cantidad..."
+                            aria-describedby="notaRevisionHelp"></textarea>
+                        <p id="notaRevisionHelp" class="text-xs text-gray-500 mt-1">Su comentario ayudará a entender el motivo de la revisión.</p>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" class="modal-close px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Cancelar
                         </button>
-                        <button type="button" class="btn btn-primary" id="submitRevisionBtn">
-                            <i class="fas fa-paper-plane me-1"></i>Enviar Revisión
+                        <button type="button" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500" id="submitRevisionBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                            Enviar Revisión
                         </button>
                     </div>
                 </div>
@@ -230,29 +276,84 @@
         </div>
 
         <!-- Validation Modal -->
-        <div class="modal fade" id="validateModal" tabindex="-1" aria-labelledby="validateModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 shadow">
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title" id="validateModalLabel"><i class="fas fa-check-circle me-2"></i>Validar Entrega</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="alert alert-success d-flex">
-                            <i class="fas fa-check-circle mt-1 me-3 fs-5"></i>
-                            <div>Al validar esta entrega, se registrará como completa en el sistema.</div>
+        <div id="validateModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center hidden backdrop-blur-sm transition-opacity duration-300">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden transform transition-all" role="dialog" aria-labelledby="validateModalTitle" aria-modal="true">
+                <div class="bg-green-600 text-white px-6 py-4 flex justify-between items-center">
+                    <h2 id="validateModalTitle" class="text-lg font-bold flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Validar Entrega
+                    </h2>
+                    <button type="button" class="modal-close focus:outline-none text-white hover:text-gray-200 transition-colors" aria-label="Cerrar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <!-- Información de la entrega -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-5 shadow-sm">
+                        <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Detalles de la entrega a validar:
+                        </h3>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100">
+                                <span class="font-medium text-green-600">Máquina:</span>
+                                <span id="validacionMaquina" class="ml-1"></span>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100">
+                                <span class="font-medium text-green-600">Item:</span>
+                                <span id="validacionItem" class="ml-1"></span>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100">
+                                <span class="font-medium text-green-600">JT/WO:</span>
+                                <span id="validacionJtWo" class="ml-1"></span>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100">
+                                <span class="font-medium text-green-600">Cantidad:</span>
+                                <span id="validacionCantidad" class="ml-1"></span>
+                            </div>
+                            <div class="bg-white p-3 rounded shadow-sm border border-gray-100 col-span-2">
+                                <span class="font-medium text-green-600">Tipo:</span>
+                                <span id="validacionTipo" class="ml-1"></span>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="comentarioValidacion" class="form-label fw-medium">Comentario (opcional)</label>
-                            <textarea class="form-control" id="comentarioValidacion" data-id="data-comentario" rows="3" placeholder="Escriba aquí sus observaciones sobre la cantidad..."></textarea>
-                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-1"></i>Cancelar
+
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-5 rounded-r flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <div>Al validar esta entrega, se registrará como completa en el sistema.</div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="comentarioValidacion" class="block text-gray-700 font-medium mb-2">Comentario (opcional)</label>
+                        <textarea class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+                            id="comentarioValidacion"
+                            data-id="data-comentario"
+                            rows="3"
+                            placeholder="Escriba aquí sus observaciones sobre la entrega..."
+                            aria-describedby="comentarioValidacionHelp"></textarea>
+                        <p id="comentarioValidacionHelp" class="text-xs text-gray-500 mt-1">Su comentario quedará registrado con la validación.</p>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" class="modal-close px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Cancelar
                         </button>
-                        <button type="button" class="btn btn-success" id="submitValidation">
-                            <i class="fas fa-check me-1"></i>Validar
+                        <button type="button" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-green-500" id="submitValidation">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Validar
                         </button>
                     </div>
                 </div>
@@ -260,7 +361,9 @@
         </div>
     </main>
 
-    <!-- Scripts -->
+    <!-- Toasts Container -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
