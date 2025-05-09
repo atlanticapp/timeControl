@@ -60,6 +60,8 @@
                                     <th class="px-4 py-3 font-medium"><i class="fas fa-cogs text-blue-600 mr-2"></i> Máquina</th>
                                     <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-blue-600 mr-2"></i> Item</th>
                                     <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-blue-600 mr-2"></i> JT/WO</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-file-invoice text-blue-600 mr-2"></i> PO</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-user text-blue-600 mr-2"></i> Cliente</th>
                                     <th class="px-4 py-3 font-medium text-right"><i class="fas fa-cubes text-blue-600 mr-2"></i> Cantidad</th>
                                     <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-blue-600 mr-2"></i> Acciones</th>
                                 </tr>
@@ -75,6 +77,8 @@
                                                 <?= htmlspecialchars($entrega['jtWo']) ?>
                                             </span>
                                         </td>
+                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['po'] ?? 'N/A') ?></td>
+                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['cliente'] ?? 'N/A') ?></td>
                                         <td class="px-4 py-3 text-right font-bold">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 <?= number_format($entrega['cantidad_produccion'], 2, '.', ',') ?> Lb
@@ -84,20 +88,18 @@
                                             <div class="flex justify-center space-x-2">
                                                 <button class="btn-validate inline-flex items-center px-2.5 py-1.5 border border-green-600 text-green-600 rounded hover:bg-green-600 hover:text-white transition-colors duration-200"
                                                     onclick="openValidateModal(<?= $entrega['id'] ?>, 
-                                                                                '<?= htmlspecialchars($entrega['nombre_empleado'] ?? 'N/A') ?>', 
-                                                                                '<?= htmlspecialchars($entrega['maquina'] ?? 'N/A') ?>', 
-                                                                                '<?= htmlspecialchars($entrega['item']) ?>', 
-                                                                                '<?= htmlspecialchars($entrega['jtWo']) ?>', 
-                                                                                '<?= $entrega['cantidad_produccion'] ?>')">
+                                                        '<?= htmlspecialchars($entrega['nombre_maquina'] ?? 'N/A') ?>', 
+                                                        '<?= htmlspecialchars($entrega['item']) ?>', 
+                                                        '<?= htmlspecialchars($entrega['jtWo']) ?>', 
+                                                        '<?= $entrega['cantidad_produccion'] ?>')">
                                                     <i class="fas fa-check mr-1"></i> Validar
                                                 </button>
                                                 <button class="btn-retain inline-flex items-center px-2.5 py-1.5 border border-yellow-500 text-yellow-500 rounded hover:bg-yellow-500 hover:text-white transition-colors duration-200"
                                                     onclick="openRetainModal(<?= $entrega['id'] ?>, 
-                                                                              '<?= htmlspecialchars($entrega['nombre_empleado'] ?? 'N/A') ?>', 
-                                                                              '<?= htmlspecialchars($entrega['maquina'] ?? 'N/A') ?>', 
-                                                                              '<?= htmlspecialchars($entrega['item']) ?>', 
-                                                                              '<?= htmlspecialchars($entrega['jtWo']) ?>', 
-                                                                              '<?= $entrega['cantidad_produccion'] ?>')">
+                                                      '<?= htmlspecialchars($entrega['nombre_maquina'] ?? 'N/A') ?>', 
+                                                      '<?= htmlspecialchars($entrega['item']) ?>', 
+                                                      '<?= htmlspecialchars($entrega['jtWo']) ?>', 
+                                                      '<?= $entrega['cantidad_produccion'] ?>')">
                                                     <i class="fas fa-times mr-1"></i> Retener
                                                 </button>
                                             </div>
@@ -125,7 +127,6 @@
                     <div class="bg-gray-50 rounded-lg p-4 mb-4">
                         <h6 class="font-semibold text-gray-700 mb-2">Detalles de la entrega a validar:</h6>
                         <div class="grid grid-cols-2 gap-2 text-sm">
-                            <div><span class="font-medium">Operador:</span> <span id="validacionOperador"></span></div>
                             <div><span class="font-medium">Máquina:</span> <span id="validacionMaquina"></span></div>
                             <div><span class="font-medium">Item:</span> <span id="validacionItem"></span></div>
                             <div><span class="font-medium">JT/WO:</span> <span id="validacionJtWo"></span></div>
@@ -177,7 +178,6 @@
                     <div class="bg-gray-50 rounded-lg p-4 mb-4">
                         <h6 class="font-semibold text-gray-700 mb-2">Detalles de la entrega a retener:</h6>
                         <div class="grid grid-cols-2 gap-2 text-sm">
-                            <div><span class="font-medium">Operador:</span> <span id="retencionOperador"></span></div>
                             <div><span class="font-medium">Máquina:</span> <span id="retencionMaquina"></span></div>
                             <div><span class="font-medium">Item:</span> <span id="retencionItem"></span></div>
                             <div><span class="font-medium">JT/WO:</span> <span id="retencionJtWo"></span></div>
@@ -261,9 +261,8 @@
         };
 
         // Funciones para modals
-        function openValidateModal(id, operador, maquina, item, jtWo, cantidad) {
+        function openValidateModal(id, maquina, item, jtWo, cantidad) {
             document.getElementById('validateEntregaId').value = id;
-            document.getElementById('validacionOperador').textContent = operador;
             document.getElementById('validacionMaquina').textContent = maquina;
             document.getElementById('validacionItem').textContent = item;
             document.getElementById('validacionJtWo').textContent = jtWo;
@@ -279,9 +278,8 @@
             }, 10);
         }
 
-        function openRetainModal(id, operador, maquina, item, jtWo, cantidad) {
+        function openRetainModal(id, maquina, item, jtWo, cantidad) {
             document.getElementById('retainEntregaId').value = id;
-            document.getElementById('retencionOperador').textContent = operador;
             document.getElementById('retencionMaquina').textContent = maquina;
             document.getElementById('retencionItem').textContent = item;
             document.getElementById('retencionJtWo').textContent = jtWo;
@@ -339,26 +337,26 @@
 
             // Realizar la petición al servidor
             fetch('/timeControl/public/guardarProduccion', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error en la petición');
-                }
-                // Cerrar el modal y recargar la página para mostrar el mensaje del backend
-                closeModal('validateModal');
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('Error al procesar la solicitud. Por favor, intente nuevamente.');
-            })
-            .finally(() => {
-                // Restaurar el botón
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalContent;
-            });
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la petición');
+                    }
+                    // Cerrar el modal y recargar la página para mostrar el mensaje del backend
+                    closeModal('validateModal');
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    toastr.error('Error al procesar la solicitud. Por favor, intente nuevamente.');
+                })
+                .finally(() => {
+                    // Restaurar el botón
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalContent;
+                });
         }
 
         function submitRetention() {
@@ -424,7 +422,7 @@
             }
         }
     </script>
-   
+
 </body>
 
 </html>

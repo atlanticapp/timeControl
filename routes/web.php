@@ -66,6 +66,8 @@ $router->get('/dashboard', [QaController::class, 'index']);
 $router->get('/checkNewNotifications', [NotificacionController::class, 'checkNewNotifications']);
 
 $router->get('/validacion', [QaController::class, 'validacion']);
+$router->get('/verificarEstadoPendiente', [QaController::class, 'verificarEstadoPendiente']);
+$router->get('/verificarEstadosRegistros', [QaController::class, 'verificarEstadosRegistros']);
 $router->post('/validarScrap', [QaController::class, 'validarScrap']);
 $router->post('/validarProduccion', [QaController::class, 'validarProduccion']);
 $router->post('/revisar', [CorreccionController::class, 'revisar']);

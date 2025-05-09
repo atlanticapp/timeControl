@@ -44,8 +44,8 @@ class Qa extends Model
 
         while ($row = $result->fetch_assoc()) {
             // Creamos una clave única usando los campos que identifican una entrega
-            $key = $row['fecha_registro'] . '_' . $row['maquina'] . '_' . $row['jtWo'] . '_' . 
-                   $row['item'] . '_' . $row['codigo_empleado'];
+            $key = $row['fecha_registro'] . '_' . $row['maquina'] . '_' . $row['jtWo'] . '_' .
+                $row['item'] . '_' . $row['codigo_empleado'];
 
             if (!isset($entregasAgrupadas[$key])) {
                 $entregasAgrupadas[$key] = [
@@ -63,7 +63,7 @@ class Qa extends Model
                     'estado_validacion' => 'Pendiente'
                 ];
             }
-            
+
             if ($row['cantidad_scrapt'] > 0) {
                 $entregasAgrupadas[$key]['entregas'][] = [
                     'id' => $row['id'],
@@ -75,7 +75,7 @@ class Qa extends Model
         }
 
         // Ordenar por fecha_registro de más reciente a más antigua
-        uasort($entregasAgrupadas, function($a, $b) {
+        uasort($entregasAgrupadas, function ($a, $b) {
             return strtotime($b['info_comun']['fecha_registro']) - strtotime($a['info_comun']['fecha_registro']);
         });
 
@@ -98,6 +98,62 @@ class Qa extends Model
             'nombre_empleado' => $this->getNombreEmpleado($row['codigo_empleado']),
             'nombre_maquina' => $control->getNameMaquina($row['maquina'])
         ];
+    }
+
+    /**
+     * Verifica los estados actuales de un conjunto de registros
+     * 
+     * @param array $registrosIds Arreglo de IDs de registros a verificar
+     * @return array Arreglo asociativo con los IDs y estados de cada registro
+     */
+    public function verificarEstadosRegistros($registrosIds)
+    {
+        if (empty($registrosIds)) {
+            return [];
+        }
+
+        // Crear placeholders para la consulta IN
+        $placeholders = implode(',', array_fill(0, count($registrosIds), '?'));
+
+        $query = "SELECT id, estado_validacion FROM registro WHERE id IN ($placeholders)";
+
+        $stmt = $this->db->prepare($query);
+
+        // Bindear parámetros dinámicamente
+        $types = str_repeat('i', count($registrosIds));
+        $stmt->bind_param($types, ...$registrosIds);
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $estados = [];
+        while ($row = $result->fetch_assoc()) {
+            $estados[$row['id']] = $row['estado_validacion'];
+        }
+
+        return $estados;
+    }
+
+    /**
+     * Verifica si un registro específico sigue en estado pendiente
+     * 
+     * @param int $registroId ID del registro a verificar
+     * @return bool True si el registro está pendiente, False en caso contrario
+     */
+    public function verificarRegistroPendiente($registroId)
+    {
+        $query = "SELECT estado_validacion FROM registro WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param('i', $registroId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            return false;
+        }
+
+        $registro = $result->fetch_assoc();
+        return $registro['estado_validacion'] === 'Pendiente';
     }
 
     public function getEntregasValidadasProduccion($userqa)
@@ -155,36 +211,51 @@ class Qa extends Model
      */
     public function getCountEntregasPendientes($area_id)
     {
-        $query = "SELECT 
-                SUM(CASE 
-                    WHEN estado_validacion = 'Pendiente' AND cantidad_produccion > 0 THEN 1 
-                    ELSE 0 
-                END) AS total_produccion,
-                SUM(CASE 
-                    WHEN estado_validacion = 'Pendiente' AND cantidad_scrapt > 0 THEN 1 
-                    ELSE 0 
-                END) AS total_scrap,
-                COUNT(*) AS total
-            FROM registro
-            WHERE estado_validacion = 'Pendiente'
+        $query = "
+        SELECT
+            SUM(CASE WHEN cantidad_produccion > 0 THEN 1 ELSE 0 END) AS total_produccion,
+            SUM(CASE WHEN cantidad_scrapt > 0 THEN 1 ELSE 0 END) AS total_scrap,
+            COUNT(*) AS total
+        FROM registro
+        WHERE estado_validacion = 'Pendiente'
             AND area_id = ?
             AND (
-                (tipo_boton = 'Producción' AND descripcion = 'Parcial') 
+                (tipo_boton = 'Producción' AND descripcion = 'Parcial')
                 OR tipo_boton = 'final_produccion'
-            )";
+            )
+            AND (cantidad_produccion > 0 OR cantidad_scrapt > 0)
+    ";
 
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param('i', $area_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
+        if ($stmt = $this->db->prepare($query)) {
+            $stmt->bind_param('i', $area_id);
 
+            if ($stmt->execute()) {
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                return [
+                    'total' => (int) ($row['total'] ?? 0),
+                    'total_scrap' => (int) ($row['total_scrap'] ?? 0),
+                    'total_produccion' => (int) ($row['total_produccion'] ?? 0),
+                ];
+            } else {
+                // Manejo de error en ejecución
+                error_log("Error al ejecutar getCountEntregasPendientes: " . $stmt->error);
+            }
+            $stmt->close();
+        } else {
+            // Manejo de error en preparación
+            error_log("Error al preparar getCountEntregasPendientes: " . $this->db->error);
+        }
+
+        // En caso de error, retorna todo en 0
         return [
-            'total' => $row['total'] ?? 0,
-            'total_scrap' => $row['total_scrap'] ?? 0,
-            'total_produccion' => $row['total_produccion'] ?? 0
+            'total' => 0,
+            'total_scrap' => 0,
+            'total_produccion' => 0
         ];
     }
+
 
     public function getCountEntregasEnProceso($area_id)
     {
@@ -200,7 +271,7 @@ class Qa extends Model
             $stmt->execute();
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
-            
+
             return $row['total'] ?? 0;
         } catch (\Exception $e) {
             error_log("Error en getCountEntregasEnProceso: " . $e->getMessage());
@@ -275,20 +346,27 @@ class Qa extends Model
         // Obtener las estadísticas de entregas pendientes
         $pendientes = $this->getCountEntregasPendientes($area_id);
 
+        // Instanciar el modelo de retenciones
+        $retencionModel = new Retencion();
+        $retenciones = $retencionModel->getRetencionesActivas($area_id);
+
         // Obtener las entregas en proceso
         $en_proceso = $this->getCountEntregasEnProceso($area_id);
 
-        // Recopilar estadísticas para el dashboard
-        $stats = [
-            'pendientes' => $pendientes['total'],
-            'scrap_pendientes' => $pendientes['total_scrap'],
-            'produccion_pendiente' => $pendientes['total_produccion'],
-            'validadas' => $this->getCountEntregasValidadas($area_id),
-            'en_proceso' => $en_proceso 
-        ];
+        // Obtener las entregas validadas
+        $validadas = $this->getCountEntregasValidadas($area_id);
 
-        return $stats;
+        // Consolidar estadísticas para el dashboard
+        return [
+            'pendientes' => (int) $pendientes['total'],
+            'produccion_pendiente' => (int) $pendientes['total_produccion'],
+            'scrap_pendiente' => (int) $pendientes['total_scrap'],
+            'validadas' => (int) $validadas,
+            'retenciones' => $retenciones,
+            'en_proceso' => (int) $en_proceso
+        ];
     }
+
 
     public function getDestinosStats($areaId = null, $userId = null)
     {
@@ -307,11 +385,11 @@ class Qa extends Model
                 GROUP BY rd.tipo_destino";
 
             $stmt = $this->db->prepare($query);
-            
+
             // Preparar los parámetros de manera dinámica
             $types = '';
             $params = [];
-            
+
             if ($areaId) {
                 $types .= 'i';
                 $params[] = $areaId;
@@ -320,7 +398,7 @@ class Qa extends Model
                 $types .= 'i';
                 $params[] = $userId;
             }
-            
+
             if (!empty($params)) {
                 $stmt->bind_param($types, ...$params);
             }
@@ -343,7 +421,6 @@ class Qa extends Model
             }
 
             return $stats;
-
         } catch (\Exception $e) {
             error_log("Error en getDestinosStats: " . $e->getMessage());
             return [

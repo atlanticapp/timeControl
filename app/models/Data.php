@@ -7,11 +7,12 @@ use App\Core\Model;
 class Data extends Model
 {
     protected $table = 'users';
-    public function updateJtWoItem($codigo_empleado, $jtWo, $item)
+
+    public function updateJtWoItemPoCliente($codigo_empleado, $jtWo, $item, $po, $cliente)
     {
-        $sql_update = "UPDATE {$this->table} SET jtWo = ?, item = ? WHERE codigo_empleado = ?";
+        $sql_update = "UPDATE {$this->table} SET jtWo = ?, item = ?, po = ?, cliente = ? WHERE codigo_empleado = ?";
         $stmt_update = $this->db->prepare($sql_update);
-        $stmt_update->bind_param("sss", $jtWo, $item, $codigo_empleado);
+        $stmt_update->bind_param("sssss", $jtWo, $item, $po, $cliente, $codigo_empleado);
         $stmt_update->execute();
         $stmt_update->close();
     }

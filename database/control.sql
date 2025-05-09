@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-04-2025 a las 18:36:43
+-- Tiempo de generación: 22-04-2025 a las 19:58:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -126,43 +126,14 @@ CREATE TABLE `notificaciones` (
 --
 
 INSERT INTO `notificaciones` (`id`, `tipo`, `mensaje`, `area_id`, `fecha`, `estado`) VALUES
-(1, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-14 11:24:37', 'leído'),
-(2, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-14 11:25:39', 'leído'),
-(3, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 16.', 1, '2025-04-14 11:31:56', 'leído'),
-(4, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 16.', 1, '2025-04-14 11:32:02', 'leído'),
-(5, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 11:54:14', 'leído'),
-(6, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 11:54:18', 'leído'),
-(7, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 12:36:26', 'leído'),
-(8, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 12:53:04', 'leído'),
-(9, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 12:53:40', 'leído'),
-(10, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 13:18:15', 'leído'),
-(11, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 13:36:02', 'leído'),
-(12, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 13:36:33', 'leído'),
-(13, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 13:41:14', 'leído'),
-(14, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 13:41:18', 'leído'),
-(15, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-14 13:41:23', 'leído'),
-(16, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-15 11:25:03', 'leído'),
-(17, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-15 14:01:27', 'leído'),
-(18, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-15 14:02:00', 'leído'),
-(19, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-15 14:02:40', 'leído'),
-(20, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-15 14:02:46', 'leído'),
-(21, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-15 14:03:10', 'leído'),
-(22, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 6.', 1, '2025-04-15 14:03:38', 'leído'),
-(23, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 21:41:58', 'leído'),
-(24, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 21:44:12', 'leído'),
-(25, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 21:59:06', 'leído'),
-(26, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 21:59:11', 'leído'),
-(27, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:01:42', 'leído'),
-(28, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:01:57', 'leído'),
-(29, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:03:16', 'leído'),
-(30, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:03:29', 'leído'),
-(31, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:03:41', 'leído'),
-(32, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:05:51', 'leído'),
-(33, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:07:22', 'leído'),
-(34, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:23:43', 'leído'),
-(35, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:23:53', 'leído'),
-(36, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-15 22:46:19', 'leído'),
-(37, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-16 09:40:13', 'leído');
+(1, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-21 21:07:46', 'leído'),
+(2, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-21 22:17:02', 'leído'),
+(3, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-21 22:17:19', 'leído'),
+(4, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-21 22:17:31', 'leído'),
+(5, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-21 22:40:34', 'leído'),
+(6, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-21 22:40:46', 'leído'),
+(7, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-21 22:45:48', 'leído'),
+(8, 'info', 'Se ha registrado una nueva cantidad de producción o scrap en la máquina 1.', 1, '2025-04-21 22:46:03', 'leído');
 
 -- --------------------------------------------------------
 
@@ -709,14 +680,6 @@ CREATE TABLE `produccion_final` (
   `fecha_validacion` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `produccion_final`
---
-
-INSERT INTO `produccion_final` (`id`, `registro_id`, `usuario_id`, `tipo_validacion`, `comentario`, `fecha_validacion`) VALUES
-(1, 56, '1212', 'produccion', 'thgjmnm', '2025-04-16 12:13:02'),
-(2, 60, '1212', 'produccion', '', '2025-04-16 12:36:17');
-
 -- --------------------------------------------------------
 
 --
@@ -727,11 +690,13 @@ CREATE TABLE `registro` (
   `id` int(11) NOT NULL,
   `tipo_boton` varchar(255) NOT NULL,
   `codigo_empleado` int(11) NOT NULL,
-  `item` varchar(255) NOT NULL,
-  `maquina` int(11) NOT NULL,
   `area_id` int(11) DEFAULT NULL,
-  `descripcion` varchar(255) NOT NULL,
+  `maquina` int(11) NOT NULL,
+  `item` varchar(255) NOT NULL,
   `jtWo` varchar(255) NOT NULL,
+  `po` varchar(255) DEFAULT NULL,
+  `cliente` varchar(255) DEFAULT NULL,
+  `descripcion` varchar(255) NOT NULL,
   `cantidad_scrapt` decimal(10,2) NOT NULL,
   `cantidad_produccion` decimal(10,2) NOT NULL,
   `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -745,42 +710,27 @@ CREATE TABLE `registro` (
 -- Volcado de datos para la tabla `registro`
 --
 
-INSERT INTO `registro` (`id`, `tipo_boton`, `codigo_empleado`, `item`, `maquina`, `area_id`, `descripcion`, `jtWo`, `cantidad_scrapt`, `cantidad_produccion`, `fecha_registro`, `fecha_fin`, `comentario`, `validado_por`, `estado_validacion`) VALUES
-(28, 'Producción', 0, 'fghnb', 6, 1, 'Parcial', 'fgbv', 0.00, 499.99, '2025-04-15 18:01:27', NULL, '', NULL, 'Pendiente'),
-(29, 'Producción', 0, 'fghnb', 6, 1, 'Parcial', 'fgbv', 20000000.00, 0.00, '2025-04-15 18:01:27', '2025-04-15 14:02:00', '', 1212, 'Validado'),
-(30, 'Producción', 0, 'fghnb', 6, 1, 'Parcial', 'fgbv', 0.00, 985.00, '2025-04-15 18:02:00', '2025-04-15 14:02:40', '', 1212, 'Validado'),
-(31, 'Producción', 0, 'fghnb', 6, 1, 'Parcial', 'fgbv', 0.00, 250.00, '2025-04-15 18:02:40', '2025-04-15 14:02:46', '', 1212, 'Validado'),
-(32, 'Producción', 0, 'fghnb', 6, 1, 'Parcial', 'fgbv', 0.00, 600.00, '2025-04-15 18:02:46', '2025-04-15 21:41:58', '', 1212, 'Retenido'),
-(33, 'Producción', 0, 'fghnb', 6, 1, 'Parcial', 'fgbv', 500.00, 0.00, '2025-04-15 18:02:46', '2025-04-15 14:03:10', '', 1212, 'Validado'),
-(34, 'Producción', 0, 'fghnb', 6, 1, 'Parcial', 'fgbv', 0.00, 200.00, '2025-04-15 18:03:10', '2025-04-15 21:19:29', '', 1212, 'Retenido'),
-(35, 'Producción', 0, 'fghnb', 6, 1, 'Parcial', 'fgbv', 800.00, 0.00, '2025-04-15 18:03:10', '2025-04-15 14:03:38', '', 1212, 'Validado'),
-(36, 'final_produccion', 0, 'fghnb', 6, 1, 'Unknown', 'fgbv', 0.00, 0.00, '2025-04-15 18:03:38', '2025-04-15 14:03:38', '', NULL, 'Pendiente'),
-(37, 'Producción', 0, 'fdfd', 1, 1, 'Parcial', 'df', 0.00, 4543.00, '2025-04-16 01:41:58', '2025-04-15 22:01:42', '', NULL, 'Pendiente'),
-(38, 'Producción', 0, 'fdfd', 1, 1, 'Parcial', 'df', 3443.00, 0.00, '2025-04-16 01:41:58', '2025-04-15 21:44:12', '', NULL, 'Pendiente'),
-(39, 'Producción', 0, 'fdfd', 1, 1, 'Parcial', 'df', 0.00, 654.00, '2025-04-16 01:44:12', '2025-04-15 22:01:35', '', NULL, 'Pendiente'),
-(40, 'Producción', 0, 'fdfd', 1, 1, 'Parcial', 'df', 654.00, 0.00, '2025-04-16 01:44:12', '2025-04-15 21:59:06', '', NULL, 'Pendiente'),
-(41, 'Producción', 0, 'fdfd', 1, 1, 'Parcial', 'df', 0.00, 987.00, '2025-04-16 01:59:06', '2025-04-15 22:01:35', '', NULL, 'Pendiente'),
-(42, 'Producción', 0, 'fdfd', 1, 1, 'Parcial', 'df', 67.00, 0.00, '2025-04-16 01:59:06', '2025-04-15 21:59:11', '', NULL, 'Pendiente'),
-(43, 'final_produccion', 0, 'fdfd', 1, 1, 'Unknown', 'df', 0.00, 4.00, '2025-04-16 01:59:11', '2025-04-15 21:59:11', '', NULL, 'Pendiente'),
-(44, 'final_produccion', 0, 'fdfd', 1, 1, 'Unknown', 'df', 4.00, 0.00, '2025-04-16 01:59:11', '2025-04-15 21:59:11', '', NULL, 'Pendiente'),
-(45, 'Producción', 0, 'ee', 1, 1, 'Parcial', 'eeeeeee', 0.00, 55.00, '2025-04-16 02:01:42', '2025-04-15 22:01:57', '', NULL, 'Pendiente'),
-(46, 'Producción', 0, 'ee', 1, 1, 'Parcial', 'eeeeeee', 0.00, 555.00, '2025-04-16 02:01:57', NULL, '', NULL, 'Pendiente'),
-(47, 'Producción', 0, 'ee', 1, 1, 'Parcial', 'eeeeeee', 5655.00, 0.00, '2025-04-16 02:01:57', '2025-04-15 22:03:16', '', NULL, 'Pendiente'),
-(48, 'Producción', 0, 'ee', 1, 1, 'Parcial', 'eeeeeee', 0.00, 655.00, '2025-04-16 02:03:16', '2025-04-15 22:05:51', '', NULL, 'Pendiente'),
-(49, 'Producción', 0, 'ee', 1, 1, 'Parcial', 'eeeeeee', 6555.00, 0.00, '2025-04-16 02:03:16', '2025-04-15 22:03:29', '', NULL, 'Pendiente'),
-(50, 'Producción', 0, 'ee', 1, 1, 'Parcial', 'eeeeeee', 0.00, 65.00, '2025-04-16 02:03:29', '2025-04-15 22:05:46', '', NULL, 'Pendiente'),
-(51, 'Producción', 0, 'ee', 1, 1, 'Parcial', 'eeeeeee', 98.00, 0.00, '2025-04-16 02:03:29', '2025-04-15 22:03:41', '', NULL, 'Pendiente'),
-(52, 'final_produccion', 0, 'ee', 1, 1, 'Unknown', 'eeeeeee', 0.00, 6456.00, '2025-04-16 02:03:41', '2025-04-15 22:03:41', '', NULL, 'Pendiente'),
-(53, 'final_produccion', 0, 'ee', 1, 1, 'Unknown', 'eeeeeee', 556.00, 0.00, '2025-04-16 02:03:41', '2025-04-15 22:03:41', '', NULL, 'Pendiente'),
-(54, 'Producción', 0, 'trgfgerf', 1, 1, 'Parcial', 'rfevgrfe', 0.00, 5454.00, '2025-04-16 02:05:51', NULL, '', NULL, 'Pendiente'),
-(55, 'Producción', 0, 'trgfgerf', 1, 1, 'Parcial', 'rfevgrfe', 5454.00, 0.00, '2025-04-16 02:05:51', '2025-04-15 22:07:22', '', NULL, 'Pendiente'),
-(56, 'Producción', 0, 'trgfgerf', 1, 1, 'Parcial', 'rfevgrfe', 0.00, 434.00, '2025-04-16 02:07:22', NULL, '', 1212, 'Guardado'),
-(57, 'Producción', 0, 'trgfgerf', 1, 1, 'Parcial', 'rfevgrfe', 3454.00, 0.00, '2025-04-16 02:07:22', '2025-04-15 22:23:43', '', 1212, 'Validado'),
-(58, 'Producción', 0, 'trgfgerf', 1, 1, 'Parcial', 'rfevgrfe', 0.00, 55.00, '2025-04-16 02:23:43', '2025-04-15 22:23:53', '', 1212, 'Retenido'),
-(59, 'Producción', 0, 'trgfgerf', 1, 1, 'Parcial', 'rfevgrfe', 0.00, 2.00, '2025-04-16 02:23:53', '2025-04-15 22:46:19', '', NULL, 'Correccion'),
-(60, 'Producción', 0, 'trgfgerf', 1, 1, 'Parcial', 'rfevgrfe', 0.00, 43.00, '2025-04-16 02:46:19', NULL, '', 1212, 'Guardado'),
-(61, 'Producción', 0, 'trgfgerf', 1, 1, 'Parcial', 'rfevgrfe', 50.00, 0.00, '2025-04-16 02:46:19', '2025-04-16 09:40:13', '', 1212, 'Validado'),
-(62, 'final_produccion', 0, 'trgfgerf', 1, 1, 'Unknown', 'rfevgrfe', 0.00, 0.00, '2025-04-16 13:40:13', '2025-04-16 09:40:13', '', NULL, 'Pendiente');
+INSERT INTO `registro` (`id`, `tipo_boton`, `codigo_empleado`, `area_id`, `maquina`, `item`, `jtWo`, `po`, `cliente`, `descripcion`, `cantidad_scrapt`, `cantidad_produccion`, `fecha_registro`, `fecha_fin`, `comentario`, `validado_por`, `estado_validacion`) VALUES
+(133, 'Producción', 0, 1, 1, 'V', 'V', NULL, NULL, 'Parcial', 0.00, 55.00, '2025-04-22 02:17:02', '2025-04-21 22:17:14', '', NULL, 'Pendiente'),
+(134, 'Producción', 0, 1, 1, 'V', 'V', NULL, NULL, 'Parcial', 60.00, 0.00, '2025-04-22 02:17:02', '2025-04-21 22:17:03', '', NULL, 'Correccion'),
+(135, 'Preparación', 0, 1, 1, 'V', 'V', NULL, NULL, 'Unknown', 0.00, 0.00, '2025-04-22 02:17:03', '2025-04-21 22:17:08', '', NULL, 'Pendiente'),
+(136, 'final_produccion', 0, 1, 1, 'V', 'V', NULL, NULL, 'Unknown', 0.00, 0.00, '2025-04-22 02:17:08', '2025-04-21 22:17:08', '', NULL, 'Pendiente'),
+(137, 'final_produccion', 0, 1, 1, 'rfgvb ', 'fdcsx', NULL, NULL, 'Unknown', 0.00, 3.00, '2025-04-22 02:17:19', '2025-04-21 22:17:19', '', NULL, 'Correccion'),
+(138, 'final_produccion', 0, 1, 1, 'rfgvb ', 'fdcsx', NULL, NULL, 'Unknown', 44.00, 0.00, '2025-04-22 02:17:19', '2025-04-21 22:17:19', '', NULL, 'Correccion'),
+(139, 'Producción', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Parcial', 0.00, 34.00, '2025-04-22 02:17:31', '2025-04-22 12:00:53', '', NULL, 'Correccion'),
+(140, 'Producción', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Parcial', 33.00, 0.00, '2025-04-22 02:17:31', '2025-04-21 22:40:34', '', NULL, 'Correccion'),
+(141, 'Producción', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Parcial', 0.00, 555.00, '2025-04-22 02:40:34', '2025-04-21 22:40:46', '', NULL, 'Pendiente'),
+(142, 'Producción', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Parcial', 555555.00, 0.00, '2025-04-22 02:40:46', '2025-04-21 22:45:48', '', NULL, 'Pendiente'),
+(143, 'Producción', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Parcial', 0.00, 55.00, '2025-04-22 02:45:48', '2025-04-22 12:00:47', '', NULL, 'Pendiente'),
+(144, 'Producción', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Parcial', 669.00, 0.00, '2025-04-22 02:45:48', '2025-04-21 22:46:03', '', NULL, 'Pendiente'),
+(145, 'Producción', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Parcial', 0.00, 98855.00, '2025-04-22 02:46:03', '2025-04-22 12:00:37', '', NULL, 'Pendiente'),
+(146, 'Producción', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Parcial', 555.00, 0.00, '2025-04-22 02:46:03', '2025-04-22 11:47:02', '', NULL, 'Pendiente'),
+(147, 'final_produccion', 0, 1, 1, 'gfvb ', 'frv', NULL, NULL, 'Unknown', 0.00, 0.00, '2025-04-22 15:47:02', '2025-04-22 11:47:02', '', NULL, 'Pendiente'),
+(148, 'Preparación', 0, 1, 1, 'dfgvb', 'dfgb', NULL, NULL, 'Unknown', 0.00, 0.00, '2025-04-22 16:00:53', '2025-04-22 12:01:00', '', NULL, 'Pendiente'),
+(149, 'final_produccion', 0, 1, 1, 'dfgvb', 'dfgb', NULL, NULL, 'Unknown', 0.00, 0.00, '2025-04-22 16:06:28', '2025-04-22 12:06:28', '', NULL, 'Pendiente'),
+(150, 'Espera_trabajo', 0, 1, 1, '', '', NULL, NULL, '', 0.00, 0.00, '2025-04-22 16:06:31', '2025-04-22 12:09:21', '', NULL, 'Pendiente'),
+(151, 'final_produccion', 0, 1, 1, 'gf', 'grf', NULL, NULL, 'Unknown', 0.00, 0.00, '2025-04-22 16:09:24', '2025-04-22 12:09:24', '', NULL, 'Pendiente'),
+(152, 'Espera_trabajo', 0, 1, 1, '', '', NULL, NULL, '', 0.00, 0.00, '2025-04-22 16:09:27', '2025-04-22 13:57:06', '', NULL, 'Pendiente');
 
 -- --------------------------------------------------------
 
@@ -800,21 +750,6 @@ CREATE TABLE `retenciones` (
   `fecha_cierre` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `retenciones`
---
-
-INSERT INTO `retenciones` (`id`, `registro_id`, `cantidad_total`, `cantidad_disponible`, `motivo`, `estado`, `usuario_id`, `fecha_creacion`, `fecha_cierre`) VALUES
-(5, 34, 200.00, 0.00, 'calidad', 'cerrada', 1212, '2025-04-15 15:31:14', '2025-04-15 16:52:15'),
-(6, 32, 600.00, 0.00, 'otro', 'cerrada', 1212, '2025-04-15 15:36:26', '2025-04-15 16:52:06'),
-(7, 31, 250.00, 0.00, 'cantidad', 'cerrada', 1212, '2025-04-15 16:12:22', '2025-04-15 16:51:59'),
-(8, 34, 200.00, 40.00, 'documentacion', 'activa', 1212, '2025-04-15 16:52:43', NULL),
-(9, 32, 600.00, 600.00, 'documentacion', 'activa', 1212, '2025-04-15 17:05:27', NULL),
-(10, 31, 250.00, 0.00, 'calidad', 'cerrada', 1212, '2025-04-15 17:05:43', '2025-04-15 22:52:15'),
-(11, 60, 43.00, 0.00, 'documentacion', 'cerrada', 1212, '2025-04-16 09:40:49', '2025-04-16 09:41:22'),
-(12, 60, 43.00, 0.00, 'otro', 'cerrada', 1212, '2025-04-16 11:57:41', '2025-04-16 12:36:12'),
-(13, 58, 55.00, 55.00, 'documentacion', 'activa', 1212, '2025-04-16 12:36:21', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -831,25 +766,6 @@ CREATE TABLE `retencion_destinos` (
   `fecha_registro` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `retencion_destinos`
---
-
-INSERT INTO `retencion_destinos` (`id`, `retencion_id`, `tipo_destino`, `cantidad`, `motivo`, `usuario_id`, `fecha_registro`) VALUES
-(1, 7, 'produccion_final', 50.00, 'Liberado a producción', 1212, '2025-04-15 16:51:35'),
-(2, 7, 'retrabajo', 200.00, 'Enviado a retrabajo', 1212, '2025-04-15 16:51:59'),
-(3, 6, 'retrabajo', 600.00, 'Enviado a retrabajo', 1212, '2025-04-15 16:52:06'),
-(4, 5, 'destruccion', 200.00, 'Material para destruir', 1212, '2025-04-15 16:52:15'),
-(5, 8, 'produccion_final', 50.00, 'Gracias ', 1212, '2025-04-15 16:54:58'),
-(6, 8, 'retrabajo', 50.00, 'Enviado a retrabajo', 1212, '2025-04-15 16:55:19'),
-(7, 8, 'retrabajo', 50.00, 'Porque eres buebno', 1212, '2025-04-15 16:55:37'),
-(8, 8, 'retrabajo', 10.00, 'Enviado a retrabajo', 1212, '2025-04-15 16:58:16'),
-(9, 10, 'retrabajo', 250.00, 'Enviado a retrabajo', 1212, '2025-04-15 22:52:15'),
-(10, 11, 'produccion_final', 25.00, 'Liberado a producción', 1212, '2025-04-16 09:41:12'),
-(11, 11, 'retrabajo', 8.00, 'Enviado a retrabajo', 1212, '2025-04-16 09:41:12'),
-(12, 11, 'produccion_final', 10.00, 'Liberado a producción', 1212, '2025-04-16 09:41:22'),
-(13, 12, 'retrabajo', 43.00, 'Enviado a retrabajo', 1212, '2025-04-16 12:36:12');
-
 -- --------------------------------------------------------
 
 --
@@ -864,17 +780,6 @@ CREATE TABLE `scrap_final` (
   `usuario_qa_id` int(11) NOT NULL,
   `fecha_validacion` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `scrap_final`
---
-
-INSERT INTO `scrap_final` (`id`, `registro_id`, `cantidad`, `observaciones`, `usuario_qa_id`, `fecha_validacion`) VALUES
-(8, 35, 800.00, '', 1212, '2025-04-15 14:08:23'),
-(9, 33, 500.00, '', 1212, '2025-04-15 14:12:27'),
-(10, 29, 20000000.00, '', 1212, '2025-04-15 16:09:35'),
-(11, 61, 50.00, '', 1212, '2025-04-16 09:40:35'),
-(12, 57, 3454.00, '', 1212, '2025-04-16 12:36:28');
 
 -- --------------------------------------------------------
 
@@ -900,14 +805,16 @@ CREATE TABLE `solicitudes_correccion` (
 --
 
 INSERT INTO `solicitudes_correccion` (`id`, `registro_id`, `tipo_cantidad`, `motivo`, `estado`, `qa_solicita_id`, `fecha_solicitud`, `fecha_resolucion`, `cantidad_corregida`, `comentario_operador`) VALUES
-(1, 34, 'produccion', '', 'Procesada', 0, '2025-04-15 14:03:30', '2025-04-15 14:03:50', 5008.00, ''),
-(2, 34, 'produccion', 'ta mal', 'Procesada', 1212, '2025-04-15 14:04:06', '2025-04-15 14:04:21', 200.00, 'Ahora si'),
-(3, 30, 'produccion', '', 'Procesada', 1212, '2025-04-15 16:08:48', '2025-04-15 16:09:08', 985.00, ''),
-(4, 29, 'scrap', '', 'Procesada', 1212, '2025-04-15 16:09:15', '2025-04-15 16:09:28', 20000000.00, ''),
-(5, 28, 'produccion', '', 'Cancelada', 1212, '2025-04-15 16:16:19', '2025-04-15 16:16:24', NULL, NULL),
-(6, 61, 'scrap', '', 'Procesada', 1212, '2025-04-16 09:40:04', '2025-04-16 09:40:25', 50.00, ''),
-(7, 59, 'produccion', '', 'Pendiente', 1212, '2025-04-16 09:41:35', NULL, NULL, NULL),
-(8, 54, 'produccion', '', 'Cancelada', 1212, '2025-04-16 12:35:49', '2025-04-16 12:35:59', NULL, NULL);
+(1, 140, 'scrap', '', 'Procesada', 1212, '2025-04-21 22:24:37', '2025-04-21 22:25:39', 33.00, ''),
+(2, 139, 'produccion', '', 'Cancelada', 1212, '2025-04-21 22:24:40', '2025-04-21 22:25:12', NULL, NULL),
+(3, 138, 'scrap', '', 'Procesada', 1212, '2025-04-21 22:24:54', '2025-04-21 22:25:23', 44.00, ''),
+(4, 137, 'produccion', '', 'Cancelada', 1212, '2025-04-21 22:24:55', '2025-04-21 22:25:05', NULL, NULL),
+(5, 140, 'scrap', '', 'Pendiente', 1212, '2025-04-21 22:25:51', NULL, NULL, NULL),
+(6, 138, 'scrap', '', 'Pendiente', 1212, '2025-04-21 22:25:54', NULL, NULL, NULL),
+(7, 134, 'scrap', '', 'Pendiente', 1212, '2025-04-21 22:25:56', NULL, NULL, NULL),
+(8, 137, 'produccion', '', 'Cancelada', 33, '2025-04-21 22:25:58', '2025-04-21 22:26:18', NULL, NULL),
+(9, 139, 'produccion', '', 'Pendiente', 1212, '2025-04-21 22:26:00', NULL, NULL, NULL),
+(10, 137, 'produccion', '', 'Pendiente', 1212, '2025-04-21 22:28:04', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -925,16 +832,20 @@ CREATE TABLE `users` (
   `maquina_id` int(11) DEFAULT NULL,
   `jtWo` varchar(255) DEFAULT NULL,
   `item` varchar(255) DEFAULT NULL,
-  `active_button_id` varchar(50) DEFAULT 'defaultButtonId'
+  `active_button_id` varchar(50) DEFAULT 'defaultButtonId',
+  `po` varchar(255) DEFAULT NULL,
+  `cliente` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `nombre`, `codigo_empleado`, `password`, `tipo_usuario`, `area_id`, `maquina_id`, `jtWo`, `item`, `active_button_id`) VALUES
-(1, '00', 0, '$2y$10$h71TJLs7aNSHhIY5JGy/VOZigZ6OooeXpzkArNteQTQ7mBaIs0Ihy', 'operador', 1, 1, NULL, NULL, 'final_produccion'),
-(2, '1212', 1212, '$2y$10$2xH3c2gSvckNjePuUWpaieD3s8TJPhFDt4QFc6riWkYK6IjVzSr2S', 'qa', 1, NULL, NULL, NULL, 'defaultButtonId');
+INSERT INTO `users` (`id`, `nombre`, `codigo_empleado`, `password`, `tipo_usuario`, `area_id`, `maquina_id`, `jtWo`, `item`, `active_button_id`, `po`, `cliente`) VALUES
+(1, '00', 0, '$2y$10$h71TJLs7aNSHhIY5JGy/VOZigZ6OooeXpzkArNteQTQ7mBaIs0Ihy', 'operador', 1, 1, 'ddf', 'ff', 'Espera_trabajo', 'ff', 'ff'),
+(2, '1212', 1212, '$2y$10$2xH3c2gSvckNjePuUWpaieD3s8TJPhFDt4QFc6riWkYK6IjVzSr2S', 'qa', 1, NULL, NULL, NULL, 'defaultButtonId', NULL, NULL),
+(3, '33', 33, '$2y$10$nr/6WGDmqOuZs.CXXQyw..iDmbnQ.8sItYPGLq/MPZKHMiePFKOu2', 'qa', 1, NULL, NULL, NULL, 'defaultButtonId', NULL, NULL),
+(4, '44', 44, '$2y$10$HU7rzmscWjWUFuq0QIhxCOQSqldY3s7rlC3L/BpTmRoq2aRKT.lJC', 'qa', 1, NULL, NULL, NULL, 'defaultButtonId', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1077,7 +988,7 @@ ALTER TABLE `maquinas`
 -- AUTO_INCREMENT de la tabla `notificaciones`
 --
 ALTER TABLE `notificaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `operacion`
@@ -1095,7 +1006,7 @@ ALTER TABLE `produccion_final`
 -- AUTO_INCREMENT de la tabla `registro`
 --
 ALTER TABLE `registro`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT de la tabla `retenciones`
@@ -1107,25 +1018,25 @@ ALTER TABLE `retenciones`
 -- AUTO_INCREMENT de la tabla `retencion_destinos`
 --
 ALTER TABLE `retencion_destinos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `scrap_final`
 --
 ALTER TABLE `scrap_final`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitudes_correccion`
 --
 ALTER TABLE `solicitudes_correccion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `velocidad`

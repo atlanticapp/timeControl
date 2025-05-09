@@ -2,13 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Cache DOM elements
     const elements = {
         timeElement: document.getElementById('current-time'),
+        dateElement: document.getElementById('current-date'), // Añadido este elemento que faltaba
         revisionModal: document.getElementById('revisionModal'),
         validateModal: document.getElementById('validateModal'),
         submitRevisionBtn: document.getElementById('submitRevisionBtn'),
         submitValidationBtn: document.getElementById('submitValidation'),
         notaRevision: document.getElementById('notaRevision'),
         comentarioValidacion: document.getElementById('comentarioValidacion'),
-        comentarioValidacionContainer: document.querySelector('label[for="comentarioValidacion"]').parentNode, // Referencia al div contenedor del comentario
+        comentarioValidacionContainer: document.querySelector('label[for="comentarioValidacion"]')?.parentNode || document.createElement('div'), // Añadido fallback
         tabButtons: document.querySelectorAll('.tab-btn'),
         tabPanels: document.querySelectorAll('.tab-panel'),
         btnReview: document.querySelectorAll('.btn-review'),
@@ -21,6 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Estado temporal
     let currentEntregaId = null;
     let currentTipoEntrega = null;
+    let registrosPendientes = [];
+    let intervalId = null;
+    const verificationInterval = 5000;
 
     // URLs para las peticiones AJAX
     const URLS = {
@@ -38,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
         timeOut: 3000,
         extendedTimeOut: 1000,
         preventDuplicates: true,
-        onHidden: function() {
+        onHidden: function () {
             if (window.pendingRedirect) {
                 window.location.href = window.pendingRedirect;
                 window.pendingRedirect = null;
@@ -48,20 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Inicializar toastr con la configuración
     toastr.options = TOAST_CONFIG;
-
-    // Funciones principales
-    const updateDateTime = () => {
-        const now = new Date();
-        const dateOptions = { dateStyle: 'medium' };
-        const timeOptions = { timeStyle: 'medium' };
-        
-        if (elements.dateElement) {
-            elements.dateElement.textContent = now.toLocaleDateString('es-ES', dateOptions);
-        }
-        if (elements.timeElement) {
-            elements.timeElement.textContent = now.toLocaleTimeString('es-ES', timeOptions);
-        }
-    };
 
     const handleApiResponse = async (response) => {
         if (response.redirected) {
@@ -95,15 +85,155 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
+    const collectPendingIds = () => {
+        registrosPendientes = [];
+
+        registrosPendientes = [
+            ...new Set([
+                ...Array.from(elements.btnReview, btn => btn.dataset.id),
+                ...Array.from(elements.btnValidateProduction, btn => btn.dataset.id),
+                ...Array.from(elements.btnValidateScrap, btn => btn.dataset.id)
+            ])
+        ].filter(id => id); // Filtra IDs vacíos
+
+        updatePendingCounter();
+    };
+
+    const checkRecordStatus = async (id) => {
+        try {
+            const response = await fetch(`/timeControl/public/verificarEstadoPendiente?id=${id}`);
+            if (!response.ok) throw new Error('Error en la respuesta');
+            const data = await response.json();
+            return data.pendiente ?? false;
+        } catch (error) {
+            console.error('Error verificando estado:', error);
+            toastr.error('Error al verificar estado del registro');
+            return false;
+        }
+    };
+
+    const updateUIForProcessedRecord = (id) => {
+        // Desactivar botones
+        document.querySelectorAll(`[data-id="${id}"]`).forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.title = 'Este registro ya no está pendiente';
+        });
+
+        // Marcar fila
+        const row = document.querySelector(`[data-id="${id}"]`).closest('tr');
+        if (row) row.classList.add('bg-gray-100');
+
+        // Eliminar de pendientes
+        registrosPendientes = registrosPendientes.filter(item => item !== id);
+        updatePendingCounter();
+    };
+
+    const updatePendingCounter = () => {
+        // Esta función faltaba implementarse
+        const pendingCounterElement = document.getElementById('pending-counter');
+        if (pendingCounterElement) {
+            pendingCounterElement.textContent = registrosPendientes.length;
+        }
+    };
+
+    const verifyRecordsStatus = async () => {
+        if (!Array.isArray(registrosPendientes) || registrosPendientes.length === 0) return;
+
+        try {
+            const query = registrosPendientes.join(',');
+            const response = await fetch(`/timeControl/public/verificarEstadosRegistros?ids=${encodeURIComponent(query)}`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success && data.estados) {
+                let changesDetected = false;
+
+                for (const [id, estado] of Object.entries(data.estados)) {
+                    if (estado !== 'Pendiente') {
+                        changesDetected = true;
+                        updateUIForProcessedRecord(id);
+                    }
+                }
+
+                if (changesDetected) {
+                    toastr.info('Algunos registros han sido actualizados', 'Cambios detectados');
+                    updatePendingCounter();
+
+                    // Solo muestra el mensaje si aún no se ha mostrado
+                    if (!document.getElementById('reloadAlert')) {
+                        showReloadMessage();
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error al verificar estados de los registros:', error);
+            toastr.error('Ocurrió un error al verificar los registros.', 'Error');
+        }
+    };
+
+
+    const showReloadMessage = () => {
+        // Evitar múltiples alertas
+        if (document.getElementById('reloadAlert')) return;
+
+        // Detener intervalo si existe
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
+
+        // Mostrar notificación con Toastr
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false, // Desactivamos la barra de progreso
+            "positionClass": "toast-top-full-width", // Toastr ocupará todo el ancho
+            "preventDuplicates": true,
+            "showDuration": "300", // Duración de la animación al mostrar
+            "hideDuration": "1000", // Duración de la animación al ocultar
+            "timeOut": "0", // No se oculta automáticamente, el usuario debe cerrar
+            "extendedTimeOut": "0", // No se oculta automáticamente
+            "tapToDismiss": false, // No se puede descartar con un click en el mensaje
+        };
+
+        // Crear el contenido del toast
+        toastr.info(
+            'Todas las entregas han sido procesadas. <button id="btnRecargar" class="font-medium underline hover:text-yellow-800 transition-colors">Recargar página</button> para ver las nuevas entregas pendientes.',
+            'Información',
+            {
+                onclick: function () {
+                    document.getElementById('btnRecargar').click(); // Si se hace click en el mensaje, recarga la página
+                }
+            }
+        );
+
+        // Escuchar el click del botón de recarga
+        document.getElementById('btnRecargar').addEventListener('click', () => {
+            window.location.reload();
+        });
+
+        // Escuchar el click en el botón de cerrar
+        document.querySelector('.toast-close-button').addEventListener('click', () => {
+            toastr.clear(); // Cerrar el toast manualmente
+        });
+    };
+
+
     // Funciones de UI
     const handleModal = (modalElement, action = 'show') => {
         if (!modalElement) return;
-        
+
         if (action === 'show') {
             modalElement.classList.remove('hidden');
             modalElement.classList.add('flex');
             document.body.classList.add('overflow-hidden');
-            
+
             // Añadir animación de entrada
             const modalContent = modalElement.querySelector('.bg-white');
             if (modalContent) {
@@ -116,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (modalContent) {
                 modalContent.classList.add('scale-95', 'opacity-0');
                 modalContent.classList.remove('scale-100', 'opacity-100');
-                
+
                 // Esperar a que termine la animación
                 setTimeout(() => {
                     modalElement.classList.add('hidden');
@@ -131,11 +261,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    const handleRevisionModal = (event) => {
+    const handleRevisionModal = async (event) => {
         const button = event.currentTarget;
+        const id = button.dataset.id; // Añadida esta línea que faltaba
+        const isPending = await checkRecordStatus(id);
+
+        if (!isPending) {
+            toastr.warning('Este registro ya no está pendiente. Recargando...');
+            setTimeout(() => window.location.reload(), 1500);
+            return;
+        }
         currentEntregaId = button.dataset.id;
         currentTipoEntrega = button.dataset.tipo;
-        
+
         // Actualizar campos del modal con los data attributes del botón
         document.getElementById('revisionMaquina').textContent = button.dataset.maquina;
         document.getElementById('revisionItem').textContent = button.dataset.item;
@@ -147,11 +285,19 @@ document.addEventListener("DOMContentLoaded", function () {
         handleModal(elements.revisionModal, 'show');
     };
 
-    const handleValidationModal = (event) => {
+    const handleValidationModal = async (event) => {
         const button = event.currentTarget;
+        const id = button.dataset.id;
+        const isPending = await checkRecordStatus(id);
+        if (!isPending) {
+            toastr.warning('Este registro ya no está pendiente. Recargando...');
+            setTimeout(() => window.location.reload(), 2000);
+            return;
+        }
+
         currentEntregaId = button.dataset.id;
         currentTipoEntrega = button.dataset.tipo;
-        
+
         // Actualizar campos del modal con los data attributes del botón
         document.getElementById('validacionMaquina').textContent = button.dataset.maquina;
         document.getElementById('validacionItem').textContent = button.dataset.item;
@@ -168,10 +314,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // Ocultar el campo de comentario para producción
             elements.comentarioValidacionContainer.style.display = 'none';
         }
-        
+
         // Reiniciar el valor del comentario
         elements.comentarioValidacion.value = '';
-        
+
         handleModal(elements.validateModal, 'show');
     };
 
@@ -202,9 +348,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Inicialización y Event Listeners
     const init = async () => {
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-
         // Verificar estado inicial
         const statusData = await fetchData(URLS.getStatus);
         if (statusData?.status && statusData?.message) {
@@ -232,11 +375,19 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append('nota', elements.notaRevision.value);
             formData.append('tipo', currentTipoEntrega);
 
+            const isPending = await checkRecordStatus(currentEntregaId);
+            if (!isPending) {
+                toastr.warning('Este registro ya fue procesado');
+                handleModal(elements.revisionModal, 'hide');
+                return;
+            }
+
             const data = await fetchData(URLS.revisar, 'POST', formData);
             if (data.success) {
-                toastr.success('Revisión enviada correctamente');
                 handleModal(elements.revisionModal, 'hide');
                 ocultarFila(currentEntregaId);
+                registrosPendientes = registrosPendientes.filter(item => item !== currentEntregaId);
+                updatePendingCounter(); // Añadida esta línea
             }
         });
 
@@ -244,11 +395,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const url = currentTipoEntrega === 'scrap' ? URLS.validarScrap : URLS.validarProduccion;
             const formData = new FormData();
             formData.append('id', currentEntregaId);
-            
+            const isPending = await checkRecordStatus(currentEntregaId);
+
             // Solo añadir comentario si es scrap (cuando el campo está visible)
             if (currentTipoEntrega === 'scrap') {
                 formData.append('comentario', elements.comentarioValidacion.value);
-                
+
                 // Solo para scrap se envía la cantidad
                 const cantidad = elements.validateModal.dataset.cantidad;
                 formData.append('cantidad', cantidad);
@@ -257,11 +409,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 formData.append('comentario', '');
             }
 
+            if (!isPending) {
+                toastr.warning('Este registro ya fue procesado');
+                handleModal(elements.validateModal, 'hide');
+                return;
+            }
+
             const data = await fetchData(url, 'POST', formData);
             if (data.success) {
                 toastr.success('Entrega validada correctamente');
                 handleModal(elements.validateModal, 'hide');
                 ocultarFila(currentEntregaId);
+                registrosPendientes = registrosPendientes.filter(item => item !== currentEntregaId);
+                updatePendingCounter(); // Añadida esta línea
             }
         });
 
@@ -283,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Cerrar modal al hacer clic fuera
         [elements.revisionModal, elements.validateModal].forEach(modal => {
             if (!modal) return;
-            
+
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     handleModal(modal, 'hide');
@@ -291,6 +451,13 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     };
+
+    collectPendingIds();
+    updatePendingCounter();
+    if (registrosPendientes.length > 0) {
+        intervalId = setInterval(verifyRecordsStatus, verificationInterval);
+        verifyRecordsStatus();
+    }
 
     init();
 });

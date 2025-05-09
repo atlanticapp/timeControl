@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Tiempos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <!-- Style.css -->
     <link rel="stylesheet" href="assets/css/styleControl.css?v=<?php echo time(); ?>">
@@ -95,6 +97,10 @@
 
 <body>
     <div class="container">
+        <!-- Componente de Correcciones -->
+        <?php if (isset($mostrar_correcciones) && $mostrar_correcciones): ?>
+            <?php include __DIR__ . '/components/correcciones_modal.php'; ?>
+        <?php endif; ?>
         <img src="./assets/img/logoContr.png" alt="Logo de la empresa" class="logo">
         <div class="user-menu">
             <table>
@@ -113,6 +119,15 @@
                 <tr>
                     <th>Item:</th>
                     <td><?php echo htmlspecialchars($data['item']); ?></td>
+                </tr>
+                <!-- Nuevos campos añadidos para PO y Cliente -->
+                <tr>
+                    <th>Orden de Compra:</th>
+                    <td><?php echo htmlspecialchars($data['po'] ?? ''); ?></td>
+                </tr>
+                <tr>
+                    <th>Cliente:</th>
+                    <td><?php echo htmlspecialchars($data['cliente'] ?? ''); ?></td>
                 </tr>
             </table>
         </div>

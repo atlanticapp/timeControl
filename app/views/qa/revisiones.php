@@ -21,10 +21,11 @@
                 <div class="p-5">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center">
                         <div class="mb-4 md:mb-0">
-                            <h1 class="text-2xl font-bold text-blue-700 flex items-center">
-                                <i class="fas fa-clipboard-check mr-3"></i>Correcciones de Producción
+                            <!-- Actualizar título e ícono para coincidir con el menú -->
+                            <h1 class="text-2xl font-bold text-rose-600 flex items-center">
+                                <i class="fas fa-search mr-3"></i>Revisiones Pendientes
                             </h1>
-                            <p class="text-gray-500 mt-1">Pendientes de Revisión</p>
+                            <p class="text-gray-500 mt-1">Control de Calidad - Revisiones</p>
                         </div>
                     </div>
                 </div>
@@ -37,12 +38,12 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm">Total Correcciones</p>
-                            <h3 class="text-2xl font-bold text-blue-700 mt-1">
+                            <h3 class="text-2xl font-bold text-rose-600 mt-1">
                                 <?= $data['estadisticas']['total'] ?? 0 ?>
                             </h3>
                         </div>
-                        <div class="bg-blue-100 p-3 rounded-full">
-                            <i class="fas fa-clipboard-list text-blue-600 text-xl"></i>
+                        <div class="bg-rose-100 p-3 rounded-full">
+                            <i class="fas fa-clipboard-list text-rose-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
@@ -80,16 +81,16 @@
 
             <!-- Main Content -->
             <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-5 flex items-center">
+                <div class="bg-gradient-to-r from-rose-600 to-rose-700 text-white py-4 px-5 flex items-center">
                     <i class="fas fa-tasks mr-3 text-xl"></i>
-                    <h3 class="text-lg font-bold">Listado de Correcciones Pendientes</h3>
+                    <h3 class="text-lg font-bold">Listado de Revisiones Pendientes</h3>
                 </div>
 
                 <?php if (empty($data['correcciones'])): ?>
-                    <div class="bg-blue-50 border-l-4 border-blue-600 p-4 m-4">
+                    <div class="bg-rose-50 border-l-4 border-rose-600 p-4 m-4">
                         <div class="flex items-center">
-                            <i class="fas fa-info-circle text-blue-600 text-xl mr-3"></i>
-                            <span class="text-blue-700">No hay correcciones de producción pendientes de revisión en este momento.</span>
+                            <i class="fas fa-info-circle text-rose-600 text-xl mr-3"></i>
+                            <span class="text-rose-700">No hay revisiones pendientes en este momento.</span>
                         </div>
                     </div>
                 <?php else: ?>
@@ -97,14 +98,14 @@
                         <table class="w-full">
                             <thead class="bg-gray-50 text-left text-gray-600 text-sm">
                                 <tr>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-calendar-alt text-blue-600 mr-2"></i>Solicitado el</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-industry text-blue-600 mr-2"></i>Máquina</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-box text-blue-600 mr-2"></i>Item</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-blue-600 mr-2"></i>JT/WO</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-blue-600 mr-2"></i>Tipo</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-layer-group text-blue-600 mr-2"></i>Cantidad</th>
-                                    <th class="px-4 py-3 font-medium text-center"><i class="fas fa-comment text-blue-600 mr-2"></i>Motivo</th>
-                                    <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-blue-600 mr-2"></i>Acciones</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-calendar-alt text-rose-600 mr-2"></i>Solicitado el</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-cogs text-rose-600 mr-2"></i>Máquina</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-rose-600 mr-2"></i>Item</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-rose-600 mr-2"></i>JT/WO</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-info-circle text-rose-600 mr-2"></i>Tipo</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-layer-group text-rose-600 mr-2"></i>Cantidad</th>
+                                    <th class="px-4 py-3 font-medium text-center"><i class="fas fa-comment text-rose-600 mr-2"></i>Motivo</th>
+                                    <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-rose-600 mr-2"></i>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>

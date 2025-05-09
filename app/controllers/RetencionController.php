@@ -32,7 +32,7 @@ class RetencionController extends Controller
         try {
             $this->view('qa/retenciones', [
                 'data' => [
-                    'retenciones' => $this->retencionModel->getRetencionesActivas($user->area_id)
+                    'retenciones' => $this->retencionModel->getRetencionesActivas($user->area_id, $user->codigo_empleado)
                 ]
             ]);
         } catch (\Exception $e) {

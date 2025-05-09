@@ -141,9 +141,9 @@ class Control extends Model
     {
         $sql = "INSERT INTO registro (
                 tipo_boton, codigo_empleado, item, maquina, area_id, 
-                descripcion, jtWo, cantidad_produccion, cantidad_scrapt,
+                descripcion, jtWo, po, cliente, cantidad_produccion, cantidad_scrapt,
                 fecha_registro, fecha_fin, estado_validacion
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')";
 
         try {
             $stmt = $this->db->prepare($sql);
@@ -155,6 +155,8 @@ class Control extends Model
                 $data['area_id'],
                 $data['descripcion'],
                 $data['jtWo'],
+                $data['po'],
+                $data['cliente'],
                 $data['cantidad_produccion'],
                 0, // cantidad_scrapt para producción
                 $data['fecha_registro'],
@@ -170,9 +172,9 @@ class Control extends Model
     {
         $sql = "INSERT INTO registro (
                     tipo_boton, codigo_empleado, item, maquina, area_id, 
-                    descripcion, jtWo, cantidad_scrapt, cantidad_produccion,
+                    descripcion, jtWo, po, cliente, cantidad_scrapt, cantidad_produccion,
                     fecha_registro, fecha_fin, estado_validacion
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')";
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')";
 
         try {
             $stmt = $this->db->prepare($sql);
@@ -184,6 +186,8 @@ class Control extends Model
                 $data['area_id'],
                 $data['descripcion'],
                 $data['jtWo'],
+                $data['po'],
+                $data['cliente'],
                 $data['cantidad_scrapt'],
                 0, // cantidad_produccion para scrap
                 $data['fecha_registro'],
@@ -199,9 +203,9 @@ class Control extends Model
     {
         $sql = "INSERT INTO registro (
                     tipo_boton, codigo_empleado, item, maquina, area_id, 
-                    descripcion, jtWo, cantidad_scrapt, cantidad_produccion,
+                    descripcion, jtWo, po, cliente, cantidad_scrapt, cantidad_produccion,
                     fecha_registro, fecha_fin
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
@@ -212,6 +216,8 @@ class Control extends Model
             $data['area_id'],
             $data['descripcion'],
             $data['jtWo'],
+            $data['po'],
+            $data['cliente'],
             0, // cantidad_scrapt
             0, // cantidad_produccion
             $data['fecha_registro'],

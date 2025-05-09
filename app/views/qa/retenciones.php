@@ -15,24 +15,27 @@
     <?php include __DIR__ . "/../layouts/sidebarQa.php"; ?>
 
     <main class="lg:ml-72 p-6 md:p-8 transition-all duration-300 min-h-screen bg-gray-50">
-        <div class="container mx-auto pt-14 lg:pt-4">
+        <div class="container mx-auto pt-14 lg:pt-4 max-w-7xl">
             <!-- Header Section -->
             <div class="bg-white rounded-xl shadow-sm mb-6">
-                <div class="p-5">
+                <div class="p-4 md:p-5">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-center">
                         <div class="mb-4 md:mb-0">
-                            <!-- Título -->
+                            <!-- Título con icono accesible -->
                             <h1 class="text-2xl font-bold text-yellow-600 flex items-center">
-                                <i class="fas fa-exclamation-triangle mr-3"></i> Gestión de Retenciones
+                                <svg class="w-6 h-6 mr-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 2L1 21h22L12 2zm0 4l7.53 13H4.47L12 6zm-1 5v4h2v-4h-2zm0 6v2h2v-2h-2z" />
+                                </svg>
+                                Gestión de Retenciones
                             </h1>
                             <p class="text-gray-500 mt-1">Sistema de Control de Calidad - Retenciones</p>
                         </div>
                         <!-- Contador de Retenciones -->
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg flex items-center">
-                                <i class="fas fa-exclamation-circle mr-2"></i>
-                                <span class="font-semibold">Total Retenciones: <?php echo count($data['retenciones']); ?></span>
-                            </div>
+                        <div class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                            </svg>
+                            <span class="font-semibold">Total Retenciones: <?php echo count($data['retenciones']); ?></span>
                         </div>
                     </div>
                 </div>
@@ -40,15 +43,20 @@
 
             <!-- Content Panel -->
             <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-4 flex justify-between items-center">
-                    <h3 class="text-lg font-bold flex items-center">
-                        <i class="fas fa-list-alt mr-3"></i>Retenciones Activas
-                    </h3>
+                <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-4 md:px-6 py-4 flex justify-between items-center">
+                    <h2 class="text-lg font-bold flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
+                        </svg>
+                        Retenciones Activas
+                    </h2>
                 </div>
 
                 <?php if (empty($data['retenciones'])): ?>
                     <div class="text-center py-12 text-gray-500">
-                        <i class="fas fa-clipboard-check text-6xl mb-4"></i>
+                        <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                        </svg>
                         <p class="text-xl">No hay retenciones activas</p>
                     </div>
                 <?php else: ?>
@@ -56,14 +64,49 @@
                         <table class="w-full">
                             <thead class="bg-gray-50 text-gray-600 text-sm">
                                 <tr>
-                                    <th class="px-4 py-3 text-left">Fecha</th>
-                                    <th class="px-4 py-3 text-left">Máquina</th>
-                                    <th class="px-4 py-3 text-left">Item</th>
-                                    <th class="px-4 py-3 text-left">JT/WO</th>
-                                    <th class="px-4 py-3 text-left">Cantidad</th>
-                                    <th class="px-4 py-3 text-left">Estado</th>
-                                    <th class="px-4 py-3 text-left">Motivo</th>
-                                    <th class="px-4 py-3 text-center">Acciones</th>
+                                    <th class="px-3 md:px-4 py-3 font-medium text-left">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-calendar text-[#D39605] mr-2"></i>
+                                            Fecha/Hora
+                                        </span>
+                                    </th>
+                                    <th class="px-3 md:px-4 py-3 font-medium text-left">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-wrench text-[#D39605] mr-2"></i>
+                                            Máquina
+                                        </span>
+                                    </th>
+                                    <th class="px-3 md:px-4 py-3 font-medium text-left hidden md:table-cell">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-tag text-[#D39605] mr-2"></i>
+                                            Item
+                                        </span>
+                                    </th>
+                                    <th class="px-3 md:px-4 py-3 font-medium text-left hidden md:table-cell">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-file-alt text-[#D39605] mr-2"></i>
+                                            JT/WO
+                                        </span>
+                                    </th>
+                                    <th class="px-3 md:px-4 py-3 font-medium text-left">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-plus-square text-[#D39605] mr-2"></i>
+                                            Cantidad
+                                        </span>
+                                    </th>
+                                    <th class="px-3 md:px-4 py-3 font-medium text-left hidden sm:table-cell">Estado</th>
+                                    <th class="px-3 md:px-4 py-3 font-medium text-left hidden lg:table-cell">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-comment-alt text-[#D39605] mr-2"></i>
+                                            Motivo
+                                        </span>
+                                    </th>
+                                    <th class="px-3 md:px-4 py-3 font-medium text-center">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-tools text-[#D39605] mr-2"></i>
+                                            Acciones
+                                        </span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
@@ -76,23 +119,27 @@
                                     $textEstado = $porcentajeDisponible == 0 ? 'text-gray-600' : ($porcentajeDisponible < 50 ? 'text-yellow-800' : 'text-green-800');
                                     ?>
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-4 py-3 text-sm text-gray-700">
+                                        <td class="px-3 md:px-4 py-3 text-sm text-gray-700">
                                             <?= date('d/m/Y H:i', strtotime($retencion['fecha_creacion'])) ?>
                                         </td>
-                                        <td class="px-4 py-3">
+                                        <td class="px-3 md:px-4 py-3">
                                             <div class="text-sm text-gray-900 font-medium">
                                                 <?= htmlspecialchars($retencion['nombre_maquina'] ?? 'No especificada') ?>
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3 font-medium text-gray-800"><?= htmlspecialchars($retencion['item']) ?></td>
-                                        <td class="px-4 py-3 text-gray-800"><?= htmlspecialchars($retencion['jtWo']) ?></td>
-                                        <td class="px-4 py-3">
+                                        <td class="px-3 md:px-4 py-3 font-medium text-gray-800 hidden md:table-cell">
+                                            <?= htmlspecialchars($retencion['item']) ?>
+                                        </td>
+                                        <td class="px-3 md:px-4 py-3 text-gray-800 hidden md:table-cell">
+                                            <?= htmlspecialchars($retencion['jtWo']) ?>
+                                        </td>
+                                        <td class="px-3 md:px-4 py-3">
                                             <div class="flex flex-col">
                                                 <span class="font-medium text-gray-900">
                                                     <?= number_format($retencion['cantidad_total'], 2) ?> <span class="text-xs text-gray-500">lb.</span>
                                                 </span>
                                                 <div class="text-xs text-gray-500 mt-1">
-                                                    Disponible: <span class="font-medium"><?= number_format($retencion['cantidad_disponible'], 2) ?> lb.</span>
+                                                    Disp: <span class="font-medium"><?= number_format($retencion['cantidad_disponible'], 2) ?> lb.</span>
                                                 </div>
 
                                                 <!-- Barra de progreso -->
@@ -101,7 +148,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3">
+                                        <td class="px-3 md:px-4 py-3 hidden sm:table-cell">
                                             <?php
                                             $gestionado = $retencion['cantidad_total'] - $retencion['cantidad_disponible'];
                                             $porcentajeGestionado = ($retencion['cantidad_total'] > 0)
@@ -114,12 +161,19 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td class="px-4 py-3 text-sm"><?= htmlspecialchars($retencion['motivo']) ?></td>
-                                        <td class="px-4 py-3 text-center">
+                                        <td class="px-3 md:px-4 py-3 text-sm hidden lg:table-cell">
+                                            <div class="line-clamp-2">
+                                                <?= htmlspecialchars($retencion['motivo']) ?>
+                                            </div>
+                                        </td>
+                                        <td class="px-3 md:px-4 py-3 text-center">
                                             <button type="button"
-                                                class="inline-flex items-center px-3 py-1.5 border border-yellow-600 text-yellow-600 rounded-lg hover:bg-yellow-600 hover:text-white transition-colors duration-200"
+                                                class="inline-flex items-center px-2 md:px-3 py-1 md:py-1.5 border border-yellow-600 text-yellow-600 rounded-lg hover:bg-yellow-600 hover:text-white transition-colors duration-200 text-sm"
                                                 data-retencion='<?= htmlspecialchars(json_encode($retencion), ENT_QUOTES, 'UTF-8') ?>'>
-                                                <i class="fas fa-share-alt mr-1.5"></i> Gestionar
+                                                <svg class="w-4 h-4 mr-1.5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" />
+                                                </svg>
+                                                Gestionar
                                             </button>
                                         </td>
                                     </tr>

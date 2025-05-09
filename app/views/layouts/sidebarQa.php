@@ -47,32 +47,32 @@
                 ['icon' => 'fas fa-check-circle', 'text' => 'Validación de Entregas', 'color' => 'teal', 'route' => 'validacion'],
                 ['icon' => 'fas fa-clipboard-check', 'text' => 'Acción QA', 'color' => 'amber', 'route' => 'accion'],
                 ['icon' => 'fas fa-exclamation-triangle', 'text' => 'Retenciones', 'color' => 'yellow', 'route' => 'retenciones'],
-                ['icon' => 'fas fa-box-archive', 'text' => 'Producción Guardada', 'color' => 'green', 'route' => 'produccion/guardada'],
-                [
-                    'icon' => 'fas fa-boxes', 
-                    'text' => 'Destinos', 
-                    'color' => 'blue',
-                    'submenu' => [
-                        [
-                            'icon' => 'fas fa-box-open mr-3',
-                            'text' => 'Producción Final',
-                            'color' => 'blue',
-                            'route' => 'destinos/produccion'
-                        ],
-                        [
-                            'icon' => 'fas fa-recycle',
-                            'text' => 'Retrabajo',
-                            'color' => 'green',
-                            'route' => 'destinos/retrabajo'
-                        ],
-                        [
-                            'icon' => 'fas fa-trash-alt',
-                            'text' => 'Destrucción',
-                            'color' => 'red',
-                            'route' => 'destinos/destruccion'
-                        ],
-                    ]
-                ],
+                // ['icon' => 'fas fa-box-archive', 'text' => 'Producción Guardada', 'color' => 'green', 'route' => 'produccion/guardada'],
+                // [
+                //     'icon' => 'fas fa-boxes', 
+                //     'text' => 'Destinos', 
+                //     'color' => 'blue',
+                //     'submenu' => [
+                //         [
+                //             'icon' => 'fas fa-box-open mr-3',
+                //             'text' => 'Producción Final',
+                //             'color' => 'blue',
+                //             'route' => 'destinos/produccion'
+                //         ],
+                //         [
+                //             'icon' => 'fas fa-recycle',
+                //             'text' => 'Retrabajo',
+                //             'color' => 'green',
+                //             'route' => 'destinos/retrabajo'
+                //         ],
+                //         [
+                //             'icon' => 'fas fa-trash-alt',
+                //             'text' => 'Destrucción',
+                //             'color' => 'red',
+                //             'route' => 'destinos/destruccion'
+                //         ],
+                //     ]
+                // ],
                 ['icon' => 'fas fa-search', 'text' => 'Revisiones Pendientes', 'color' => 'rose', 'route' => 'revisiones']
             ];
             foreach ($menuItems as $item): ?>

@@ -41,8 +41,56 @@
                         <div class="flex items-center">
                             <div class="bg-teal-100 text-teal-800 px-4 py-2 rounded-lg flex items-center shadow-sm">
                                 <i class="fas fa-layer-group mr-2"></i>
-                                <span class="font-semibold">Entregas Pendientes: <?php echo count($data['entregas_produccion'] ?? []) + count($data['entregas_scrap'] ?? []); ?></span>
+                                <span class="font-semibold">Entregas Pendientes: <span id="pending-counter"><?php echo count($data['entregas_produccion'] ?? []) + count($data['entregas_scrap'] ?? []); ?></span></span>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Total de Correcciones -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Entregas Pendientes</p>
+                            <h3 class="text-2xl font-bold text-green-600 mt-1">
+                                <?= $data['stats']['pendientes'] ?? 0 ?>
+                            </h3>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-clipboard-list text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Correcciones de Producción -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Producción</p>
+                            <h3 class="text-2xl font-bold text-green-600 mt-1">
+                                <?= $data['stats']['produccion_pendiente'] ?? 0 ?>
+                            </h3>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-industry text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Correcciones de Scrap -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Scrap</p>
+                            <h3 class="text-2xl font-bold text-red-600 mt-1">
+                                <?= $data['stats']['scrap_pendiente'] ?? 0 ?>
+                            </h3>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-full">
+                            <i class="fas fa-trash-alt text-red-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
@@ -55,9 +103,6 @@
                         <i class="fas fa-clipboard-check mr-3 text-xl"></i>
                         <h3 class="text-lg font-bold">Entregas Pendientes de Validación</h3>
                     </div>
-                    <span class="bg-white bg-opacity-20 rounded-full px-3 py-1 text-sm font-medium">
-                        <?php echo count($data['entregas_produccion'] ?? []) + count($data['entregas_scrap'] ?? []); ?> pendientes
-                    </span>
                 </div>
 
                 <?php if (empty($data['entregas_produccion']) && empty($data['entregas_scrap'])): ?>
@@ -79,6 +124,8 @@
                                     <th class="px-4 py-3 font-medium"><i class="fas fa-cogs text-teal-600 mr-2"></i> Máquina</th>
                                     <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-teal-600 mr-2"></i> Item</th>
                                     <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-teal-600 mr-2"></i> JT/WO</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-barcode text-teal-600 mr-2"></i> PO</th>
+                                    <th class="px-4 py-3 font-medium"><i class="fas fa-user text-teal-600 mr-2"></i> Cliente</th>
                                     <th class="px-4 py-3 font-medium"><i class="fas fa-info-circle text-teal-600 mr-2"></i> Tipo</th>
                                     <th class="px-4 py-3 font-medium"><i class="fas fa-cubes text-teal-600 mr-2"></i> Detalle</th>
                                     <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-teal-600 mr-2"></i> Acciones</th>
@@ -95,6 +142,8 @@
                                             'nombre_maquina' => $entrega['nombre_maquina'],
                                             'item' => $entrega['item'],
                                             'jtWo' => $entrega['jtWo'],
+                                            'po' => $entrega['po'] ?? '',
+                                            'cliente' => $entrega['cliente'] ?? '',
                                             'tipo_boton' => $entrega['tipo_boton'],
                                             'entregas' => []
                                         ];
@@ -114,6 +163,8 @@
                                             'nombre_maquina' => $entrega['nombre_maquina'],
                                             'item' => $entrega['item'],
                                             'jtWo' => $entrega['jtWo'],
+                                            'po' => $entrega['po'] ?? '',
+                                            'cliente' => $entrega['cliente'] ?? '',
                                             'tipo_boton' => $entrega['tipo_boton'],
                                             'entregas' => []
                                         ];
@@ -136,9 +187,11 @@
                                         <td class="px-4 py-3"><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
                                         <td class="px-4 py-3 font-medium"><?= htmlspecialchars($entrega['item']) ?></td>
                                         <td class="px-4 py-3"><?= htmlspecialchars($entrega['jtWo']) ?></td>
+                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['po']) ?></td>
+                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['cliente']) ?></td>
                                         <td class="px-4 py-3">
                                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold 
-                                                <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' ?>">
+                        <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' ?>">
                                                 <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
                                             </span>
                                         </td>
@@ -165,18 +218,22 @@
                                                         data-cantidad="<?= $detalle['cantidad'] ?>"
                                                         data-maquina="<?= htmlspecialchars($entrega['nombre_maquina']) ?>"
                                                         data-item="<?= htmlspecialchars($entrega['item']) ?>"
-                                                        data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>">
+                                                        data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>"
+                                                        data-po="<?= htmlspecialchars($entrega['po']) ?>"
+                                                        data-cliente="<?= htmlspecialchars($entrega['cliente']) ?>">
                                                         <i class="fas fa-search mr-1"></i>Revisar
                                                     </button>
                                                     <button class="<?= $detalle['tipo'] == 'scrap' ? 'btn-validate-scrap' : 'btn-validate-production' ?> 
-                                                            inline-flex items-center px-2.5 py-1.5 border border-green-600 text-green-600 rounded 
-                                                            hover:bg-green-600 hover:text-white transition-colors duration-200 text-sm w-full justify-center"
+                                    inline-flex items-center px-2.5 py-1.5 border border-green-600 text-green-600 rounded 
+                                    hover:bg-green-600 hover:text-white transition-colors duration-200 text-sm w-full justify-center"
                                                         data-id="<?= $detalle['id'] ?>"
                                                         data-tipo="<?= $detalle['tipo'] ?>"
                                                         data-cantidad="<?= $detalle['cantidad'] ?>"
                                                         data-maquina="<?= htmlspecialchars($entrega['nombre_maquina']) ?>"
                                                         data-item="<?= htmlspecialchars($entrega['item']) ?>"
-                                                        data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>">
+                                                        data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>"
+                                                        data-po="<?= htmlspecialchars($entrega['po']) ?>"
+                                                        data-cliente="<?= htmlspecialchars($entrega['cliente']) ?>">
                                                         <i class="fas fa-check mr-1"></i>Validar
                                                     </button>
                                                 </div>
@@ -368,6 +425,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="assets/js/appValidacion.js"></script>
+    <script>
+        document.addEventListener('newDelivery', (e) => {
+            // Opción 1: Recargar inmediatamente
+            // window.location.reload();
+
+            // Opción 2: Mostrar notificación con opción de recargar
+            toastr.info('Nueva entrega detectada', 'Hay nuevos registros disponibles', {
+                timeOut: 5000,
+                extendedTimeOut: 1000,
+                closeButton: true,
+                tapToDismiss: false,
+                onclick: () => window.location.reload()
+            });
+        });
+    </script>
 </body>
 
 </html>

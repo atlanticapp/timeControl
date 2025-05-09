@@ -34,30 +34,8 @@ class DataController extends Controller
                 session_start();
             }
 
-
-            $maquinaSeleccionada = $user->maquina_id;
             $control = new Control();
-            $maquina = $control->getNameMaquina($maquinaSeleccionada);
-
-            if ($maquinaSeleccionada) {
-                $correccionesModel = new \App\Models\CorreccionesOperador();
-                $correccionesPendientes = $correccionesModel->getCorreccionesPendientes($user->maquina_id);
-
-                // Si hay correcciones pendientes, mostrar botón/modal en datos_trabajo
-                if (!empty($correccionesPendientes)) {
-                    $control = new Control();
-                    $active_button_id = $control->getActiveButton($user->codigo_empleado);
-
-                    $this->view('operador/datos_trabajo', [
-                        'usuario' => $user,
-                        'maquina' => $maquina,
-                        'active_button_id' => $active_button_id,
-                        'correcciones_pendientes' => $correccionesPendientes,
-                        'mostrar_correcciones' => true
-                    ]);
-                    return;
-                }
-            }
+            $maquina = $control->getNameMaquina($user->maquina_id);
 
             // Vista normal de datos_trabajo sin correcciones
             $control = new Control();
@@ -67,7 +45,6 @@ class DataController extends Controller
                 'usuario' => $user,
                 'maquina' => $maquina,
                 'active_button_id' => $active_button_id,
-                'mostrar_correcciones' => false
             ]);
         } catch (\Exception $e) {
             $this->redirectWithMessage('/timeControl/public/error', 'error', 'Error al cargar la página de datos de trabajo.');
@@ -86,16 +63,18 @@ class DataController extends Controller
         }
 
         // Verificar que los datos fueron enviados por POST
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['jtWo'], $_POST['item'])) {
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['jtWo'], $_POST['item'], $_POST['po'], $_POST['cliente'])) {
             $jtWo = $_POST['jtWo'];
             $item = $_POST['item'];
+            $po = $_POST['po'];
+            $cliente = $_POST['cliente'];
 
             // Instanciar el modelo de datos
             $data = new Data();
             $control = new Control();
 
-            // Actualizar JTWO e ITEM del usuario
-            $data->updateJtWoItem($user->codigo_empleado, $jtWo, $item);
+            // Actualizar JTWO, ITEM, PO y Cliente del usuario
+            $data->updateJtWoItemPoCliente($user->codigo_empleado, $jtWo, $item, $po, $cliente);
 
             // Actualizar la fecha de fin en el registro "Espera Trabajo"
             $data->updateFinEspera($user->codigo_empleado);

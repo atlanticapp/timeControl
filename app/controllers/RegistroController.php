@@ -45,11 +45,35 @@ class RegistroController extends Controller
             $nombre_maquina = isset($data['maquina_id']) ? $control->getNameMaquina($data['maquina_id']) : "No asignado";
             $nombre_area = isset($user->area_id) ? $usuario->getNameArea($user->area_id) : "No asignado";
 
+            $maquinaSeleccionada = $user->maquina_id;
             // Obtener datos adicionales
             $active_button_id = $control->getActiveButton($user->codigo_empleado);
             $bad_copy = isset($data['maquina_id']) ? $control->getBadCopy($data['maquina_id']) : null;
             $historial = $control->obtenerHistorial($data['item'] ?? '', $data['jtWo'] ?? '', $data['maquina_id'] ?? '', $user->codigo_empleado);
             $preparacion = isset($data['maquina_id']) ? $control->getPreparacion($data['maquina_id']) : [];
+
+            if ($maquinaSeleccionada) {
+                $correccionesModel = new \App\Models\CorreccionesOperador();
+                $correccionesPendientes = $correccionesModel->getCorreccionesPendientes($user->maquina_id);
+
+                // Si hay correcciones pendientes, mostrar botón/modal en datos_trabajo
+                if (!empty($correccionesPendientes)) {
+
+                    $this->view('operador/control', [
+                        'data' => $data,
+                        'maquina' => $nombre_maquina,
+                        'area' => $nombre_area,
+                        'bad_copy' => $bad_copy,
+                        'active_button_id' => $active_button_id,
+                        'historial' => $historial,
+                        'preparacion' => $preparacion,
+                        'correcciones_pendientes' => $correccionesPendientes,
+                        'mostrar_correcciones' => true
+                    ]);
+                    return;
+                }
+            }
+
 
             // Renderizar la vista con la información del usuario
             $this->view('operador/control', [
@@ -59,7 +83,8 @@ class RegistroController extends Controller
                 'bad_copy' => $bad_copy,
                 'active_button_id' => $active_button_id,
                 'historial' => $historial,
-                'preparacion' => $preparacion
+                'preparacion' => $preparacion,
+                'mostrar_correcciones' => false
             ]);
         } catch (\Exception $e) {
             header('Location: /timeControl/public/login?status=error');
@@ -92,6 +117,8 @@ class RegistroController extends Controller
                 'tipo_boton' => $_POST['tipo_boton'] ?? null,
                 'item' => $userData['item'] ?? null,
                 'jtWo' => $userData['jtWo'] ?? null,
+                'po' => $userData['po'] ?? null,
+                'cliente' => $userData['cliente'] ?? null,
                 'maquina' => $userData['maquina_id'] ?? null
             ];
 
@@ -116,6 +143,8 @@ class RegistroController extends Controller
                 'maquina' => $requiredFields['maquina'],
                 'area_id' => $user->area_id,
                 'jtWo' => $requiredFields['jtWo'],
+                'po' => $requiredFields['po'],
+                'cliente' => $requiredFields['cliente'],
                 'descripcion' => $_POST['badCopy'] ?? 'Unknown',
                 'fecha_registro' => $currentDateTime,
                 'fecha_fin' => null,
@@ -123,29 +152,41 @@ class RegistroController extends Controller
                 'cantidad_scrapt' => $this->parseQuantity($_POST['finalScraptAmount'] ?? $_POST['parcialScraptAmount'] ?? 0)
             ];
 
+            // Variable para determinar si se debe enviar notificación
+            $shouldNotify = false;
+
             // 7. Manejo específico por tipo de botón
             switch ($registroData['tipo_boton']) {
                 case 'final_produccion':
                     $registroData['fecha_fin'] = $currentDateTime;
                     unset($_SESSION['data_entered']);
                     $controlModel->resetUserData($user->codigo_empleado);
+                    // Notificar si hay producción o scrap
+                    $shouldNotify = ($registroData['cantidad_produccion'] > 0 || $registroData['cantidad_scrapt'] > 0);
                     break;
 
                 case 'Parcial':
+                    $registroData['fecha_fin'] = $currentDateTime;
                     $registroData['tipo_boton'] = 'Producción';
                     $registroData['descripcion'] = 'Parcial';
+                    // Notificar si hay producción o scrap
+                    $shouldNotify = ($registroData['cantidad_produccion'] > 0 || $registroData['cantidad_scrapt'] > 0);
                     break;
 
                 case 'Contratiempos':
                     $registroData['descripcion'] = $_POST['badCopy'] ?? 'Incidente reportado';
                     $registroData['cantidad_produccion'] = 0;
                     $registroData['cantidad_scrapt'] = 0;
+                    // No notificar para contratiempos
+                    $shouldNotify = false;
                     break;
 
                 case 'Velocidad':
                 case 'Preparación':
                     $registroData['cantidad_produccion'] = 0;
                     $registroData['cantidad_scrapt'] = 0;
+                    // No notificar para velocidad o preparación
+                    $shouldNotify = false;
                     break;
             }
 
@@ -166,12 +207,14 @@ class RegistroController extends Controller
                     throw new \Exception("Error al actualizar el estado del botón");
                 }
 
-                // 9. Notificar a los QA del área
-                $this->sendNotificationToQA(
-                    $user->area_id, 
-                    "Nueva entrega de producción o scrap registrada", 
-                    "Se ha registrado una nueva cantidad de producción o scrap en la máquina {$registroData['maquina']}."
-                );
+                // 9. Notificar a los QA del área solo si corresponde
+                if ($shouldNotify) {
+                    $this->sendNotificationToQA(
+                        $user->area_id,
+                        "Nueva entrega de producción o scrap registrada",
+                        "Se ha registrado una nueva cantidad de producción o scrap en la máquina {$registroData['maquina']}."
+                    );
+                }
 
                 $this->redirectWithMessage('/timeControl/public/control', 'success', 'Registro guardado correctamente.');
             } catch (\Exception $e) {
@@ -187,13 +230,13 @@ class RegistroController extends Controller
         }
     }
     // Método para enviar la notificación a los QA del área
-   private function sendNotificationToQA($areaId, $title, $message)
-{
-    $notificationModel = new Notificacion();  
-    $notificationModel->createNotification($areaId, $message, 'info');
-}
+    private function sendNotificationToQA($areaId, $title, $message)
+    {
+        $notificationModel = new Notificacion();
+        $notificationModel->createNotification($areaId, $message, 'info');
+    }
 
-    
+
 
 
 

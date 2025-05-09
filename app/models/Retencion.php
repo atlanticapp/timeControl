@@ -8,31 +8,36 @@ use Exception;
 
 class Retencion extends Model
 {
-    public function getRetencionesActivas($areaId = null)
+    public function getRetencionesActivas($areaId = null, $codigoEmpleado = null)
     {
         try {
             $query = "
-                SELECT 
-                    r.*,
-                    reg.jtWo,
-                    reg.item,
-                    reg.maquina,
-                    m.nombre as nombre_maquina,
-                    reg.area_id,
-                    u.nombre as usuario_nombre
-                FROM retenciones r
-                INNER JOIN registro reg ON r.registro_id = reg.id
-                LEFT JOIN users u ON r.usuario_id = u.codigo_empleado
-                LEFT JOIN maquinas m ON reg.maquina = m.id
-                WHERE r.estado = 'activa'
-                " . ($areaId ? "AND reg.area_id = ?" : "") . "
-                ORDER BY r.fecha_creacion DESC
-            ";
+            SELECT 
+                r.*,
+                reg.jtWo,
+                reg.item,
+                reg.maquina,
+                m.nombre as nombre_maquina,
+                reg.area_id,
+                u.nombre as usuario_nombre
+            FROM retenciones r
+            INNER JOIN registro reg ON r.registro_id = reg.id
+            LEFT JOIN users u ON r.usuario_id = u.codigo_empleado
+            LEFT JOIN maquinas m ON reg.maquina = m.id
+            WHERE r.estado = 'activa'
+            " . ($areaId ? "AND reg.area_id = ?" : "") . "
+            " . ($codigoEmpleado ? "AND r.usuario_id = ?" : "") . "
+            ORDER BY r.fecha_creacion DESC
+        ";
 
             $stmt = $this->db->prepare($query);
-            
-            if ($areaId) {
+
+            if ($areaId && $codigoEmpleado) {
+                $stmt->bind_param('is', $areaId, $codigoEmpleado);
+            } elseif ($areaId) {
                 $stmt->bind_param('i', $areaId);
+            } elseif ($codigoEmpleado) {
+                $stmt->bind_param('s', $codigoEmpleado);
             }
 
             $stmt->execute();
@@ -40,17 +45,18 @@ class Retencion extends Model
 
             Logger::info('Consulta de retenciones activas', [
                 'area_id' => $areaId,
+                'codigo_empleado' => $codigoEmpleado,
                 'cantidad' => $result->num_rows
             ]);
 
             return $result->fetch_all(MYSQLI_ASSOC);
-
         } catch (\Exception $e) {
             Logger::error('Error al obtener retenciones activas', [
                 'area_id' => $areaId,
+                'codigo_empleado' => $codigoEmpleado,
                 'error' => $e->getMessage()
             ]);
-            
+
             return [];
         }
     }

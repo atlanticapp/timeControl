@@ -14,7 +14,7 @@ class Notificacion extends Model
     // Insertar una notificación en la base de datos
     public function createNotification($area_id, $mensaje, $tipo = 'info', $fecha = null)
     {
-        $fecha = $fecha ?? date('Y-m-d H:i:s'); // Si no se pasa fecha, usa la actual
+        $fecha = $fecha ?? date('Y-m-d H:i:s'); 
 
         $sql = "INSERT INTO {$this->table} (area_id, mensaje, tipo, fecha, estado) 
                 VALUES (?, ?, ?, ?, 'pendiente')";

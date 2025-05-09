@@ -65,15 +65,18 @@ class QaController extends Controller
     public function validacion()
     {
         $user = AuthHelper::getCurrentUser();
-        
+
         try {
             // Obtener entregas pendientes separadas
             $entregasProduccion = $this->qa->getEntregasProduccionPendientes($user->area_id);
             $entregasScrap = $this->qa->getEntregasScrapPendientes($user->area_id);
-            
+
             // Obtener estadísticas del dashboard
             $stats = $this->qa->getDashboardStats($user->area_id);
-            
+
+            // Obtener timestamps para la verificación de concurrencia
+            $timestamp_actual = date('Y-m-d H:i:s');
+
             $this->view('qa/validacion', [
                 'data' => [
                     'title' => 'Validación de Entregas',
@@ -82,8 +85,10 @@ class QaController extends Controller
                     'stats' => [
                         'pendientes' => $stats['pendientes'] ?? 0,
                         'produccion_pendiente' => $stats['produccion_pendiente'] ?? 0,
-                        'scrap_pendientes' => $stats['scrap_pendientes'] ?? 0
-                    ]
+                        'scrap_pendiente' => $stats['scrap_pendiente'] ?? 0
+                    ],
+                    'timestamp_consulta' => $timestamp_actual,
+                    'area_id' => $user->area_id
                 ]
             ]);
         } catch (\Exception $e) {
@@ -94,6 +99,93 @@ class QaController extends Controller
             $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Error al cargar las entregas pendientes.');
         }
     }
+
+    /**
+     * Verifica los estados actuales de un conjunto de registros
+     */
+    public function verificarEstadosRegistros()
+    {
+        try {
+            $user = AuthHelper::getCurrentUser();
+
+            if (!$this->validateGetRequest(['ids'])) {
+                return $this->sendJsonResponse(false, 'Parámetros requeridos faltantes', 400);
+            }
+
+            // Validar y procesar IDs
+            $registrosIds = array_unique(
+                array_filter(
+                    explode(',', $_GET['ids']),
+                    function ($id) {
+                        return is_numeric($id) && $id > 0;
+                    }
+                )
+            );
+
+            if (empty($registrosIds)) {
+                return $this->sendJsonResponse(false, 'Lista de IDs inválida', 400);
+            }
+
+            // Obtener estados con validación de área
+            $estados = $this->qa->verificarEstadosRegistros(
+                $registrosIds,
+                $user->area_id
+            );
+
+            return $this->sendJsonResponse(true, '', 200, [
+                'estados' => $estados,
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        } catch (\Exception $e) {
+            Logger::error('QA_EstadosRegistros_Error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user' => $user->codigo_empleado,
+                'input' => $_GET
+            ]);
+
+            return $this->sendJsonResponse(false, 'Error interno al verificar estados', 500);
+        }
+    }
+
+    /**
+     * Verifica si un registro específico sigue pendiente
+     */
+    public function verificarEstadoPendiente()
+    {
+        try {
+            $user = AuthHelper::getCurrentUser();
+
+            // Validación de entrada
+            if (!$this->validateGetRequest(['id'])) {
+                return $this->sendJsonResponse(false, 'Parámetros requeridos faltantes', 400);
+            }
+
+            $registroId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+            if (!$registroId || $registroId < 1) {
+                return $this->sendJsonResponse(false, 'ID de registro inválido', 400);
+            }
+
+            // Verificar existencia y estado
+            $esPendiente = $this->qa->verificarRegistroPendiente($registroId, $user->area_id);
+
+            return $this->sendJsonResponse(true, '', 200, [
+                'pendiente' => $esPendiente,
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        } catch (\Exception $e) {
+            Logger::error('QA_EstadoPendiente_Error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user' => $user->codigo_empleado,
+                'input' => $_GET
+            ]);
+
+            return $this->sendJsonResponse(false, 'Error interno al verificar estado', 500);
+        }
+    }
+
 
     /**
      * Procesa la validación de scrap
@@ -255,15 +347,30 @@ class QaController extends Controller
             ]);
         }
     }
-    
-    private function sendJsonResponse($success, $message, $statusCode = 200)
+
+    private function sendJsonResponse($success, $message, $statusCode = 200, $data = [])
     {
         header('Content-Type: application/json');
         http_response_code($statusCode);
-        echo json_encode([
+
+        $response = [
             'success' => $success,
-            'message' => $message
-        ]);
+            'message' => $message,
+            'code' => $statusCode
+        ] + $data;
+
+        echo json_encode($response);
+        exit();
+    }
+
+    private function validateGetRequest($requiredParams)
+    {
+        foreach ($requiredParams as $param) {
+            if (!isset($_GET[$param]) || empty($_GET[$param])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private function logAndRedirect($logLevel, $logMessage, array $context, $type, $message)
