@@ -135,3 +135,4 @@
 [2025-05-19 16:36:38] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":167}
 [2025-05-19 16:36:38] [INFO] Validación de producción exitosa {"entrega_id":167,"usuario_id":1212,"validacion_id":6}
 [2025-05-19 16:36:38] [INFO] Guardado de producción exitoso {"user_id":1212,"entrega_id":167,"validacion_id":6}
+[2025-05-19 16:39:50] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}

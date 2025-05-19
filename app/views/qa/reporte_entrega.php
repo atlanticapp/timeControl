@@ -196,7 +196,7 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-row gap-2 mt-6 justify-center">
-                                    <a href="/timeControl/public/reporte-entrega/detalle/<?= $entrega['id'] ?>" target="_blank" class="px-6 py-3 bg-blue-700 hover:bg-blue-900 text-white rounded-xl shadow-lg text-lg font-bold flex items-center gap-2 transition-colors duration-200 border-2 border-blue-800 uppercase tracking-wider">
+                                    <a href="/timeControl/public/reporte-entrega/detalle/<?= $entrega['id'] ?>" class="px-6 py-3 bg-blue-700 hover:bg-blue-900 text-white rounded-xl shadow-lg text-lg font-bold flex items-center gap-2 transition-colors duration-200 border-2 border-blue-800 uppercase tracking-wider">
                                         <i class="fas fa-eye fa-lg"></i> Ver Detalle
                                     </a>
                                 </div>
