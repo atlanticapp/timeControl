@@ -96,6 +96,34 @@
                 </div>
             </div>
 
+            <!-- Filtros de búsqueda -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-6 flex flex-wrap gap-4 items-end">
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroFecha">Fecha</label>
+                    <input type="date" id="filtroFecha" class="border border-gray-300 rounded px-2 py-1 w-40" />
+                </div>
+                <!-- Se elimina el filtro de máquina -->
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroItem">Item</label>
+                    <input type="text" id="filtroItem" class="border border-gray-300 rounded px-2 py-1 w-40" placeholder="Item" />
+                </div>
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroJtWo">JT/WO</label>
+                    <input type="text" id="filtroJtWo" class="border border-gray-300 rounded px-2 py-1 w-40" placeholder="JT/WO" />
+                </div>
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroPO">PO</label>
+                    <input type="text" id="filtroPO" class="border border-gray-300 rounded px-2 py-1 w-40" placeholder="PO" />
+                </div>
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroCliente">Cliente</label>
+                    <input type="text" id="filtroCliente" class="border border-gray-300 rounded px-2 py-1 w-40" placeholder="Cliente" />
+                </div>
+                <div>
+                    <button id="btnLimpiarFiltros" class="ml-2 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-gray-700">Limpiar</button>
+                </div>
+            </div>
+
             <!-- Lista de entregas pendientes -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden">
                 <div class="bg-gradient-to-r from-teal-600 to-teal-700 text-white py-4 px-5 flex items-center justify-between">
@@ -105,7 +133,54 @@
                     </div>
                 </div>
 
-                <?php if (empty($data['entregas_produccion']) && empty($data['entregas_scrap'])): ?>
+                <?php
+                // Agrupar entregas por máquina
+                $maquinas = [];
+                foreach ($data['entregas_produccion'] as $entrega) {
+                    $maquina = $entrega['nombre_maquina'];
+                    if (!isset($maquinas[$maquina])) $maquinas[$maquina] = [];
+                    $key = $entrega['fecha_registro'] . '_' . $entrega['jtWo'] . '_' . $entrega['item'];
+                    if (!isset($maquinas[$maquina][$key])) {
+                        $maquinas[$maquina][$key] = [
+                            'fecha_registro' => $entrega['fecha_registro'],
+                            'item' => $entrega['item'],
+                            'jtWo' => $entrega['jtWo'],
+                            'po' => $entrega['po'] ?? '',
+                            'cliente' => $entrega['cliente'] ?? '',
+                            'tipo_boton' => $entrega['tipo_boton'],
+                            'entregas' => []
+                        ];
+                    }
+                    $maquinas[$maquina][$key]['entregas'][] = [
+                        'id' => $entrega['id'],
+                        'tipo' => 'produccion',
+                        'cantidad' => $entrega['cantidad_produccion']
+                    ];
+                }
+                foreach ($data['entregas_scrap'] as $entrega) {
+                    $maquina = $entrega['nombre_maquina'];
+                    if (!isset($maquinas[$maquina])) $maquinas[$maquina] = [];
+                    $key = $entrega['fecha_registro'] . '_' . $entrega['jtWo'] . '_' . $entrega['item'];
+                    if (!isset($maquinas[$maquina][$key])) {
+                        $maquinas[$maquina][$key] = [
+                            'fecha_registro' => $entrega['fecha_registro'],
+                            'item' => $entrega['item'],
+                            'jtWo' => $entrega['jtWo'],
+                            'po' => $entrega['po'] ?? '',
+                            'cliente' => $entrega['cliente'] ?? '',
+                            'tipo_boton' => $entrega['tipo_boton'],
+                            'entregas' => []
+                        ];
+                    }
+                    $maquinas[$maquina][$key]['entregas'][] = [
+                        'id' => $entrega['id'],
+                        'tipo' => 'scrap',
+                        'cantidad' => $entrega['cantidad_scrapt']
+                    ];
+                }
+                ?>
+
+                <?php if (empty($maquinas)): ?>
                     <div class="flex flex-col items-center justify-center p-12 bg-gray-50">
                         <div class="text-teal-600 mb-4">
                             <i class="fas fa-check-circle text-5xl"></i>
@@ -117,132 +192,99 @@
                     </div>
                 <?php else: ?>
                     <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-gray-50 text-left text-gray-600 text-sm">
-                                <tr>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-calendar-alt text-teal-600 mr-2"></i> Fecha/Hora</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-cogs text-teal-600 mr-2"></i> Máquina</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-teal-600 mr-2"></i> Item</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-teal-600 mr-2"></i> JT/WO</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-barcode text-teal-600 mr-2"></i> PO</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-user text-teal-600 mr-2"></i> Cliente</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-info-circle text-teal-600 mr-2"></i> Tipo</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-cubes text-teal-600 mr-2"></i> Detalle</th>
-                                    <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-teal-600 mr-2"></i> Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $entregas = [];
-                                foreach ($data['entregas_produccion'] as $entrega) {
-                                    $key = $entrega['fecha_registro'] . '_' . $entrega['maquina'] . '_' . $entrega['jtWo'] . '_' . $entrega['item'];
-                                    if (!isset($entregas[$key])) {
-                                        $entregas[$key] = [
-                                            'fecha_registro' => $entrega['fecha_registro'],
-                                            'nombre_maquina' => $entrega['nombre_maquina'],
-                                            'item' => $entrega['item'],
-                                            'jtWo' => $entrega['jtWo'],
-                                            'po' => $entrega['po'] ?? '',
-                                            'cliente' => $entrega['cliente'] ?? '',
-                                            'tipo_boton' => $entrega['tipo_boton'],
-                                            'entregas' => []
-                                        ];
-                                    }
-                                    $entregas[$key]['entregas'][] = [
-                                        'id' => $entrega['id'],
-                                        'tipo' => 'produccion',
-                                        'cantidad' => $entrega['cantidad_produccion']
-                                    ];
-                                }
-
-                                foreach ($data['entregas_scrap'] as $entrega) {
-                                    $key = $entrega['fecha_registro'] . '_' . $entrega['maquina'] . '_' . $entrega['jtWo'] . '_' . $entrega['item'];
-                                    if (!isset($entregas[$key])) {
-                                        $entregas[$key] = [
-                                            'fecha_registro' => $entrega['fecha_registro'],
-                                            'nombre_maquina' => $entrega['nombre_maquina'],
-                                            'item' => $entrega['item'],
-                                            'jtWo' => $entrega['jtWo'],
-                                            'po' => $entrega['po'] ?? '',
-                                            'cliente' => $entrega['cliente'] ?? '',
-                                            'tipo_boton' => $entrega['tipo_boton'],
-                                            'entregas' => []
-                                        ];
-                                    }
-                                    $entregas[$key]['entregas'][] = [
-                                        'id' => $entrega['id'],
-                                        'tipo' => 'scrap',
-                                        'cantidad' => $entrega['cantidad_scrapt']
-                                    ];
-                                }
-
-                                foreach ($entregas as $entrega): ?>
-                                    <tr class="hover:bg-gray-50/50 border-b border-gray-100">
-                                        <td class="px-4 py-3">
-                                            <div class="text-sm">
-                                                <div class="font-medium"><?= date('d/m/Y', strtotime($entrega['fecha_registro'])) ?></div>
-                                                <div class="text-gray-500"><?= date('H:i', strtotime($entrega['fecha_registro'])) ?></div>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['nombre_maquina']) ?></td>
-                                        <td class="px-4 py-3 font-medium"><?= htmlspecialchars($entrega['item']) ?></td>
-                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['jtWo']) ?></td>
-                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['po']) ?></td>
-                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['cliente']) ?></td>
-                                        <td class="px-4 py-3">
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold 
-                        <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' ?>">
-                                                <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
-                                            </span>
-                                        </td>
-                                        <td class="px-4 py-3">
-                                            <div class="space-y-2">
-                                                <?php foreach ($entrega['entregas'] as $detalle): ?>
-                                                    <div class="flex items-center justify-between py-1.5 px-3 rounded-md <?= $detalle['tipo'] == 'scrap' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700' ?>">
-                                                        <span class="font-medium">
-                                                            <?= ucfirst($detalle['tipo']) ?>
-                                                        </span>
-                                                        <span class="font-bold">
-                                                            <?= number_format($detalle['cantidad'], 2) ?> lb.
-                                                        </span>
+                        <?php foreach ($maquinas as $nombre_maquina => $entregas): ?>
+                            <div class="border-b border-gray-200">
+                                <div class="bg-gray-100 px-4 py-2 font-bold text-teal-700 flex items-center text-base">
+                                    <i class="fas fa-cogs mr-2"></i> <?= htmlspecialchars($nombre_maquina) ?>
+                                </div>
+                                <table class="w-full" id="tablaEntregas">
+                                    <thead class="bg-gray-50 text-left text-gray-600 text-sm">
+                                        <tr>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-calendar-alt text-teal-600 mr-2"></i> Fecha/Hora</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-teal-600 mr-2"></i> Item</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-teal-600 mr-2"></i> JT/WO</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-barcode text-teal-600 mr-2"></i> PO</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-user text-teal-600 mr-2"></i> Cliente</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-info-circle text-teal-600 mr-2"></i> Tipo</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-cubes text-teal-600 mr-2"></i> Detalle</th>
+                                            <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-teal-600 mr-2"></i> Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($entregas as $entrega): ?>
+                                            <tr class="hover:bg-gray-50/50 border-b border-gray-100 entrega-row"
+                                                data-fecha="<?= date('Y-m-d', strtotime($entrega['fecha_registro'])) ?>"
+                                                data-item="<?= htmlspecialchars($entrega['item']) ?>"
+                                                data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>"
+                                                data-po="<?= htmlspecialchars($entrega['po']) ?>"
+                                                data-cliente="<?= htmlspecialchars($entrega['cliente']) ?>"
+                                            >
+                                                <td class="px-4 py-3">
+                                                    <div class="text-sm">
+                                                        <div class="font-medium"><?= date('d/m/Y', strtotime($entrega['fecha_registro'])) ?></div>
+                                                        <div class="text-gray-500"><?= date('H:i', strtotime($entrega['fecha_registro'])) ?></div>
                                                     </div>
-                                                <?php endforeach; ?>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-3">
-                                            <?php foreach ($entrega['entregas'] as $index => $detalle): ?>
-                                                <div class="flex space-x-2 <?= $index > 0 ? 'mt-2' : '' ?>">
-                                                    <button class="btn-review inline-flex items-center px-2.5 py-1.5 border border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors duration-200 text-sm w-full justify-center"
-                                                        data-id="<?= $detalle['id'] ?>"
-                                                        data-tipo="<?= $detalle['tipo'] ?>"
-                                                        data-cantidad="<?= $detalle['cantidad'] ?>"
-                                                        data-maquina="<?= htmlspecialchars($entrega['nombre_maquina']) ?>"
-                                                        data-item="<?= htmlspecialchars($entrega['item']) ?>"
-                                                        data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>"
-                                                        data-po="<?= htmlspecialchars($entrega['po']) ?>"
-                                                        data-cliente="<?= htmlspecialchars($entrega['cliente']) ?>">
-                                                        <i class="fas fa-search mr-1"></i>Revisar
-                                                    </button>
-                                                    <button class="<?= $detalle['tipo'] == 'scrap' ? 'btn-validate-scrap' : 'btn-validate-production' ?> 
+                                                </td>
+                                                <td class="px-4 py-3 font-medium"><?= htmlspecialchars($entrega['item']) ?></td>
+                                                <td class="px-4 py-3"><?= htmlspecialchars($entrega['jtWo']) ?></td>
+                                                <td class="px-4 py-3"><?= htmlspecialchars($entrega['po']) ?></td>
+                                                <td class="px-4 py-3"><?= htmlspecialchars($entrega['cliente']) ?></td>
+                                                <td class="px-4 py-3">
+                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold 
+                        <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' ?>">
+                                                        <?= ($entrega['tipo_boton'] == 'final_produccion') ? 'Final' : 'Parcial' ?>
+                                                    </span>
+                                                </td>
+                                                <td class="px-4 py-3">
+                                                    <div class="space-y-2">
+                                                        <?php foreach ($entrega['entregas'] as $detalle): ?>
+                                                            <div class="flex items-center justify-between py-1.5 px-3 rounded-md <?= $detalle['tipo'] == 'scrap' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700' ?>">
+                                                                <span class="font-medium">
+                                                                    <?= ucfirst($detalle['tipo']) ?>
+                                                                </span>
+                                                                <span class="font-bold">
+                                                                    <?= number_format($detalle['cantidad'], 2) ?> lb.
+                                                                </span>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </td>
+                                                <td class="px-4 py-3">
+                                                    <?php foreach ($entrega['entregas'] as $index => $detalle): ?>
+                                                        <div class="flex space-x-2 <?= $index > 0 ? 'mt-2' : '' ?>">
+                                                            <button class="btn-review inline-flex items-center px-2.5 py-1.5 border border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors duration-200 text-sm w-full justify-center"
+                                                                data-id="<?= $detalle['id'] ?>"
+                                                                data-tipo="<?= $detalle['tipo'] ?>"
+                                                                data-cantidad="<?= $detalle['cantidad'] ?>"
+                                                                data-maquina="<?= htmlspecialchars($nombre_maquina) ?>"
+                                                                data-item="<?= htmlspecialchars($entrega['item']) ?>"
+                                                                data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>"
+                                                                data-po="<?= htmlspecialchars($entrega['po']) ?>"
+                                                                data-cliente="<?= htmlspecialchars($entrega['cliente']) ?>">
+                                                                <i class="fas fa-search mr-1"></i>Revisar
+                                                            </button>
+                                                            <button class="<?= $detalle['tipo'] == 'scrap' ? 'btn-validate-scrap' : 'btn-validate-production' ?> 
                                     inline-flex items-center px-2.5 py-1.5 border border-green-600 text-green-600 rounded 
                                     hover:bg-green-600 hover:text-white transition-colors duration-200 text-sm w-full justify-center"
-                                                        data-id="<?= $detalle['id'] ?>"
-                                                        data-tipo="<?= $detalle['tipo'] ?>"
-                                                        data-cantidad="<?= $detalle['cantidad'] ?>"
-                                                        data-maquina="<?= htmlspecialchars($entrega['nombre_maquina']) ?>"
-                                                        data-item="<?= htmlspecialchars($entrega['item']) ?>"
-                                                        data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>"
-                                                        data-po="<?= htmlspecialchars($entrega['po']) ?>"
-                                                        data-cliente="<?= htmlspecialchars($entrega['cliente']) ?>">
-                                                        <i class="fas fa-check mr-1"></i>Validar
-                                                    </button>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                                                                data-id="<?= $detalle['id'] ?>"
+                                                                data-tipo="<?= $detalle['tipo'] ?>"
+                                                                data-cantidad="<?= $detalle['cantidad'] ?>"
+                                                                data-maquina="<?= htmlspecialchars($nombre_maquina) ?>"
+                                                                data-item="<?= htmlspecialchars($entrega['item']) ?>"
+                                                                data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>"
+                                                                data-po="<?= htmlspecialchars($entrega['po']) ?>"
+                                                                data-cliente="<?= htmlspecialchars($entrega['cliente']) ?>">
+                                                                <i class="fas fa-check mr-1"></i>Validar
+                                                            </button>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -440,6 +482,35 @@
             });
         });
     </script>
+    <script>
+$(document).ready(function () {
+    function filtrar() {
+        let fecha = $('#filtroFecha').val();
+        let item = $('#filtroItem').val().toLowerCase();
+        let jtwo = $('#filtroJtWo').val().toLowerCase();
+        let po = $('#filtroPO').val().toLowerCase();
+        let cliente = $('#filtroCliente').val().toLowerCase();
+
+        $('.entrega-row').each(function () {
+            let $row = $(this);
+            let match = true;
+            if (fecha && $row.data('fecha') !== fecha) match = false;
+            if (item && !$row.data('item').toLowerCase().includes(item)) match = false;
+            if (jtwo && !$row.data('jtwo').toLowerCase().includes(jtwo)) match = false;
+            if (po && !$row.data('po').toLowerCase().includes(po)) match = false;
+            if (cliente && !$row.data('cliente').toLowerCase().includes(cliente)) match = false;
+            $row.toggle(match);
+        });
+    }
+
+    $('#filtroFecha, #filtroItem, #filtroJtWo, #filtroPO, #filtroCliente').on('input change', filtrar);
+    $('#btnLimpiarFiltros').on('click', function (e) {
+        e.preventDefault();
+        $('#filtroFecha, #filtroItem, #filtroJtWo, #filtroPO, #filtroCliente').val('');
+        filtrar();
+    });
+});
+</script>
 </body>
 
 </html>

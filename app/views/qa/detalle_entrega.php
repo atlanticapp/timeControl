@@ -335,25 +335,27 @@
                             <td>
                                 <?php $cajas = isset($entrega['cajas']) ? intval($entrega['cajas']) : null; ?>
                                 <?php $piezas = isset($entrega['piezas']) ? intval($entrega['piezas']) : null; ?>
-                                <?php if ($cajas > 0): ?>
-                                    <div class="text-center">
-                                        <span class="font-semibold"><span style="border-bottom: 1px solid #000;"><?= $cajas ?></span> Cajas</span>
-                                    </div>
-                                    <?php if ($piezas > 0): ?>
-                                        <div class="my-1"></div>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <?php if ($piezas > 0): ?>
-                                    <div class="text-center">
-                                        <span class="font-semibold"><span style="border-bottom: 1px solid #000;"><?= $piezas ?></span> Piezas</span>
-                                    </div>
-                                <?php endif; ?>
+                                <div class="text-center">
+                                    <span class="font-semibold">
+                                        <span style="border-bottom: 1px solid #000;">
+                                            <?= ($cajas !== null && $cajas !== '') ? $cajas : '-' ?>
+                                        </span> Cajas
+                                    </span>
+                                </div>
+                                <div class="my-1"></div>
+                                <div class="text-center">
+                                    <span class="font-semibold">
+                                        <span style="border-bottom: 1px solid #000;">
+                                            <?= ($piezas !== null && $piezas !== '') ? $piezas : '-' ?>
+                                        </span> Piezas
+                                    </span>
+                                </div>
                                 <?php if (isset($_GET['editar']) && $_GET['editar'] == 1): ?>
                                     <div class="mt-2">
-                                        <input type="number" name="cajas" placeholder="Cajas" value="<?= htmlspecialchars($entrega['cajas'] ?? '') ?>" min="0" required>
+                                        <input type="number" name="cajas" placeholder="Cajas" value="<?= ($entrega['cajas'] !== null && $entrega['cajas'] !== '') ? htmlspecialchars($entrega['cajas']) : '' ?>" min="0" required>
                                     </div>
                                     <div class="mt-1">
-                                        <input type="number" name="piezas" placeholder="Piezas" value="<?= htmlspecialchars($entrega['piezas'] ?? '') ?>" min="0" required>
+                                        <input type="number" name="piezas" placeholder="Piezas" value="<?= ($entrega['piezas'] !== null && $entrega['piezas'] !== '') ? htmlspecialchars($entrega['piezas']) : '' ?>" min="0" required>
                                     </div>
                                 <?php endif; ?>
                             </td>
@@ -362,13 +364,17 @@
                             </td>
                             <td>
                                 <?php $paletas = isset($entrega['paletas']) ? intval($entrega['paletas']) : null; ?>
-                                <?php if ($paletas > 0): ?>
-                                    <div class="text-center">
-                                        <span class="font-semibold"><span style="border-bottom: 1px solid #000;"><?= $paletas ?></span> Paletas</span>
-                                    </div>
-                                <?php endif; ?>
+                                <div class="text-center">
+                                    <span class="font-semibold">
+                                        <span style="border-bottom: 1px solid #000;">
+                                            <?= ($paletas !== null && $paletas !== '') ? $paletas : '-' ?>
+                                        </span> Paletas
+                                    </span>
+                                </div>
                                 <?php if (isset($_GET['editar']) && $_GET['editar'] == 1): ?>
-                                    <input type="number" name="paletas" value="<?= htmlspecialchars($entrega['paletas'] ?? '') ?>" min="0" required>
+                                    <div class="mt-2">
+                                        <input type="number" name="paletas" placeholder="Paletas" value="<?= ($entrega['paletas'] !== null && $entrega['paletas'] !== '') ? htmlspecialchars($entrega['paletas']) : '' ?>" min="0" required>
+                                    </div>
                                 <?php endif; ?>
                             </td>
                             <td>

@@ -38,6 +38,35 @@
                 </div>
             </div>
 
+            <!-- Filtros de búsqueda -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-6 flex flex-wrap gap-4 items-end">
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroFecha">Fecha</label>
+                    <input type="date" id="filtroFecha" class="border border-gray-300 rounded px-2 py-1 w-40" />
+                </div>
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroItem">Item</label>
+                    <input type="text" id="filtroItem" class="border border-gray-300 rounded px-2 py-1 w-40" placeholder="Item" />
+                </div>
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroJtWo">JT/WO</label>
+                    <input type="text" id="filtroJtWo" class="border border-gray-300 rounded px-2 py-1 w-40" placeholder="JT/WO" />
+                </div>
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroPO">PO</label>
+                    <input type="text" id="filtroPO" class="border border-gray-300 rounded px-2 py-1 w-40" placeholder="PO" />
+                </div>
+                <div>
+                    <label class="block text-gray-600 text-sm mb-1" for="filtroCliente">Cliente</label>
+                    <input type="text" id="filtroCliente" class="border border-gray-300 rounded px-2 py-1 w-40" placeholder="Cliente" />
+                </div>
+                <div>
+                    <button id="btnLimpiarFiltros" class="ml-2 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-gray-700">
+                        <i class="fas fa-eraser mr-1"></i>Limpiar
+                    </button>
+                </div>
+            </div>
+
             <!-- Content Panel -->
             <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                 <div class="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-4 flex justify-between items-center">
@@ -52,62 +81,86 @@
                         <p class="text-xl">No hay entregas de producción registradas</p>
                     </div>
                 <?php else: ?>
+                    <?php
+                    // Agrupar entregas por máquina
+                    $maquinas = [];
+                    foreach ($data['entregas_validadas'] as $entrega) {
+                        $maquina = $entrega['nombre_maquina'] ?? 'Sin Máquina';
+                        if (!isset($maquinas[$maquina])) {
+                            $maquinas[$maquina] = [];
+                        }
+                        $maquinas[$maquina][] = $entrega;
+                    }
+                    ?>
+
                     <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-gray-50 text-left text-gray-600 text-sm">
-                                <tr>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-calendar-alt text-blue-600 mr-2"></i> Fecha/Hora</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-cogs text-blue-600 mr-2"></i> Máquina</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-blue-600 mr-2"></i> Item</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-blue-600 mr-2"></i> JT/WO</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-file-invoice text-blue-600 mr-2"></i> PO</th>
-                                    <th class="px-4 py-3 font-medium"><i class="fas fa-user text-blue-600 mr-2"></i> Cliente</th>
-                                    <th class="px-4 py-3 font-medium text-right"><i class="fas fa-cubes text-blue-600 mr-2"></i> Cantidad</th>
-                                    <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-blue-600 mr-2"></i> Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($data['entregas_validadas'] as $entrega): ?>
-                                    <tr class="hover:bg-blue-50 border-b border-gray-100">
-                                        <td class="px-4 py-3 text-sm"><?= date('d/m/Y H:i', strtotime($entrega['fecha_registro'])) ?></td>
-                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['nombre_maquina'] ?? 'N/A') ?></td>
-                                        <td class="px-4 py-3 font-medium"><?= htmlspecialchars($entrega['item']) ?></td>
-                                        <td class="px-4 py-3">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                <?= htmlspecialchars($entrega['jtWo']) ?>
-                                            </span>
-                                        </td>
-                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['po'] ?? 'N/A') ?></td>
-                                        <td class="px-4 py-3"><?= htmlspecialchars($entrega['cliente'] ?? 'N/A') ?></td>
-                                        <td class="px-4 py-3 text-right font-bold">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                <?= number_format($entrega['cantidad_produccion'], 2, '.', ',') ?> Lb
-                                            </span>
-                                        </td>
-                                        <td class="px-4 py-3 text-center">
-                                            <div class="flex justify-center space-x-2">
-                                                <button class="btn-validate inline-flex items-center px-2.5 py-1.5 border border-green-600 text-green-600 rounded hover:bg-green-600 hover:text-white transition-colors duration-200"
-                                                    onclick="openValidateModal(<?= $entrega['id'] ?>, 
-                                                        '<?= htmlspecialchars($entrega['nombre_maquina'] ?? 'N/A') ?>', 
-                                                        '<?= htmlspecialchars($entrega['item']) ?>', 
-                                                        '<?= htmlspecialchars($entrega['jtWo']) ?>', 
-                                                        '<?= $entrega['cantidad_produccion'] ?>')">
-                                                    <i class="fas fa-check mr-1"></i> Validar
-                                                </button>
-                                                <button class="btn-retain inline-flex items-center px-2.5 py-1.5 border border-yellow-500 text-yellow-500 rounded hover:bg-yellow-500 hover:text-white transition-colors duration-200"
-                                                    onclick="openRetainModal(<?= $entrega['id'] ?>, 
-                                                      '<?= htmlspecialchars($entrega['nombre_maquina'] ?? 'N/A') ?>', 
-                                                      '<?= htmlspecialchars($entrega['item']) ?>', 
-                                                      '<?= htmlspecialchars($entrega['jtWo']) ?>', 
-                                                      '<?= $entrega['cantidad_produccion'] ?>')">
-                                                    <i class="fas fa-times mr-1"></i> Retener
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                        <?php foreach ($maquinas as $nombre_maquina => $entregas): ?>
+                            <div class="border-b border-gray-200 maquina-group">
+                                <div class="bg-gray-100 px-4 py-2 font-bold text-amber-700 flex items-center text-base">
+                                    <i class="fas fa-cogs mr-2"></i> <?= htmlspecialchars($nombre_maquina) ?>
+                                </div>
+                                <table class="w-full">
+                                    <thead class="bg-gray-50 text-left text-gray-600 text-sm">
+                                        <tr>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-calendar-alt text-blue-600 mr-2"></i> Fecha/Hora</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-cogs text-blue-600 mr-2"></i> Máquina</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-tag text-blue-600 mr-2"></i> Item</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-file-alt text-blue-600 mr-2"></i> JT/WO</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-file-invoice text-blue-600 mr-2"></i> PO</th>
+                                            <th class="px-4 py-3 font-medium"><i class="fas fa-user text-blue-600 mr-2"></i> Cliente</th>
+                                            <th class="px-4 py-3 font-medium text-right"><i class="fas fa-cubes text-blue-600 mr-2"></i> Cantidad</th>
+                                            <th class="px-4 py-3 font-medium text-center"><i class="fas fa-tools text-blue-600 mr-2"></i> Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($entregas as $entrega): ?>
+                                            <tr class="hover:bg-blue-50 border-b border-gray-100 entrega-row"
+                                                data-fecha="<?= date('Y-m-d', strtotime($entrega['fecha_registro'])) ?>"
+                                                data-item="<?= htmlspecialchars($entrega['item']) ?>"
+                                                data-jtwo="<?= htmlspecialchars($entrega['jtWo']) ?>"
+                                                data-po="<?= htmlspecialchars($entrega['po'] ?? '') ?>"
+                                                data-cliente="<?= htmlspecialchars($entrega['cliente'] ?? '') ?>">
+                                                <td class="px-4 py-3 text-sm"><?= date('d/m/Y H:i', strtotime($entrega['fecha_registro'])) ?></td>
+                                                <td class="px-4 py-3"><?= htmlspecialchars($entrega['nombre_maquina'] ?? 'N/A') ?></td>
+                                                <td class="px-4 py-3 font-medium"><?= htmlspecialchars($entrega['item']) ?></td>
+                                                <td class="px-4 py-3">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                        <?= htmlspecialchars($entrega['jtWo']) ?>
+                                                    </span>
+                                                </td>
+                                                <td class="px-4 py-3"><?= htmlspecialchars($entrega['po'] ?? 'N/A') ?></td>
+                                                <td class="px-4 py-3"><?= htmlspecialchars($entrega['cliente'] ?? 'N/A') ?></td>
+                                                <td class="px-4 py-3 text-right font-bold">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                        <?= number_format($entrega['cantidad_produccion'], 2, '.', ',') ?> Lb
+                                                    </span>
+                                                </td>
+                                                <td class="px-4 py-3 text-center">
+                                                    <div class="flex justify-center space-x-2">
+                                                        <button class="btn-validate inline-flex items-center px-2.5 py-1.5 border border-green-600 text-green-600 rounded hover:bg-green-600 hover:text-white transition-colors duration-200"
+                                                            onclick="openValidateModal(<?= $entrega['id'] ?>, 
+                                                                '<?= htmlspecialchars($entrega['nombre_maquina'] ?? 'N/A') ?>', 
+                                                                '<?= htmlspecialchars($entrega['item']) ?>', 
+                                                                '<?= htmlspecialchars($entrega['jtWo']) ?>', 
+                                                                '<?= $entrega['cantidad_produccion'] ?>')">
+                                                            <i class="fas fa-check mr-1"></i> Validar
+                                                        </button>
+                                                        <button class="btn-retain inline-flex items-center px-2.5 py-1.5 border border-yellow-500 text-yellow-500 rounded hover:bg-yellow-500 hover:text-white transition-colors duration-200"
+                                                            onclick="openRetainModal(<?= $entrega['id'] ?>, 
+                                                              '<?= htmlspecialchars($entrega['nombre_maquina'] ?? 'N/A') ?>', 
+                                                              '<?= htmlspecialchars($entrega['item']) ?>', 
+                                                              '<?= htmlspecialchars($entrega['jtWo']) ?>', 
+                                                              '<?= $entrega['cantidad_produccion'] ?>')">
+                                                            <i class="fas fa-times mr-1"></i> Retener
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -229,7 +282,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             fetch('/timeControl/public/getStatus')
                 .then(response => response.json())
-                .then(data => {
+                .then data => {
                     if (data.status && data.message) {
                         const toastrFunction = data.status === "success" ? toastr.success : toastr.error;
                         toastrFunction(data.message, '', {
@@ -421,6 +474,69 @@
                 totalCounter.textContent = Math.max(0, currentTotal);
             }
         }
+
+        $(document).ready(function() {
+            function filtrarEntregas() {
+                const filtros = {
+                    fecha: $('#filtroFecha').val(),
+                    item: $('#filtroItem').val().toLowerCase(),
+                    jtwo: $('#filtroJtWo').val().toLowerCase(),
+                    po: $('#filtroPO').val().toLowerCase(),
+                    cliente: $('#filtroCliente').val().toLowerCase()
+                };
+
+                $('.entrega-row').each(function() {
+                    const $row = $(this);
+                    const datos = {
+                        fecha: $row.data('fecha'),
+                        item: $row.data('item').toLowerCase(),
+                        jtwo: $row.data('jtwo').toLowerCase(),
+                        po: ($row.data('po') || '').toLowerCase(),
+                        cliente: ($row.data('cliente') || '').toLowerCase()
+                    };
+
+                    let mostrar = true;
+
+                    // Filtrado por caracteres
+                    if (filtros.fecha && datos.fecha !== filtros.fecha) mostrar = false;
+                    if (filtros.item && !datos.item.includes(filtros.item)) mostrar = false;
+                    if (filtros.jtwo && !datos.jtwo.includes(filtros.jtwo)) mostrar = false;
+                    if (filtros.po && !datos.po.includes(filtros.po)) mostrar = false;
+                    if (filtros.cliente && !datos.cliente.includes(filtros.cliente)) mostrar = false;
+
+                    $row.toggle(mostrar);
+                });
+
+                // Actualizar visibilidad de grupos de máquinas
+                $('.maquina-group').each(function() {
+                    const $grupo = $(this);
+                    const filasVisibles = $grupo.find('.entrega-row:visible').length;
+                    $grupo.toggle(filasVisibles > 0);
+                });
+
+                actualizarContador();
+            }
+
+            // Event listeners optimizados para respuesta inmediata
+            $('.border-gray-300').on('input keyup', function() {
+                filtrarEntregas();
+            });
+
+            $('#btnLimpiarFiltros').on('click', function(e) {
+                e.preventDefault();
+                $('#filtroFecha, #filtroItem, #filtroJtWo, #filtroPO, #filtroCliente').val('');
+                $('.entrega-row, .maquina-group').show();
+                actualizarContador();
+            });
+
+            function actualizarContador() {
+                const entregasVisibles = $('.entrega-row:visible').length;
+                $('.bg-amber-100 .font-semibold').text('Total Entregas: ' + entregasVisibles);
+            }
+
+            // Inicializar contador
+            actualizarContador();
+        });
     </script>
 
 </body>
