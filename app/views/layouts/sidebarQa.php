@@ -73,7 +73,9 @@
                 //         ],
                 //     ]
                 // ],
-                ['icon' => 'fas fa-search', 'text' => 'Revisiones Pendientes', 'color' => 'rose', 'route' => 'revisiones']
+                ['icon' => 'fas fa-search', 'text' => 'Revisiones Pendientes', 'color' => 'rose', 'route' => 'revisiones'],
+                // Nuevo ítem para Reporte de Entrega
+                ['icon' => 'fas fa-file-alt', 'text' => 'Reporte de Entrega', 'color' => 'green', 'route' => 'reporte-entrega']
             ];
             foreach ($menuItems as $item): ?>
                 <li>

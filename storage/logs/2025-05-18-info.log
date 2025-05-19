@@ -1,0 +1,42 @@
+[2025-05-18 20:16:56] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":145}
+[2025-05-18 20:16:56] [INFO] Validación de producción exitosa {"entrega_id":145,"usuario_id":1212,"validacion_id":9}
+[2025-05-18 20:16:56] [INFO] Guardado de producción exitoso {"user_id":1212,"entrega_id":145,"validacion_id":9}
+[2025-05-18 20:16:59] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":133}
+[2025-05-18 20:16:59] [INFO] Validación de producción exitosa {"entrega_id":133,"usuario_id":1212,"validacion_id":10}
+[2025-05-18 20:16:59] [INFO] Guardado de producción exitoso {"user_id":1212,"entrega_id":133,"validacion_id":10}
+[2025-05-18 20:21:07] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":1212,"cantidad":0}
+[2025-05-18 20:21:10] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:21:11] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:21:29] [INFO] Correcciones pendientes consultadas {"maquina_id":0,"cantidad":0}
+[2025-05-18 20:21:38] [INFO] Correcciones pendientes consultadas {"maquina_id":5,"cantidad":0}
+[2025-05-18 20:21:46] [INFO] Correcciones pendientes consultadas {"maquina_id":5,"cantidad":0}
+[2025-05-18 20:21:59] [INFO] Correcciones pendientes consultadas {"maquina_id":5,"cantidad":0}
+[2025-05-18 20:22:03] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:22:08] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":156}
+[2025-05-18 20:22:08] [INFO] Registrando historial de validación {"registro_id":156,"tipo":"produccion","usuario_id":1212}
+[2025-05-18 20:22:08] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":156,"validacion_id":null}
+[2025-05-18 20:22:08] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:22:08] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:22:20] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:22:24] [INFO] Solicitud de guardar producción recibida {"user_id":1212,"entrega_id":156}
+[2025-05-18 20:22:24] [INFO] Validación de producción exitosa {"entrega_id":156,"usuario_id":1212,"validacion_id":11}
+[2025-05-18 20:22:24] [INFO] Guardado de producción exitoso {"user_id":1212,"entrega_id":156,"validacion_id":11}
+[2025-05-18 20:22:45] [INFO] Correcciones pendientes consultadas {"maquina_id":5,"cantidad":0}
+[2025-05-18 20:22:49] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:22:59] [INFO] Solicitud de validación de producción recibida {"user_id":1212,"registro_id":157}
+[2025-05-18 20:22:59] [INFO] Registrando historial de validación {"registro_id":157,"tipo":"produccion","usuario_id":1212}
+[2025-05-18 20:22:59] [INFO] Validación de producción exitosa {"user_id":1212,"registro_id":157,"validacion_id":null}
+[2025-05-18 20:22:59] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:23:00] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-05-18 20:23:08] [INFO] Solicitud de creación de retención recibida {"registro_id":157,"cantidad":548796,"user_id":1212}
+[2025-05-18 20:23:08] [INFO] Retención creada exitosamente {"retencion_id":16,"registro_id":157,"cantidad":548796}
+[2025-05-18 20:23:08] [INFO] Retención creada exitosamente {"retencion_id":16,"registro_id":157,"user_id":1212}
+[2025-05-18 20:23:08] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":1212,"cantidad":1}
+[2025-05-18 20:23:10] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":1212,"cantidad":1}
+[2025-05-18 20:23:20] [INFO] Destino asignado exitosamente {"retencion_id":16,"tipo_destino":"produccion_final","cantidad":666,"user_id":1212,"resultado":"Destino asignado correctamente"}
+[2025-05-18 20:23:20] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":1212,"cantidad":1}
+[2025-05-18 20:23:20] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":1212,"cantidad":1}
+[2025-05-18 20:23:26] [INFO] Destino asignado exitosamente {"retencion_id":16,"tipo_destino":"produccion_final","cantidad":665,"user_id":1212,"resultado":"Destino asignado correctamente"}
+[2025-05-18 20:23:26] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":1212,"cantidad":1}
+[2025-05-18 20:23:26] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":1212,"cantidad":1}
+[2025-05-18 20:39:23] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":1}

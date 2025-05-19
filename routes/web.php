@@ -16,6 +16,7 @@ use App\Controllers\ProduccionController;
 use App\Controllers\QaController;
 use App\Helpers\AuthHelper;
 use App\Controllers\RegistroController;
+use App\Controllers\ReporteEntregaController;
 use App\Controllers\RetencionController;
 use App\Controllers\SaveVelocidad;
 use App\Controllers\SupervisorController;
@@ -82,10 +83,15 @@ $router->get('/retenciones', [RetencionController::class, 'index']);
 $router->post('/retener', [RetencionController::class, 'crearRetencion']);
 $router->post('/asignarDestinos', [RetencionController::class, 'asignarDestino']);
 
-$router->get('/destinos/produccion', [DestinoProdController::class, 'index']);
-$router->get('/destinos/retrabajo', [DestinoRetrabajoController::class, 'index']);
-$router->get('/destinos/destruccion', [DestinoDestruccionController::class, 'index']);
-$router->get('/produccion/guardada', [ProduccionController::class, 'index']);
+$router->get('/reporte-entrega', [ReporteEntregaController::class, 'reporteEntrega']);
+$router->get('/reporte-entrega/detalle/{id}', [ReporteEntregaController::class, 'detalle']);
+$router->post('/guardar-entrega', [ReporteEntregaController::class, 'guardarEntrega']);
+$router->post('/marcar-impresa', [ReporteEntregaController::class, 'marcarImpresa']);
+
+// $router->get('/destinos/produccion', [DestinoProdController::class, 'index']);
+// $router->get('/destinos/retrabajo', [DestinoRetrabajoController::class, 'index']);
+// $router->get('/destinos/destruccion', [DestinoDestruccionController::class, 'index']);
+// $router->get('/produccion/guardada', [ProduccionController::class, 'index']);
 
 // Error handling
 $router->get('/error', function () {
