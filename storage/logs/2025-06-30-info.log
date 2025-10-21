@@ -1,0 +1,19 @@
+[2025-06-30 15:45:47] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-06-30 15:47:44] [INFO] Correcciones pendientes consultadas {"maquina_id":123789,"cantidad":0}
+[2025-06-30 15:48:08] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-06-30 15:48:14] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-06-30 15:48:24] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-06-30 15:48:34] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-06-30 15:49:11] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-06-30 15:49:28] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-06-30 15:49:42] [INFO] Corrección enviada con éxito {"registro_id":176,"tipo":"produccion","nota":"No son 3000","user_id":147258}
+[2025-06-30 15:49:42] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-06-30 15:49:43] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-06-30 15:49:48] [INFO] Solicitud de validación de scrap recibida {"registroId":177,"cantidad":350,"user_id":147258}
+[2025-06-30 15:49:48] [INFO] Validación de scrap exitosa {"registroId":177,"cantidad":350,"user_id":147258,"mensaje":"Scrap validado correctamente"}
+[2025-06-30 15:49:48] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-06-30 15:49:48] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-06-30 15:50:37] [INFO] Correcciones pendientes consultadas {"maquina_id":123789,"cantidad":0}
+[2025-06-30 15:50:46] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-06-30 15:51:05] [INFO] Corrección procesada exitosamente {"solicitud_id":13,"registro_id":176}
+[2025-06-30 15:51:05] [INFO] Corrección procesada con éxito {"solicitud_id":13,"registro_id":176,"tipo":"produccion","cantidad":25000,"comentario":"","user_id":123789}

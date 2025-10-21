@@ -18,16 +18,49 @@ class QaController extends Controller
     {
         $this->qa = new Qa();
         $this->validacionModel = new ValidacionModel();
+        
 
         if (!AuthHelper::isAuthenticated()) {
             $this->redirectWithMessage('/timeControl/public/login', 'error', 'Debes iniciar sesión.');
         }
 
         $user = AuthHelper::getCurrentUser();
-        if (!$user || $user->tipo_usuario !== 'qa') {
+        if (!$user || !in_array($user->tipo_usuario, ['qa', 'supervisor'])) {
             $this->redirectWithMessage('/timeControl/public/login', 'error', 'Acceso denegado.');
         }
     }
+
+   
+    public function accion()
+{
+    $user = AuthHelper::getCurrentUser();
+
+    try {
+        
+        $entregas_produccion = $this->qa->getEntregasValidadasProduccion($user->codigo_empleado);
+        $entregas_scrap = $this->qa->getEntregasValidadasScrap($user->codigo_empleado); // NUEVO
+        
+        Logger::info('Cargando página de acción QA', [
+            'user_id' => $user->codigo_empleado,
+            'total_produccion' => count($entregas_produccion),
+            'total_scrap' => count($entregas_scrap)
+        ]);
+
+        $this->view('qa/accion', [
+            'data' => [
+                'title' => 'Acción QA - Entregas Validadas',
+                'entregas_validadas' => array_merge($entregas_produccion, $entregas_scrap), // Combinar ambos
+                'user' => $user
+            ]
+        ]);
+    } catch (\Exception $e) {
+        Logger::error('Error al cargar la página de acción QA', [
+            'error' => $e->getMessage(),
+            'user_id' => $user->codigo_empleado
+        ]);
+        $this->redirectWithMessage('/timeControl/public/qa', 'error', 'Error al cargar las entregas validadas.');
+    }
+}
 
     public function index()
     {
@@ -36,10 +69,10 @@ class QaController extends Controller
         try {
             $notificaciones = (new Notificacion())->getPendingNotifications($user->area_id);
 
-            // Obtener estadísticas de destinos
+            
             $destinosStats = $this->qa->getDestinosStats($user->area_id, $user->codigo_empleado);
 
-            // Obtener estadísticas para el dashboard
+            
             $stats = $this->qa->getDashboardStats($user->area_id);
 
             $this->view('qa/dashboard', [
@@ -71,10 +104,10 @@ class QaController extends Controller
             $entregasProduccion = $this->qa->getEntregasProduccionPendientes($user->area_id);
             $entregasScrap = $this->qa->getEntregasScrapPendientes($user->area_id);
 
-            // Obtener estadísticas del dashboard
+            
             $stats = $this->qa->getDashboardStats($user->area_id);
 
-            // Obtener timestamps para la verificación de concurrencia
+            
             $timestamp_actual = date('Y-m-d H:i:s');
 
             $this->view('qa/validacion', [
@@ -126,7 +159,7 @@ class QaController extends Controller
                 return $this->sendJsonResponse(false, 'Lista de IDs inválida', 400);
             }
 
-            // Obtener estados con validación de área
+            
             $estados = $this->qa->verificarEstadosRegistros(
                 $registrosIds,
                 $user->area_id
@@ -148,9 +181,7 @@ class QaController extends Controller
         }
     }
 
-    /**
-     * Verifica si un registro específico sigue pendiente
-     */
+    
     public function verificarEstadoPendiente()
     {
         try {
@@ -187,21 +218,11 @@ class QaController extends Controller
     }
 
 
-    /**
-     * Procesa la validación de scrap
-     * @return void
-     */
+  
     public function validarScrap()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->logAndRedirect(
-                'warning',
-                'Intento de acceso a validarScrap con método no permitido',
-                ['method' => $_SERVER['REQUEST_METHOD']],
-                'error',
-                'Método no permitido'
-            );
-            return;
+            return $this->sendJsonResponse(false, 'Método no permitido', 405);
         }
 
         $user = AuthHelper::getCurrentUser();
@@ -212,25 +233,18 @@ class QaController extends Controller
         Logger::info('Solicitud de validación de scrap recibida', compact('registroId', 'cantidad') + ['user_id' => $user->codigo_empleado]);
 
         if (!$registroId) {
-            $this->logAndRedirect(
-                'warning',
-                'ID de registro inválido al validar scrap',
-                ['user_id' => $user->codigo_empleado, 'registro_id' => $_POST['id'] ?? 'no-id'],
-                'error',
-                'ID de registro inválido'
-            );
-            return;
+            Logger::warning('ID de registro inválido al validar scrap', [
+                'user_id' => $user->codigo_empleado, 
+                'registro_id' => $_POST['id'] ?? 'no-id'
+            ]);
+            return $this->sendJsonResponse(false, 'ID de registro inválido', 400);
         }
 
         if ($cantidad <= 0) {
-            $this->logAndRedirect(
-                'warning',
-                'Cantidad inválida al validar scrap',
-                compact('registroId', 'cantidad') + ['user_id' => $user->codigo_empleado],
-                'error',
-                'La cantidad debe ser mayor que cero'
+            Logger::warning('Cantidad inválida al validar scrap', 
+                compact('registroId', 'cantidad') + ['user_id' => $user->codigo_empleado]
             );
-            return;
+            return $this->sendJsonResponse(false, 'La cantidad debe ser mayor que cero', 400);
         }
 
         try {
@@ -238,9 +252,17 @@ class QaController extends Controller
 
             $logLevel = $resultado['success'] ? 'info' : 'warning';
             $logMessage = $resultado['success'] ? 'Validación de scrap exitosa' : 'Error en validación de scrap';
-            Logger::$logLevel($logMessage, compact('registroId', 'cantidad') + ['user_id' => $user->codigo_empleado, 'mensaje' => $resultado['message']]);
+            Logger::$logLevel($logMessage, compact('registroId', 'cantidad') + [
+                'user_id' => $user->codigo_empleado, 
+                'mensaje' => $resultado['message']
+            ]);
 
-            $this->redirectWithMessage('/timeControl/public/validacion', $resultado['success'] ? 'success' : 'error', $resultado['message']);
+            return $this->sendJsonResponse(
+                $resultado['success'], 
+                $resultado['message'],
+                $resultado['success'] ? 200 : 400
+            );
+
         } catch (\Exception $e) {
             Logger::exception($e, [
                 'controller' => 'QaController',
@@ -250,29 +272,20 @@ class QaController extends Controller
                 'cantidad' => $cantidad
             ]);
 
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Error al procesar la validación: ' . $e->getMessage());
+            return $this->sendJsonResponse(false, 'Error al procesar la validación: ' . $e->getMessage(), 500);
         }
     }
 
-
-    /**
-     * Procesa la validación de producción
-     * @return void
-     */
+   
     public function validarProduccion()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            Logger::warning('Intento de acceso a validarProduccion con método no permitido', [
-                'method' => $_SERVER['REQUEST_METHOD']
-            ]);
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Método no permitido');
-            return;
+            return $this->sendJsonResponse(false, 'Método no permitido', 405);
         }
 
         $registroId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
         $user = AuthHelper::getCurrentUser();
 
-        // Log de solicitud recibida
         Logger::info('Solicitud de validación de producción recibida', [
             'user_id' => $user->codigo_empleado,
             'registro_id' => $registroId
@@ -283,15 +296,13 @@ class QaController extends Controller
                 'user_id' => $user->codigo_empleado,
                 'registro_id' => $_POST['id'] ?? 'no-id'
             ]);
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'ID de registro inválido');
-            return;
+            return $this->sendJsonResponse(false, 'ID de registro inválido', 400);
         }
 
         try {
             $resultado = $this->validacionModel->validarProduccion($registroId, $user->codigo_empleado);
 
             if ($resultado['success']) {
-                // Registrar la acción en historial si es necesario
                 $this->registrarHistorialValidacion($registroId, 'produccion', $user->codigo_empleado);
 
                 Logger::info('Validación de producción exitosa', [
@@ -299,17 +310,20 @@ class QaController extends Controller
                     'registro_id' => $registroId,
                     'validacion_id' => $resultado['validacion_id'] ?? null
                 ]);
-
-                $this->redirectWithMessage('/timeControl/public/validacion', 'success', $resultado['message']);
             } else {
                 Logger::warning('Error en validación de producción', [
                     'user_id' => $user->codigo_empleado,
                     'registro_id' => $registroId,
                     'error' => $resultado['message']
                 ]);
-
-                $this->redirectWithMessage('/timeControl/public/validacion', 'error', $resultado['message']);
             }
+
+            return $this->sendJsonResponse(
+                $resultado['success'], 
+                $resultado['message'],
+                $resultado['success'] ? 200 : 400
+            );
+
         } catch (\Exception $e) {
             Logger::exception($e, [
                 'controller' => 'QaController',
@@ -317,22 +331,136 @@ class QaController extends Controller
                 'user_id' => $user->codigo_empleado,
                 'registro_id' => $registroId
             ]);
-            $this->redirectWithMessage('/timeControl/public/validacion', 'error', 'Error al procesar la validación: ' . $e->getMessage());
+            
+            return $this->sendJsonResponse(false, 'Error al procesar la validación: ' . $e->getMessage(), 500);
         }
     }
 
-    /**
-     * Registra una entrada en el historial de validaciones
-     * @param int $registroId ID del registro
-     * @param string $tipo Tipo de validación (produccion/scrap)
-     * @param string $usuarioId ID del usuario que realiza la validación
-     * @return void
-     */
+   
+    public function revisar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return $this->sendJsonResponse(false, 'Método no permitido', 405);
+        }
+
+        $user = AuthHelper::getCurrentUser();
+        $registroId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $tipo = filter_input(INPUT_POST, 'tipo', FILTER_SANITIZE_STRING);
+        $motivo = trim($_POST['motivo'] ?? '');
+
+        Logger::info('Solicitud de revisión recibida (QA)', [
+            'user_id' => $user->codigo_empleado,
+            'registro_id' => $registroId,
+            'tipo' => $tipo,
+            'motivo' => $motivo
+        ]);
+
+        if (!$registroId || !$tipo) {
+            return $this->sendJsonResponse(false, 'Datos de solicitud inválidos', 400);
+        }
+
+        try {
+            $resultado = $this->validacionModel->solicitarCorreccion($registroId, $tipo, $motivo, $user->codigo_empleado);
+            
+            Logger::info('Resultado de solicitud de corrección (QA)', [
+                'user_id' => $user->codigo_empleado,
+                'registro_id' => $registroId,
+                'success' => $resultado['success'],
+                'mensaje' => $resultado['message']
+            ]);
+
+            return $this->sendJsonResponse(
+                $resultado['success'], 
+                $resultado['message'],
+                $resultado['success'] ? 200 : 400,
+                ['reload' => true]  // Indicar que debe recargar la página
+            );
+
+        } catch (\Exception $e) {
+            Logger::exception($e, [
+                'controller' => 'QaController',
+                'method' => 'revisar',
+                'user_id' => $user->codigo_empleado,
+                'registro_id' => $registroId
+            ]);
+            
+            return $this->sendJsonResponse(false, 'Error al procesar la revisión: ' . $e->getMessage(), 500);
+        }
+    }
+
+    
+    public function solicitarCorreccion()
+{
+   
+    if (ob_get_level()) {
+        ob_clean();
+    }
+ 
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-cache, must-revalidate');
+    
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Método no permitido'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $user = AuthHelper::getCurrentUser();
+    $registroId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $tipo = filter_input(INPUT_POST, 'tipo', FILTER_SANITIZE_STRING);
+    $motivo = trim($_POST['motivo'] ?? '');
+
+    
+    error_log("QA solicitarCorreccion - ID: $registroId, Tipo: $tipo, Usuario: {$user->codigo_empleado}");
+
+    if (!$registroId || !$tipo) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Datos de solicitud inválidos'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    try {
+        $resultado = $this->validacionModel->solicitarCorreccion(
+            $registroId, 
+            $tipo, 
+            $motivo, 
+            $user->codigo_empleado
+        );
+        
+        // Log del resultado
+        error_log("QA solicitarCorreccion resultado: " . ($resultado['success'] ? 'SUCCESS' : 'FAIL'));
+        
+        http_response_code($resultado['success'] ? 200 : 400);
+        echo json_encode([
+            'success' => $resultado['success'],
+            'message' => $resultado['message'],
+            'reload' => true
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+
+    } catch (\Exception $e) {
+        error_log("QA solicitarCorreccion ERROR: " . $e->getMessage());
+        
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error al procesar la solicitud: ' . $e->getMessage()
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+}
+
+   
     private function registrarHistorialValidacion($registroId, $tipo, $usuarioId)
     {
         try {
-            // Si tienes una tabla de historial, aquí puedes registrar la acción
-            // Este método es opcional y depende de tu implementación específica
+            
             Logger::info('Registrando historial de validación', [
                 'registro_id' => $registroId,
                 'tipo' => $tipo,

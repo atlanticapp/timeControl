@@ -14,23 +14,34 @@ class ProduccionFinal extends Model
             $resultados = [];
             $hoy = date('Y-m-d');
 
-            // Consulta 1: Producción Final Guardada del día
+            // Consulta 1: Produccion Final Guardada del día
             $queryProduccionFinal = "
-                SELECT 
-                    'produccion_final' AS tipo,
-                    pf.id, pf.cajas, pf.piezas, pf.paletas, pf.fecha_validacion, pf.comentario, pf.estado,
-                    r.item, r.jtWo, r.po, r.cliente, r.cantidad_produccion,
-                    u.nombre AS validador_nombre,
-                    m.nombre AS nombre_maquina
-                FROM produccion_final pf
-                INNER JOIN registro r ON pf.registro_id = r.id
-                INNER JOIN users u ON pf.usuario_id = u.codigo_empleado
-                LEFT JOIN maquinas m ON r.maquina = m.id
-                WHERE r.estado_validacion = 'Guardado' 
-                AND pf.usuario_id = ?
-                AND DATE(pf.fecha_validacion) = CURDATE()
-                ORDER BY pf.fecha_validacion DESC
-            ";
+            SELECT 
+                'produccion_final' AS tipo,
+                pf.id, 
+                pf.registro_id,  
+                pf.cajas, 
+                pf.piezas, 
+                pf.paletas, 
+                pf.fecha_validacion, 
+                pf.comentario, 
+                pf.estado,
+                r.item, 
+                r.jtWo, 
+                r.po, 
+                r.cliente, 
+                r.cantidad_produccion,
+                u.nombre AS validador_nombre,
+                m.nombre AS nombre_maquina
+            FROM produccion_final pf
+            INNER JOIN registro r ON pf.registro_id = r.id
+            INNER JOIN users u ON pf.usuario_id = u.codigo_empleado
+            LEFT JOIN maquinas m ON r.maquina = m.id
+            WHERE r.estado_validacion = 'Guardado' 
+            AND pf.usuario_id = ?
+            AND DATE(pf.fecha_validacion) = CURDATE()
+            ORDER BY pf.fecha_validacion DESC
+        ";
 
             $stmt = $this->db->prepare($queryProduccionFinal);
             if (!$stmt) throw new Exception("Error preparando consulta Producción Final");
@@ -41,7 +52,7 @@ class ProduccionFinal extends Model
             $resultados = $result->fetch_all(MYSQLI_ASSOC);
             $stmt->close();
 
-            // Consulta 2: Retenciones con destino a producción_final del día
+            // Consulta 2: Retenciones con destino a produccion_final del día
             $queryDestinos = "
                 SELECT 
                     'destino_produccion' AS tipo,
@@ -110,7 +121,7 @@ class ProduccionFinal extends Model
                 return $entrega;
             }
 
-            // Si no está en produccion_final, buscar en retencion_destinos (destino_produccion)
+            
             $queryDestino = "
                 SELECT 
                     rd.id, rd.cajas, rd.piezas, rd.paletas, rd.cantidad AS cantidad_produccion, rd.paletas, rd.fecha_registro AS fecha_validacion, rd.estado,
@@ -173,7 +184,7 @@ class ProduccionFinal extends Model
                 if ($affected > 0) return true;
             }
 
-            // Si no se actualizó nada, intentar en retencion_destinos (destino produccion_final)
+            
             $query2 = "UPDATE retencion_destinos 
                         SET paletas = ?, cajas = ?, piezas = ? 
                         WHERE id = ? AND usuario_id = ? AND tipo_destino = 'produccion_final'";

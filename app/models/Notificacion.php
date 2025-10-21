@@ -11,7 +11,7 @@ class Notificacion extends Model
 {
     protected $table = 'notificaciones';
 
-    // Insertar una notificación en la base de datos
+    // Insertar una notificacion en la base de datos
     public function createNotification($area_id, $mensaje, $tipo = 'info', $fecha = null)
     {
         $fecha = $fecha ?? date('Y-m-d H:i:s'); 
@@ -55,7 +55,7 @@ class Notificacion extends Model
         }
     }
 
-    // Marcar una notificación como leída
+    // Marcar una notificacion como leída
     public function markNotificationsAsSeen($area_id)
     {
         $sql = "UPDATE {$this->table} SET estado = 'leído' 

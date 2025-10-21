@@ -1,0 +1,11 @@
+[2025-10-01 08:14:55] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:15:14] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:17:50] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:18:55] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:19:30] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:22:58] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:24:53] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:25:08] [WARNING] Error en validación de scrap por supervisor {"registroId":417,"cantidad":120,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:28:44] [WARNING] Error en validación de scrap por supervisor {"registroId":417,"cantidad":120,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 08:29:05] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":13,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-10-01 15:58:29] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":312}

@@ -1,22 +1,23 @@
 <?php
-
 namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Helpers\AuthHelper;
 use App\Models\Maquina;
+use App\Models\CorreccionesOperador;
 use App\Helpers\Logger;
 
 class MaquinaController extends Controller
 {
     private $jwt_secret;
+    private $correccionesOperador;
 
     public function __construct()
     {
         global $jwt_secret;
         $this->jwt_secret = $jwt_secret;
+        $this->correccionesOperador = new CorreccionesOperador();
 
-        // Verificar autenticación
         if (!AuthHelper::isAuthenticated()) {
             header('Location: /timeControl/public/login');
             exit();
@@ -26,31 +27,36 @@ class MaquinaController extends Controller
     public function index()
     {
         try {
-            // Obtener el usuario actual
             $user = AuthHelper::getCurrentUser();
 
             if ($user->tipo_usuario !== 'operador') {
                 $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es operador.');
             }
 
-            // Verificar si ya ingresó datos
-            session_start();
+            
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
             if (isset($_SESSION['data_entered']) && $_SESSION['data_entered'] === true) {
                 header('Location: /timeControl/public/control');
                 exit();
             }
 
-            // Obtener lista de máquinas para el área del usuario
             $maquinaModel = new Maquina();
             $maquinas = $maquinaModel->getMaquinasByArea($user->area_id);
 
-            // Renderizar la vista con las máquinas
+           
+            $correccionesPendientes = $this->correccionesOperador->getCorreccionesPendientesPorOperador($user->codigo_empleado);
+            $mostrarCorrecciones = !empty($correccionesPendientes);
+
             $this->view('operador/maquina', [
                 'user' => $user,
-                'maquinas' => $maquinas
+                'maquinas' => $maquinas,
+                'correcciones_pendientes' => $correccionesPendientes,
+                'mostrar_correcciones' => $mostrarCorrecciones
             ]);
         } catch (\Exception $e) {
-            // Manejar cualquier error
             $this->redirectWithMessage('/timeControl/public/error', 'error', 'Error al cargar la vista de máquinas.');
         }
     }
@@ -63,20 +69,12 @@ class MaquinaController extends Controller
                 throw new \Exception("ID de máquina no válido");
             }
 
-            // Actualizar la máquina en el JWT
             $jwt = AuthHelper::updateMaquinaId($maquinaId);
             if (!$jwt) {
                 throw new \Exception("Error al actualizar la máquina seleccionada");
             }
 
-            // Verificar si hay correcciones pendientes
             $user = AuthHelper::getCurrentUser();
-            $correccionesModel = new \App\Models\CorreccionesOperador();
-            $correccionesPendientes = $correccionesModel->getCorreccionesPendientes(
-                $user->codigo_empleado,
-                $maquinaId
-            );
-
             $maquinaModel = new Maquina();
             if (!$maquinaModel->actualizarMaquinaId($maquinaId, $user->codigo_empleado)) {
                 error_log("Error al actualizar maquina_id en la base de datos.");
@@ -84,8 +82,10 @@ class MaquinaController extends Controller
                 exit();
             }
 
+            
+            $correccionesPendientes = $this->correccionesOperador->getCorreccionesPendientesPorOperador($user->codigo_empleado);
             if (!empty($correccionesPendientes)) {
-                header('Location: /timeControl/public/correcciones');
+                $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'info', 'Tienes correcciones pendientes que requieren tu atención.');
                 exit();
             }
 
@@ -105,6 +105,10 @@ class MaquinaController extends Controller
 
     private function redirectWithMessage($url, $status, $message)
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
         $_SESSION['status'] = $status;
         $_SESSION['message'] = $message;
         header("Location: $url");

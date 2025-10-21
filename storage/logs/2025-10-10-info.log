@@ -1,0 +1,63 @@
+[2025-10-10 08:53:22] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 08:53:26] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 08:53:45] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku"}
+[2025-10-10 08:53:45] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 08:53:45] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Echo","correcciones_pendientes":0}
+[2025-10-10 08:53:50] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku","tipo_boton":"Preparación"}
+[2025-10-10 08:53:50] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Preparación","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-10 08:53:50] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku"}
+[2025-10-10 08:53:50] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 08:53:50] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Echo","correcciones_pendientes":0}
+[2025-10-10 08:54:06] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku","tipo_boton":"Producción"}
+[2025-10-10 08:54:06] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-10 08:54:06] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku"}
+[2025-10-10 08:54:06] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 08:54:06] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Echo","correcciones_pendientes":0}
+[2025-10-10 08:55:44] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku","tipo_boton":"Producción"}
+[2025-10-10 08:55:44] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-10 08:55:44] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku"}
+[2025-10-10 08:55:44] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 08:55:44] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Echo","correcciones_pendientes":0}
+[2025-10-10 08:56:23] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku","tipo_boton":"final_produccion"}
+[2025-10-10 08:56:23] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":9000,"cantidad_scrapt":3000}
+[2025-10-10 08:56:23] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"mp70fl8obd9v9vjf04dfb8p7ku"}
+[2025-10-10 08:57:00] [INFO] Solicitud de corrección recibida (SUPERVISOR) {"user_id":13,"registro_id":4622,"tipo":"produccion","motivo":"asdasdasdadasd"}
+[2025-10-10 08:57:00] [INFO] Resultado de solicitud de corrección (SUPERVISOR) {"user_id":13,"registro_id":4622,"success":true,"mensaje":"Solicitud de corrección enviada correctamente"}
+[2025-10-10 08:57:25] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":1}
+[2025-10-10 08:58:26] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 09:42:09] [INFO] Acceso a control de registro {"codigo_empleado":1194,"session_id":"hulo0ppp9upiahcv9ujdd6kj04"}
+[2025-10-10 09:42:09] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":1194,"cantidad":0}
+[2025-10-10 09:42:09] [INFO] Renderizando vista de control {"codigo_empleado":1194,"maquina":"CX-102","correcciones_pendientes":0}
+[2025-10-10 09:42:40] [INFO] Acceso a control de registro {"codigo_empleado":1194,"session_id":"3tptakb356nqj9tgl7ge8de5sm"}
+[2025-10-10 09:42:40] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":1194,"cantidad":0}
+[2025-10-10 09:42:40] [INFO] Renderizando vista de control {"codigo_empleado":1194,"maquina":"CX-102","correcciones_pendientes":0}
+[2025-10-10 09:43:31] [INFO] Acceso a control de registro {"codigo_empleado":1194,"session_id":"s1gq42fv3dttk50qbi4o1ovl0s"}
+[2025-10-10 09:43:31] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":1194,"cantidad":0}
+[2025-10-10 09:43:31] [INFO] Renderizando vista de control {"codigo_empleado":1194,"maquina":"CX-102","correcciones_pendientes":0}
+[2025-10-10 10:03:01] [INFO] Acceso a control de registro {"codigo_empleado":1194,"session_id":"4uou7v51ha1j4v5f1hov2dk9m2"}
+[2025-10-10 10:03:01] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":1194,"cantidad":0}
+[2025-10-10 10:03:01] [INFO] Renderizando vista de control {"codigo_empleado":1194,"maquina":"CX-102","correcciones_pendientes":0}
+[2025-10-10 10:03:48] [INFO] Acceso a control de registro {"codigo_empleado":1194,"session_id":"aeivimf56gs7dvp85k636u8m31"}
+[2025-10-10 10:03:48] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":1194,"cantidad":0}
+[2025-10-10 10:03:48] [INFO] Renderizando vista de control {"codigo_empleado":1194,"maquina":"CX-102","correcciones_pendientes":0}
+[2025-10-10 11:10:16] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 11:10:17] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 11:10:29] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"qa5up285ps08v4p24kcbusahhv"}
+[2025-10-10 11:10:29] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 11:10:29] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-10 11:10:36] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"qa5up285ps08v4p24kcbusahhv","tipo_boton":"final_produccion"}
+[2025-10-10 11:10:37] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":300,"cantidad_scrapt":300}
+[2025-10-10 11:10:37] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"qa5up285ps08v4p24kcbusahhv"}
+[2025-10-10 11:10:56] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"qa5up285ps08v4p24kcbusahhv"}
+[2025-10-10 11:10:56] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-10 11:10:56] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-10 11:11:11] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"qa5up285ps08v4p24kcbusahhv","tipo_boton":"final_produccion"}
+[2025-10-10 11:11:11] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":300,"cantidad_scrapt":36000}
+[2025-10-10 11:11:11] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"qa5up285ps08v4p24kcbusahhv"}
+[2025-10-10 11:11:43] [INFO] Acceso a control de registro {"codigo_empleado":1194,"session_id":"7ptl9rr3296cifgb8p2ut18lu5"}
+[2025-10-10 11:11:43] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":1194,"cantidad":0}
+[2025-10-10 11:11:43] [INFO] Renderizando vista de control {"codigo_empleado":1194,"maquina":"CX-102","correcciones_pendientes":0}
+[2025-10-10 11:11:52] [INFO] Iniciando registro {"codigo_empleado":1194,"session_id":"7ptl9rr3296cifgb8p2ut18lu5","tipo_boton":"final_produccion"}
+[2025-10-10 11:11:52] [INFO] Registro guardado exitosamente {"codigo_empleado":1194,"tipo_boton":"final_produccion","cantidad_produccion":300,"cantidad_scrapt":300}
+[2025-10-10 11:11:52] [INFO] Acceso a control de registro {"codigo_empleado":1194,"session_id":"7ptl9rr3296cifgb8p2ut18lu5"}
+[2025-10-10 11:16:49] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":1194,"cantidad":0}

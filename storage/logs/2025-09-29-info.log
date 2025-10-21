@@ -1,0 +1,93 @@
+[2025-09-29 09:28:05] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 09:28:08] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 09:28:10] [INFO] Cargando página de acción QA {"user_id":14,"total_entregas":0}
+[2025-09-29 09:28:11] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-09-29 09:33:52] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 09:33:55] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 09:53:00] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-09-29 09:54:27] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-09-29 09:56:12] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-09-29 09:56:18] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-09-29 11:03:32] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-09-29 11:03:38] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-09-29 11:03:52] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-09-29 11:05:17] [INFO] Solicitud de validación de producción recibida (SUPERVISOR) {"user_id":13,"registro_id":4478}
+[2025-09-29 11:05:17] [INFO] Registrando historial de validación (SUPERVISOR) {"registro_id":4478,"tipo":"produccion","usuario_id":13}
+[2025-09-29 11:05:17] [INFO] Validación de producción por supervisor exitosa {"user_id":13,"registro_id":4478,"validacion_id":0}
+[2025-09-29 11:05:31] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 11:05:35] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 11:05:37] [INFO] Cargando página de acción QA {"user_id":14,"total_entregas":1}
+[2025-09-29 11:07:40] [INFO] Cargando página de acción QA {"user_id":14,"total_entregas":0}
+[2025-09-29 11:07:42] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 12:54:50] [INFO] Solicitud de validación de producción recibida (SUPERVISOR) {"user_id":13,"registro_id":176}
+[2025-09-29 12:54:50] [INFO] Registrando historial de validación (SUPERVISOR) {"registro_id":176,"tipo":"produccion","usuario_id":13}
+[2025-09-29 12:54:50] [INFO] Validación de producción por supervisor exitosa {"user_id":13,"registro_id":176,"validacion_id":0}
+[2025-09-29 12:55:04] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 12:55:06] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 12:55:07] [INFO] Cargando página de acción QA {"user_id":14,"total_entregas":1}
+[2025-09-29 12:57:37] [INFO] Cargando página de acción QA {"user_id":14,"total_entregas":0}
+[2025-09-29 12:57:39] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 15:13:27] [INFO] Correcciones pendientes consultadas {"maquina_id":2,"cantidad":0}
+[2025-09-29 15:14:21] [INFO] Correcciones pendientes consultadas {"maquina_id":2,"cantidad":0}
+[2025-09-29 15:14:44] [INFO] Correcciones pendientes consultadas {"maquina_id":2,"cantidad":0}
+[2025-09-29 15:15:22] [INFO] Correcciones pendientes consultadas {"maquina_id":2,"cantidad":0}
+[2025-09-29 15:47:21] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-29 15:58:20] [INFO] Correcciones pendientes consultadas {"maquina_id":12,"cantidad":0}
+[2025-09-29 15:58:28] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:02:01] [INFO] Correcciones pendientes consultadas {"maquina_id":12,"cantidad":0}
+[2025-09-29 16:02:14] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:02:19] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:02:24] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:02:32] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:03:25] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:03:50] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:15:39] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:17:55] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:17:57] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:20:10] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:20:53] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:21:21] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:21:25] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:21:26] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:21:26] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:21:26] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:21:26] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:08] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:08] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:08] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:17] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:18] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:18] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:18] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:41] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:24:52] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:25:22] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:25:27] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:25:27] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:25:27] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:25:27] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:25:27] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:25:28] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:26:21] [INFO] Solicitud de validación de producción recibida (SUPERVISOR) {"user_id":13,"registro_id":4483}
+[2025-09-29 16:26:21] [INFO] Registrando historial de validación (SUPERVISOR) {"registro_id":4483,"tipo":"produccion","usuario_id":13}
+[2025-09-29 16:26:21] [INFO] Validación de producción por supervisor exitosa {"user_id":13,"registro_id":4483,"validacion_id":0}
+[2025-09-29 16:26:37] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:27:55] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:30:44] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:30:44] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:30:44] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:31:09] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:31:13] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:34:32] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:34:44] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:36:12] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:44:32] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:44:48] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:44:49] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:45:52] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:45:59] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:48:00] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:49:15] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:49:26] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:51:18] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}
+[2025-09-29 16:54:45] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":0}

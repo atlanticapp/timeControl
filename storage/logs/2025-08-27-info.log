@@ -1,0 +1,117 @@
+[2025-08-27 07:22:35] [INFO] Correcciones pendientes consultadas {"maquina_id":498,"cantidad":0}
+[2025-08-27 07:25:26] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 07:25:53] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 07:26:33] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 07:26:54] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 07:27:30] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 07:32:01] [INFO] Correcciones pendientes consultadas {"maquina_id":91693,"cantidad":0}
+[2025-08-27 07:32:34] [INFO] Correcciones pendientes consultadas {"maquina_id":7,"cantidad":0}
+[2025-08-27 07:32:44] [INFO] Correcciones pendientes consultadas {"maquina_id":7,"cantidad":0}
+[2025-08-27 07:50:06] [INFO] Correcciones pendientes consultadas {"maquina_id":91295,"cantidad":0}
+[2025-08-27 07:50:21] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 07:50:24] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 07:58:02] [INFO] Correcciones pendientes consultadas {"maquina_id":79852,"cantidad":0}
+[2025-08-27 07:59:05] [INFO] Correcciones pendientes consultadas {"maquina_id":12,"cantidad":0}
+[2025-08-27 07:59:08] [INFO] Correcciones pendientes consultadas {"maquina_id":12,"cantidad":0}
+[2025-08-27 08:15:19] [INFO] Correcciones pendientes consultadas {"maquina_id":36,"cantidad":0}
+[2025-08-27 08:15:53] [INFO] Correcciones pendientes consultadas {"maquina_id":36,"cantidad":0}
+[2025-08-27 08:17:02] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 08:17:06] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 09:27:41] [INFO] Correcciones pendientes consultadas {"maquina_id":12,"cantidad":0}
+[2025-08-27 09:39:43] [INFO] Correcciones pendientes consultadas {"maquina_id":88092,"cantidad":0}
+[2025-08-27 09:39:45] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-08-27 09:40:25] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-08-27 09:40:49] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 09:41:00] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 09:41:06] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 09:42:12] [INFO] Solicitud de validación de producción recibida {"user_id":91550,"registro_id":320}
+[2025-08-27 09:42:12] [INFO] Registrando historial de validación {"registro_id":320,"tipo":"produccion","usuario_id":91550}
+[2025-08-27 09:42:12] [INFO] Validación de producción exitosa {"user_id":91550,"registro_id":320,"validacion_id":null}
+[2025-08-27 09:42:12] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-08-27 09:42:12] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-08-27 09:42:16] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-08-27 09:43:04] [INFO] Solicitud de creación de retención recibida {"registro_id":320,"cantidad":225000,"user_id":91550}
+[2025-08-27 09:43:04] [INFO] Retención creada exitosamente {"retencion_id":16,"registro_id":320,"cantidad":225000}
+[2025-08-27 09:43:04] [INFO] Retención creada exitosamente {"retencion_id":16,"registro_id":320,"user_id":91550}
+[2025-08-27 09:43:04] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":91550,"cantidad":1}
+[2025-08-27 09:43:06] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":1}
+[2025-08-27 09:43:13] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":91550,"cantidad":1}
+[2025-08-27 09:46:01] [INFO] Destino asignado exitosamente {"retencion_id":16,"tipo_destino":"produccion_final","cantidad":225000,"user_id":91550,"resultado":"Destino asignado correctamente"}
+[2025-08-27 09:46:01] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":91550,"cantidad":0}
+[2025-08-27 09:46:01] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":91550,"cantidad":0}
+[2025-08-27 09:48:09] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-08-27 09:48:16] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-08-27 09:53:35] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 09:55:56] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 10:01:01] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 10:01:28] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 10:01:36] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 11:42:41] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 11:50:38] [INFO] Correcciones pendientes consultadas {"maquina_id":376,"cantidad":0}
+[2025-08-27 11:52:02] [INFO] Correcciones pendientes consultadas {"maquina_id":3,"cantidad":0}
+[2025-08-27 11:52:05] [INFO] Correcciones pendientes consultadas {"maquina_id":3,"cantidad":0}
+[2025-08-27 11:52:10] [INFO] Correcciones pendientes consultadas {"maquina_id":3,"cantidad":0}
+[2025-08-27 11:54:29] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 12:00:00] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 13:54:44] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 14:00:20] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 14:03:50] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 14:04:25] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 14:04:29] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 14:38:31] [INFO] Correcciones pendientes consultadas {"maquina_id":1,"cantidad":1}
+[2025-08-27 14:38:44] [INFO] Correcciones pendientes consultadas {"maquina_id":3,"cantidad":0}
+[2025-08-27 14:38:51] [INFO] Correcciones pendientes consultadas {"maquina_id":3,"cantidad":0}
+[2025-08-27 14:39:25] [INFO] Correcciones pendientes consultadas {"maquina_id":3,"cantidad":0}
+[2025-08-27 14:39:28] [INFO] Correcciones pendientes consultadas {"maquina_id":3,"cantidad":0}
+[2025-08-27 14:39:41] [INFO] Correcciones pendientes consultadas {"maquina_id":3,"cantidad":0}
+[2025-08-27 14:54:43] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 15:31:28] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 15:31:29] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 15:31:29] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 15:31:40] [INFO] Correcciones pendientes consultadas {"maquina_id":25,"cantidad":0}
+[2025-08-27 15:35:20] [INFO] Correcciones pendientes consultadas {"maquina_id":1194,"cantidad":0}
+[2025-08-27 15:37:13] [INFO] Correcciones pendientes consultadas {"maquina_id":4,"cantidad":0}
+[2025-08-27 15:37:39] [INFO] Correcciones pendientes consultadas {"maquina_id":4,"cantidad":0}
+[2025-08-27 15:48:11] [INFO] Correcciones pendientes consultadas {"maquina_id":7,"cantidad":0}
+[2025-08-27 15:48:16] [INFO] Correcciones pendientes consultadas {"maquina_id":7,"cantidad":0}
+[2025-08-27 15:48:32] [INFO] Correcciones pendientes consultadas {"maquina_id":7,"cantidad":0}
+[2025-08-27 16:08:36] [INFO] Correcciones pendientes consultadas {"maquina_id":453,"cantidad":0}
+[2025-08-27 16:10:41] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 16:11:30] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 16:33:49] [INFO] Correcciones pendientes consultadas {"maquina_id":77000,"cantidad":0}
+[2025-08-27 16:35:24] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 16:35:27] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 16:41:59] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 16:46:40] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 17:19:21] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 17:28:21] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 18:00:42] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 18:19:43] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 18:27:24] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 19:04:32] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 19:16:18] [INFO] Correcciones pendientes consultadas {"maquina_id":453,"cantidad":0}
+[2025-08-27 19:16:51] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 19:17:03] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 19:19:27] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 19:30:47] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 19:42:59] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 19:57:30] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 20:33:33] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 20:44:36] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 21:02:40] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 21:18:59] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 21:49:31] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 21:56:17] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 22:02:13] [INFO] Correcciones pendientes consultadas {"maquina_id":453,"cantidad":0}
+[2025-08-27 22:03:33] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 22:03:37] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 22:06:23] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 22:17:11] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 22:38:21] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 22:57:12] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 23:03:41] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 23:14:23] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 23:19:45] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 23:38:04] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-08-27 23:45:04] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}
+[2025-08-27 23:57:03] [INFO] Correcciones pendientes consultadas {"maquina_id":18,"cantidad":0}

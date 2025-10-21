@@ -34,11 +34,11 @@ class NotificacionController extends Controller
             $notificaciones = $notificationModel->getPendingNotifications($user->area_id);
 
             if (!empty($notificaciones)) {
-                // Marcar notificaciones como vistas después de mostrarlas
+                
                 $notificationModel->markNotificationsAsSeen($user->area_id);
             }
 
-            // Enviar la respuesta en JSON
+            
             $this->jsonResponse(true, 'Consulta exitosa', ['notificaciones' => $notificaciones]);
         } catch (\Exception $e) {
             error_log('❌ Error al verificar notificaciones: ' . $e->getMessage());
@@ -46,9 +46,6 @@ class NotificacionController extends Controller
         }
     }
 
-    /**
-     * Método para simplificar respuestas JSON
-     */
     private function jsonResponse($success, $message, $data = [])
     {
         echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));

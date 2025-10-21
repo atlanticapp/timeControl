@@ -110,7 +110,7 @@ class CorreccionController extends Controller
     public function cancelar()
     {
         try {
-            // Verificar que sea una petición POST
+            // Verificar que sea una peticion POST
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new \Exception('Método no permitido');
             }
@@ -126,7 +126,7 @@ class CorreccionController extends Controller
             // Obtener el usuario actual
             $user = AuthHelper::getCurrentUser();
 
-            // Llamar al modelo para cancelar la corrección
+            // Llamar al modelo para cancelar la correccion
             $resultado = $this->correccionModel->cancelarCorreccion($id);
 
             // Registrar la acción en el log

@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Cache DOM elements
     const elements = {
         timeElement: document.getElementById('current-time'),
-        dateElement: document.getElementById('current-date'), // Añadido este elemento que faltaba
+        dateElement: document.getElementById('current-date'),
         revisionModal: document.getElementById('revisionModal'),
         validateModal: document.getElementById('validateModal'),
         submitRevisionBtn: document.getElementById('submitRevisionBtn'),
         submitValidationBtn: document.getElementById('submitValidation'),
         notaRevision: document.getElementById('notaRevision'),
         comentarioValidacion: document.getElementById('comentarioValidacion'),
-        comentarioValidacionContainer: document.querySelector('label[for="comentarioValidacion"]')?.parentNode || document.createElement('div'), // Añadido fallback
+        comentarioValidacionContainer: document.querySelector('label[for="comentarioValidacion"]')?.parentNode || document.createElement('div'),
         tabButtons: document.querySelectorAll('.tab-btn'),
         tabPanels: document.querySelectorAll('.tab-panel'),
         btnReview: document.querySelectorAll('.btn-review'),
@@ -26,12 +26,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let intervalId = null;
     const verificationInterval = 5000;
 
-    // URLs para las peticiones AJAX
+    // URLs para QA
     const URLS = {
         getStatus: '/timeControl/public/getStatus',
         revisar: '/timeControl/public/revisar',
+        solicitarCorreccion: '/timeControl/public/solicitarCorreccion',
         validarScrap: '/timeControl/public/validarScrap',
-        validarProduccion: '/timeControl/public/validarProduccion'
+        validarProduccion: '/timeControl/public/validarProduccion',
+        verificarEstadosRegistros: '/timeControl/public/verificarEstadosRegistros',
+        verificarEstadoPendiente: '/timeControl/public/verificarEstadoPendiente'
     };
 
     // Configuración de Toastr
@@ -66,14 +69,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return data;
     };
 
-    const fetchData = async (url, method = 'GET', formData = null) => {
+    const fetchData = async (url, method = 'GET', data = null) => {
         try {
             const options = {
                 method,
-                headers: method === 'GET' ? {} : {
+                headers: {
+                    'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
-                body: formData
+                body: data ? JSON.stringify(data) : null
             };
 
             const response = await fetch(url, options);
@@ -94,14 +98,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 ...Array.from(elements.btnValidateProduction, btn => btn.dataset.id),
                 ...Array.from(elements.btnValidateScrap, btn => btn.dataset.id)
             ])
-        ].filter(id => id); // Filtra IDs vacíos
+        ].filter(id => id);
 
         updatePendingCounter();
     };
 
     const checkRecordStatus = async (id) => {
         try {
-            const response = await fetch(`/timeControl/public/verificarEstadoPendiente?id=${id}`);
+            const response = await fetch(`${URLS.verificarEstadoPendiente}?id=${id}`);
             if (!response.ok) throw new Error('Error en la respuesta');
             const data = await response.json();
             return data.pendiente ?? false;
@@ -121,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         // Marcar fila
-        const row = document.querySelector(`[data-id="${id}"]`).closest('tr');
+        const row = document.querySelector(`[data-id="${id}"]`)?.closest('tr');
         if (row) row.classList.add('bg-gray-100');
 
         // Eliminar de pendientes
@@ -130,7 +134,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const updatePendingCounter = () => {
-        // Esta función faltaba implementarse
         const pendingCounterElement = document.getElementById('pending-counter');
         if (pendingCounterElement) {
             pendingCounterElement.textContent = registrosPendientes.length;
@@ -141,13 +144,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!Array.isArray(registrosPendientes) || registrosPendientes.length === 0) return;
 
         try {
-            const query = registrosPendientes.join(',');
-            const response = await fetch(`/timeControl/public/verificarEstadosRegistros?ids=${encodeURIComponent(query)}`);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
+            const idsParam = registrosPendientes.join(',');
+            const response = await fetch(`${URLS.verificarEstadosRegistros}?ids=${idsParam}`);
             const data = await response.json();
 
             if (data.success && data.estados) {
@@ -164,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     toastr.info('Algunos registros han sido actualizados', 'Cambios detectados');
                     updatePendingCounter();
 
-                    // Solo muestra el mensaje si aún no se ha mostrado
                     if (!document.getElementById('reloadAlert')) {
                         showReloadMessage();
                     }
@@ -176,56 +173,47 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-
     const showReloadMessage = () => {
-        // Evitar múltiples alertas
         if (document.getElementById('reloadAlert')) return;
 
-        // Detener intervalo si existe
         if (intervalId) {
             clearInterval(intervalId);
             intervalId = null;
         }
 
-        // Mostrar notificación con Toastr
         toastr.options = {
             "closeButton": true,
             "debug": false,
             "newestOnTop": true,
-            "progressBar": false, // Desactivamos la barra de progreso
-            "positionClass": "toast-top-full-width", // Toastr ocupará todo el ancho
+            "progressBar": false,
+            "positionClass": "toast-top-full-width",
             "preventDuplicates": true,
-            "showDuration": "300", // Duración de la animación al mostrar
-            "hideDuration": "1000", // Duración de la animación al ocultar
-            "timeOut": "0", // No se oculta automáticamente, el usuario debe cerrar
-            "extendedTimeOut": "0", // No se oculta automáticamente
-            "tapToDismiss": false, // No se puede descartar con un click en el mensaje
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "0",
+            "extendedTimeOut": "0",
+            "tapToDismiss": false,
         };
 
-        // Crear el contenido del toast
         toastr.info(
             'Todas las entregas han sido procesadas. <button id="btnRecargar" class="font-medium underline hover:text-yellow-800 transition-colors">Recargar página</button> para ver las nuevas entregas pendientes.',
             'Información',
             {
                 onclick: function () {
-                    document.getElementById('btnRecargar').click(); // Si se hace click en el mensaje, recarga la página
+                    document.getElementById('btnRecargar').click();
                 }
             }
         );
 
-        // Escuchar el click del botón de recarga
         document.getElementById('btnRecargar').addEventListener('click', () => {
             window.location.reload();
         });
 
-        // Escuchar el click en el botón de cerrar
         document.querySelector('.toast-close-button').addEventListener('click', () => {
-            toastr.clear(); // Cerrar el toast manualmente
+            toastr.clear();
         });
     };
 
-
-    // Funciones de UI
     const handleModal = (modalElement, action = 'show') => {
         if (!modalElement) return;
 
@@ -234,20 +222,17 @@ document.addEventListener("DOMContentLoaded", function () {
             modalElement.classList.add('flex');
             document.body.classList.add('overflow-hidden');
 
-            // Añadir animación de entrada
             const modalContent = modalElement.querySelector('.bg-white');
             if (modalContent) {
                 modalContent.classList.add('scale-100', 'opacity-100');
                 modalContent.classList.remove('scale-95', 'opacity-0');
             }
         } else {
-            // Añadir animación de salida
             const modalContent = modalElement.querySelector('.bg-white');
             if (modalContent) {
                 modalContent.classList.add('scale-95', 'opacity-0');
                 modalContent.classList.remove('scale-100', 'opacity-100');
 
-                // Esperar a que termine la animación
                 setTimeout(() => {
                     modalElement.classList.add('hidden');
                     modalElement.classList.remove('flex');
@@ -263,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const handleRevisionModal = async (event) => {
         const button = event.currentTarget;
-        const id = button.dataset.id; // Añadida esta línea que faltaba
+        const id = button.dataset.id;
         const isPending = await checkRecordStatus(id);
 
         if (!isPending) {
@@ -271,10 +256,10 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => window.location.reload(), 1500);
             return;
         }
+
         currentEntregaId = button.dataset.id;
         currentTipoEntrega = button.dataset.tipo;
 
-        // Actualizar campos del modal con los data attributes del botón
         document.getElementById('revisionMaquina').textContent = button.dataset.maquina;
         document.getElementById('revisionItem').textContent = button.dataset.item;
         document.getElementById('revisionJtWo').textContent = button.dataset.jtwo;
@@ -289,6 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const button = event.currentTarget;
         const id = button.dataset.id;
         const isPending = await checkRecordStatus(id);
+        
         if (!isPending) {
             toastr.warning('Este registro ya no está pendiente. Recargando...');
             setTimeout(() => window.location.reload(), 2000);
@@ -298,66 +284,29 @@ document.addEventListener("DOMContentLoaded", function () {
         currentEntregaId = button.dataset.id;
         currentTipoEntrega = button.dataset.tipo;
 
-        // Actualizar campos del modal con los data attributes del botón
         document.getElementById('validacionMaquina').textContent = button.dataset.maquina;
         document.getElementById('validacionItem').textContent = button.dataset.item;
         document.getElementById('validacionJtWo').textContent = button.dataset.jtwo;
         document.getElementById('validacionCantidad').textContent = button.dataset.cantidad + ' lb.';
         document.getElementById('validacionTipo').textContent = currentTipoEntrega === 'scrap' ? 'Scrap' : 'Producción';
 
-        // Mostrar u ocultar el campo de comentario según el tipo
         if (currentTipoEntrega === 'scrap') {
-            // Mostrar el campo de comentario para scrap
             elements.comentarioValidacionContainer.style.display = 'block';
             elements.validateModal.dataset.cantidad = button.dataset.cantidad;
         } else {
-            // Ocultar el campo de comentario para producción
             elements.comentarioValidacionContainer.style.display = 'none';
         }
 
-        // Reiniciar el valor del comentario
         elements.comentarioValidacion.value = '';
-
         handleModal(elements.validateModal, 'show');
-    };
-
-    const ocultarFila = (id) => {
-        const row = document.querySelector(`[data-id="${id}"]`)?.closest('tr');
-        if (row) {
-            row.style.transition = 'opacity 0.5s ease-out';
-            row.style.opacity = '0';
-            setTimeout(() => row.remove(), 500);
-        }
-    };
-
-    // Event Handlers
-    const handleTabClick = (event) => {
-        const button = event.target.closest('.tab-btn');
-        if (!button) return;
-
-        elements.tabButtons.forEach(btn => {
-            btn.classList.remove('active', 'bg-blue-50', 'text-blue-700');
-        });
-        button.classList.add('active', 'bg-blue-50', 'text-blue-700');
-
-        elements.tabPanels.forEach(panel => {
-            panel.classList.add('hidden');
-        });
-        document.getElementById(button.dataset.target)?.classList.remove('hidden');
     };
 
     // Inicialización y Event Listeners
     const init = async () => {
-        // Verificar estado inicial
         const statusData = await fetchData(URLS.getStatus);
         if (statusData?.status && statusData?.message) {
             toastr[statusData.status === "success" ? 'success' : 'error'](statusData.message);
         }
-
-        // Event Listeners
-        elements.tabButtons.forEach(button => {
-            button.addEventListener('click', handleTabClick);
-        });
 
         // Event Listeners para los botones de revisión
         document.querySelectorAll('.btn-review').forEach(btn => {
@@ -369,12 +318,8 @@ document.addEventListener("DOMContentLoaded", function () {
             btn.addEventListener('click', handleValidationModal);
         });
 
+        // CORREGIDO: Submit de solicitud de corrección - IGUAL QUE SUPERVISOR
         elements.submitRevisionBtn?.addEventListener('click', async () => {
-            const formData = new FormData();
-            formData.append('id', currentEntregaId);
-            formData.append('nota', elements.notaRevision.value);
-            formData.append('tipo', currentTipoEntrega);
-
             const isPending = await checkRecordStatus(currentEntregaId);
             if (!isPending) {
                 toastr.warning('Este registro ya fue procesado');
@@ -382,55 +327,119 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            const data = await fetchData(URLS.revisar, 'POST', formData);
-            if (data.success) {
-                handleModal(elements.revisionModal, 'hide');
-                ocultarFila(currentEntregaId);
-                registrosPendientes = registrosPendientes.filter(item => item !== currentEntregaId);
-                updatePendingCounter(); // Añadida esta línea
+            const motivo = elements.notaRevision.value.trim();
+            if (!motivo) {
+                toastr.warning('Por favor, ingrese un motivo para la corrección');
+                return;
+            }
+
+            // Deshabilitar botón durante el proceso
+            elements.submitRevisionBtn.disabled = true;
+            const originalHTML = elements.submitRevisionBtn.innerHTML;
+            elements.submitRevisionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+            try {
+                const formData = new FormData();
+                formData.append('id', currentEntregaId);
+                formData.append('tipo', currentTipoEntrega);
+                formData.append('motivo', motivo);
+
+                const response = await fetch(URLS.solicitarCorreccion, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Cerrar modal inmediatamente
+                    handleModal(elements.revisionModal, 'hide');
+                    
+                    // Mostrar mensaje y recargar (NO ocultar fila)
+                    toastr.success(data.message || 'Solicitud de corrección enviada correctamente', 'Éxito', {
+                        timeOut: 1000,
+                        onHidden: function() {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    toastr.error(data.message || 'Error al procesar la solicitud');
+                    elements.submitRevisionBtn.disabled = false;
+                    elements.submitRevisionBtn.innerHTML = originalHTML;
+                }
+
+            } catch (error) {
+                console.error('Error en solicitud de corrección:', error);
+                toastr.error('Error al enviar la solicitud de corrección');
+                elements.submitRevisionBtn.disabled = false;
+                elements.submitRevisionBtn.innerHTML = originalHTML;
             }
         });
 
-        elements.submitValidationBtn?.addEventListener('click', async () => {
-            const url = currentTipoEntrega === 'scrap' ? URLS.validarScrap : URLS.validarProduccion;
-            const formData = new FormData();
-            formData.append('id', currentEntregaId);
+        // CORREGIDO: Submit de validación - IGUAL QUE SUPERVISOR
+        elements.submitValidationBtn?.addEventListener('click', async (event) => {
+            event.preventDefault();
+            
             const isPending = await checkRecordStatus(currentEntregaId);
-
-            // Solo añadir comentario si es scrap (cuando el campo está visible)
-            if (currentTipoEntrega === 'scrap') {
-                formData.append('comentario', elements.comentarioValidacion.value);
-
-                // Solo para scrap se envía la cantidad
-                const cantidad = elements.validateModal.dataset.cantidad;
-                formData.append('cantidad', cantidad);
-            } else {
-                // Para producción enviamos comentario vacío
-                formData.append('comentario', '');
-            }
-
             if (!isPending) {
                 toastr.warning('Este registro ya fue procesado');
                 handleModal(elements.validateModal, 'hide');
                 return;
             }
 
-            const data = await fetchData(url, 'POST', formData);
-            if (data.success) {
-                toastr.success('Entrega validada correctamente');
-                handleModal(elements.validateModal, 'hide');
-                ocultarFila(currentEntregaId);
-                registrosPendientes = registrosPendientes.filter(item => item !== currentEntregaId);
-                updatePendingCounter(); // Añadida esta línea
+            // Determinar la URL según el tipo
+            const url = currentTipoEntrega === 'scrap' ? 
+                URLS.validarScrap : 
+                URLS.validarProduccion;
+
+            // Deshabilitar botón durante el proceso
+            elements.submitValidationBtn.disabled = true;
+            const originalHTML = elements.submitValidationBtn.innerHTML;
+            elements.submitValidationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validando...';
+
+            try {
+                const formData = new FormData();
+                formData.append('id', currentEntregaId);
+                
+                if (currentTipoEntrega === 'scrap') {
+                    formData.append('cantidad', elements.validateModal.dataset.cantidad);
+                }
+                
+                formData.append('comentario', elements.comentarioValidacion.value.trim());
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Cerrar modal inmediatamente
+                    handleModal(elements.validateModal, 'hide');
+                    
+                    const mensaje = currentTipoEntrega === 'scrap' ? 'Scrap validado exitosamente' : 'Producción validada exitosamente';
+                    
+                    // Mostrar mensaje y recargar (NO ocultar fila)
+                    toastr.success(data.message || mensaje, 'Éxito', {
+                        timeOut: 1000,
+                        onHidden: function() {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    toastr.error(data.message || 'Error al validar la entrega');
+                    elements.submitValidationBtn.disabled = false;
+                    elements.submitValidationBtn.innerHTML = originalHTML;
+                }
+
+            } catch (error) {
+                console.error('Error en validación:', error);
+                toastr.error('Error al validar la entrega');
+                elements.submitValidationBtn.disabled = false;
+                elements.submitValidationBtn.innerHTML = originalHTML;
             }
         });
-
-        // Manejar entregaId almacenado
-        const entregaIdToHide = sessionStorage.getItem('ocultarEntregaId');
-        if (entregaIdToHide) {
-            ocultarFila(entregaIdToHide);
-            sessionStorage.removeItem('ocultarEntregaId');
-        }
 
         // Agregar listeners para cerrar modales
         elements.modalCloseButtons.forEach(button => {

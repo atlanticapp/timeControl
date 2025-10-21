@@ -1,0 +1,1 @@
+[2025-10-21 11:02:47] [ERROR] Error al asignar destino {"retencion_id":46,"error":"Unknown column 'reg.usuario_id' in 'on clause'"}

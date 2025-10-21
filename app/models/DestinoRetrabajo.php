@@ -38,7 +38,7 @@ class DestinoRetrabajo extends Model
 
             $stmt = $this->db->prepare($query);
             
-            // Preparar los parámetros de manera dinámica
+            // Preparar los parametros de manera dinamica
             $types = '';
             $params = [];
             
@@ -47,7 +47,7 @@ class DestinoRetrabajo extends Model
                 $params[] = $areaId;
             }
             if ($userId) {
-                $types .= 's'; // código_empleado es string
+                $types .= 's'; // codigo_empleado es string
                 $params[] = $userId;
             }
             

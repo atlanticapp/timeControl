@@ -39,15 +39,24 @@ class Control extends Model
 
     public function getNameMaquina($maquina_id)
     {
-        $query_maquina = "SELECT nombre FROM maquinas WHERE id = ?";
-        $stmt_maquina = $this->db->prepare($query_maquina);
-        $stmt_maquina->bind_param("i", $maquina_id);
-        $stmt_maquina->execute();
-        $stmt_maquina->bind_result($nombreMaquina);
-        $stmt_maquina->fetch();
-        $stmt_maquina->close();
+        // Inicializar la variable para evitar el error de variable no asignada
+        $nombreMaquina = null;
 
-        return $nombreMaquina;
+        try {
+            $query_maquina = "SELECT nombre FROM maquinas WHERE id = ?";
+            $stmt_maquina = $this->db->prepare($query_maquina);
+            $stmt_maquina->bind_param("i", $maquina_id);
+            $stmt_maquina->execute();
+            $stmt_maquina->bind_result($nombreMaquina);
+            $stmt_maquina->fetch();
+            $stmt_maquina->close();
+
+            // Devolver el nombre de la maquina o una cadena vacia si no se encontro
+            return $nombreMaquina ?? '';
+        } catch (PDOException $e) {
+            error_log("Error en getNameMaquina: " . $e->getMessage());
+            return ''; // Devolver cadena vacia en caso de error
+        }
     }
 
     public function getBadCopy($maquina_id)
@@ -87,18 +96,26 @@ class Control extends Model
         return $preparacion;
     }
 
-
     public function getActiveButton($codigo_empleado)
     {
-        $query_active_button = "SELECT active_button_id FROM {$this->table} WHERE codigo_empleado = ?";
-        $stmt_active_button = $this->db->prepare($query_active_button);
-        $stmt_active_button->bind_param("s", $codigo_empleado);
-        $stmt_active_button->execute();
-        $stmt_active_button->bind_result($active_button_id);
-        $stmt_active_button->fetch();
-        $stmt_active_button->close();
+        // Inicializar la variable para evitar el error de variable no asignada
+        $active_button_id = null;
 
-        return $active_button_id;
+        try {
+            $query_active_button = "SELECT active_button_id FROM {$this->table} WHERE codigo_empleado = ?";
+            $stmt_active_button = $this->db->prepare($query_active_button);
+            $stmt_active_button->bind_param("s", $codigo_empleado);
+            $stmt_active_button->execute();
+            $stmt_active_button->bind_result($active_button_id);
+            $stmt_active_button->fetch();
+            $stmt_active_button->close();
+
+            // Devolver el ID del boton activo o null si no se encontro
+            return $active_button_id ?? null;
+        } catch (PDOException $e) {
+            error_log("Error en getActiveButton: " . $e->getMessage() . " | codigo_empleado: " . $codigo_empleado);
+            return null; // Devolver null en caso de error
+        }
     }
 
     public function insertRegistro(array $registroData): bool
@@ -108,7 +125,7 @@ class Control extends Model
         try {
             $success = true;
 
-            // Insertar registro de producción si hay cantidad
+            // Insertar registro de produccion si hay cantidad
             if (!empty($registroData['cantidad_produccion']) && $registroData['cantidad_produccion'] > 0) {
                 $success = $this->insertProductionRecord($registroData) && $success;
             }
@@ -147,7 +164,12 @@ class Control extends Model
 
         try {
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([
+            $cantidad_scrapt = 0; // Fijo para producción
+            $fecha_fin = $data['fecha_fin'] ?? null;
+
+            
+            $stmt->bind_param(
+                "sssssssssddss",
                 $data['tipo_boton'],
                 $data['codigo_empleado'],
                 $data['item'],
@@ -158,10 +180,12 @@ class Control extends Model
                 $data['po'],
                 $data['cliente'],
                 $data['cantidad_produccion'],
-                0, // cantidad_scrapt para producción
+                $cantidad_scrapt,
                 $data['fecha_registro'],
-                $data['fecha_fin'] ?? null
-            ]);
+                $fecha_fin
+            );
+
+            return $stmt->execute();
         } catch (PDOException $e) {
             error_log("Error al insertar en registro: " . $e->getMessage());
             return false;
@@ -178,7 +202,12 @@ class Control extends Model
 
         try {
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([
+            $cantidad_produccion = 0; // Fijo para scrap
+            $fecha_fin = $data['fecha_fin'] ?? null;
+
+            
+            $stmt->bind_param(
+                "sssssssssddss",
                 $data['tipo_boton'],
                 $data['codigo_empleado'],
                 $data['item'],
@@ -189,10 +218,12 @@ class Control extends Model
                 $data['po'],
                 $data['cliente'],
                 $data['cantidad_scrapt'],
-                0, // cantidad_produccion para scrap
+                $cantidad_produccion,
                 $data['fecha_registro'],
-                $data['fecha_fin'] ?? null
-            ]);
+                $fecha_fin
+            );
+
+            return $stmt->execute();
         } catch (PDOException $e) {
             error_log("Error al insertar en registro: " . $e->getMessage());
             return false;
@@ -208,7 +239,13 @@ class Control extends Model
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
+        $cantidad_scrapt = 0;
+        $cantidad_produccion = 0;
+        $fecha_fin = $data['fecha_fin'] ?? null;
+
+        
+        $stmt->bind_param(
+            "sssssssssddss",
             $data['tipo_boton'],
             $data['codigo_empleado'],
             $data['item'],
@@ -218,15 +255,15 @@ class Control extends Model
             $data['jtWo'],
             $data['po'],
             $data['cliente'],
-            0, // cantidad_scrapt
-            0, // cantidad_produccion
+            $cantidad_scrapt,
+            $cantidad_produccion,
             $data['fecha_registro'],
-            $data['fecha_fin'] ?? null
-        ]);
+            $fecha_fin
+        );
+
+        return $stmt->execute();
     }
 
-
-    // Función para actualizar el estado del botón
     public function actualizarEstadoBoton($codigo_empleado, $nuevo_tipo_boton)
     {
         $sql = "UPDATE users SET active_button_id = ? WHERE codigo_empleado = ?";
@@ -242,7 +279,6 @@ class Control extends Model
         }
     }
 
-    // Función para actualizar el registro anterior
     public function updatePreviousRegistro($codigo_empleado, $fecha_actual)
     {
         $sql = "UPDATE registro SET fecha_fin = ? WHERE codigo_empleado = ? AND fecha_fin IS NULL ORDER BY id DESC LIMIT 1";
@@ -252,7 +288,6 @@ class Control extends Model
         $stmt->close();
     }
 
-    // Función para actualizar datos de usuario cuando la producción finaliza
     public function resetUserData($codigo_empleado)
     {
         $sql = "UPDATE users SET jtWo = NULL, item = NULL, active_button_id = 'defaultButtonId' WHERE codigo_empleado = ?";
@@ -280,7 +315,7 @@ class Control extends Model
             $codigo_empleado,
             $maquina,
             $area_id,
-            $fecha_registro,
+            $fecha_registro
         );
 
         if ($stmt->execute()) {

@@ -1,182 +1,248 @@
 <?php
-
 namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Helpers\AuthHelper;
-use App\Models\Control;
-use App\Models\Data;
 use App\Models\Usuario;
+use App\Models\CorreccionesOperador;
+use App\Helpers\Logger;
 
 class DataController extends Controller
 {
+    private $usuarioModel;
+    private $correccionesOperador;
+    private $user;
 
     public function __construct()
     {
-        if (!AuthHelper::isAuthenticated()) {
-            header('Location: /timeControl/public/login');
+        $this->usuarioModel = new Usuario();
+        $this->correccionesOperador = new CorreccionesOperador();
+        $this->user = AuthHelper::getCurrentUser();
+
+        if (!$this->user) {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Debes iniciar sesión para continuar.');
+            return;
+        }
+
+        if ($this->user->tipo_usuario !== 'operador') {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Acceso denegado. Solo operadores pueden acceder.');
+            return;
+        }
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
     }
 
     public function index()
     {
-        try {
-            $user = AuthHelper::getCurrentUser();
-            if (!$user) {
-                throw new \Exception("Usuario no autenticado");
-            }
-
-            if ($user->tipo_usuario !== 'operador') {
-                $this->redirectWithMessage('/timeControl/public/login', 'error', 'Tipo de usuario no es operador.');
-            }
-
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-
-            $control = new Control();
-            $maquina = $control->getNameMaquina($user->maquina_id);
-
-            // Vista normal de datos_trabajo sin correcciones
-            $control = new Control();
-            $active_button_id = $control->getActiveButton($user->codigo_empleado);
-
-            $this->view('operador/datos_trabajo', [
-                'usuario' => $user,
-                'maquina' => $maquina,
-                'active_button_id' => $active_button_id,
-            ]);
-        } catch (\Exception $e) {
-            $this->redirectWithMessage('/timeControl/public/error', 'error', 'Error al cargar la página de datos de trabajo.');
+        if (!$this->user) {
+            Logger::error('No user found in DataController::index', []);
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Sesión no válida. Inicia sesión de nuevo.');
+            return;
         }
+
+        $maquinaNombre = $this->usuarioModel->getNameMaquina($this->user->maquina_id);
+        if (!$this->user->maquina_id) {
+            Logger::warning('No machine selected for user', ['codigo_empleado' => $this->user->codigo_empleado]);
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo_maquina', 'error', 'Debes seleccionar una máquina primero.');
+            return;
+        }
+
+        $correccionesPendientes = $this->correccionesOperador->getCorreccionesPendientesPorOperador($this->user->codigo_empleado);
+        $mostrarCorrecciones = !empty($correccionesPendientes);
+
+        Logger::info('Fetching corrections in DataController::index', [
+            'codigo_empleado' => $this->user->codigo_empleado,
+            'correcciones_count' => count($correccionesPendientes),
+            'mostrar_correcciones' => $mostrarCorrecciones,
+            'user_data' => ['maquina_id' => $this->user->maquina_id, 'area_id' => $this->user->area_id]
+        ]);
+
+        $activeButtonId = $this->usuarioModel->getActiveButton($this->user->codigo_empleado);
+
+        $this->view('operador/datos_trabajo', [
+            'maquina' => $maquinaNombre,
+            'active_button_id' => $activeButtonId,
+            'correcciones_pendientes' => $correccionesPendientes,
+            'mostrar_correcciones' => $mostrarCorrecciones
+        ]);
     }
 
     public function seleccionarData()
     {
-        session_start(); // Asegurar que la sesión esté iniciada
-
-        // Obtener usuario actual del JWT
-        $user = AuthHelper::getCurrentUser();
-        if (!$user) {
-            header('Location: /timeControl/public/login');
-            exit();
+        if (!$this->user) {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Sesión no válida. Inicia sesión de nuevo.');
+            return;
         }
 
-        // Verificar que los datos fueron enviados por POST
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['jtWo'], $_POST['item'], $_POST['po'], $_POST['cliente'])) {
-            $jtWo = $_POST['jtWo'];
-            $item = $_POST['item'];
-            $po = $_POST['po'];
-            $cliente = $_POST['cliente'];
-
-            // Instanciar el modelo de datos
-            $data = new Data();
-            $control = new Control();
-
-            // Actualizar JTWO, ITEM, PO y Cliente del usuario
-            $data->updateJtWoItemPoCliente($user->codigo_empleado, $jtWo, $item, $po, $cliente);
-
-            // Actualizar la fecha de fin en el registro "Espera Trabajo"
-            $data->updateFinEspera($user->codigo_empleado);
-
-            // Marcar que los datos han sido ingresados
-            $_SESSION['data_entered'] = true;
-
-            // Cerrar Espera Trabajo si está abierto
-            date_default_timezone_set("America/Santo_Domingo");
-            $fecha_actual = date("Y-m-d H:i:s");
-            $control->updatePreviousRegistro($user->codigo_empleado, $fecha_actual);
-
-            // Redirigir a la página de control
-            header('Location: /timeControl/public/control');
-            exit();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'Método no permitido. Usa POST.');
+            return;
         }
 
-        // Si no se enviaron los datos requeridos
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            echo "No se enviaron todos los datos requeridos.";
+        $jtWo = trim($_POST['jtWo'] ?? '');
+        $item = trim($_POST['item'] ?? '');
+        $po = trim($_POST['po'] ?? '');
+        $cliente = trim($_POST['cliente'] ?? '');
+
+        if (empty($jtWo) || empty($item) || empty($po) || empty($cliente)) {
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'Todos los campos (JT/WO, Item, PO, Cliente) son obligatorios.');
+            return;
         }
-    }
 
-    public function esperaTrabajo()
-    {
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new \Exception("Método no permitido");
-            }
-
-            // Validar autenticación del usuario
-            $user = AuthHelper::getCurrentUser();
-            if (!$user) {
-                throw new \Exception("Usuario no autenticado");
-            }
-
-            // Iniciar sesión si no está iniciada
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-
-            $usuario = new Usuario();
-            $control = new Control();
-
-            // Obtener información del usuario
-            $data = $usuario->findByCodigo($user->codigo_empleado);
-            if (!$data) {
-                throw new \Exception("No se encontró información del usuario.");
-            }
-
-            $codigo_empleado = $user->codigo_empleado;
-            $tipo_boton = $_POST['tipo_boton'] ?? null;
-            $maquina = $data['maquina_id'] ?? null;
-            $area_id = $user->area_id ?? null;
-
-            // Configurar zona horaria y obtener fecha actual
-            date_default_timezone_set("America/Santo_Domingo");
-            $fecha_actual = date("Y-m-d H:i:s");
-
-            // Verificar si el botón ya está activo
-            if ($control->getActiveButton($codigo_empleado) === 'Espera_trabajo') {
-                $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'El botón ya está activo, no se puede crear un nuevo registro.');
-            }
-
-            // Crear el registro de espera de trabajo
-            $registroData = [
-                'tipo_boton' => $tipo_boton,
-                'codigo_empleado' => $codigo_empleado,
-                'maquina' => $maquina,
-                'area_id' => $area_id,
-                'fecha_registro' => $fecha_actual
-            ];
-
-            if (!$control->insertEsperaTrabajo($registroData)) {
-                throw new \Exception("Error al insertar el registro de espera de trabajo.");
-            }
-
-            // Actualizar estado del botón
-            if (!$control->actualizarEstadoBoton($codigo_empleado, $tipo_boton)) {
-                throw new \Exception("Error al actualizar el estado del botón.");
-            }
-
-            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'success', 'Registro de espera de trabajo exitoso!');
-        } catch (\Exception $e) {
-            $this->redirect('/timeControl/public/error');
+        if (strlen($jtWo) > 255 || strlen($item) > 255 || strlen($po) > 255 || strlen($cliente) > 255) {
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'Los campos no pueden exceder 255 caracteres.');
+            return;
         }
+
+        if (!$this->user->maquina_id) {
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo_maquina', 'error', 'Debes seleccionar una máquina primero.');
+            return;
+        }
+
+        $updated = $this->usuarioModel->updateDatosTrabajo(
+            $this->user->codigo_empleado,
+            $jtWo,
+            $item,
+            $po,
+            $cliente
+        );
+
+        if (!$updated) {
+            Logger::error("Error updating work data", [
+                'codigo_empleado' => $this->user->codigo_empleado,
+                'jtWo' => $jtWo
+            ]);
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'Error al guardar datos. Verifica la conexión MySQL e intenta de nuevo.');
+            return;
+        }
+
+        $this->usuarioModel->actualizarEstadoBoton($this->user->codigo_empleado, 'defaultButtonId');
+
+        if (isset($_SESSION['status'])) unset($_SESSION['status']);
+        if (isset($_SESSION['message'])) unset($_SESSION['message']);
+
+        $this->redirectWithMessage('/timeControl/public/control', 'success', 'Datos del trabajo guardados correctamente. Ahora puedes registrar producción o eventos.');
     }
 
     /**
-     * Método auxiliar para redirigir
+     * Método para manejar Espera de Trabajo
      */
-    private function redirect($url)
+    public function esperaTrabajo()
     {
-        header("Location: $url");
-        exit();
+        if (!$this->user) {
+            $this->redirectWithMessage('/timeControl/public/login', 'error', 'Sesión no válida. Inicia sesión de nuevo.');
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'Método no permitido. Usa POST.');
+            return;
+        }
+
+        // Verificar que el operador tiene una máquina asignada
+        if (!$this->user->maquina_id || $this->user->maquina_id <= 0) {
+            Logger::warning('Intento de espera sin máquina asignada', [
+                'codigo_empleado' => $this->user->codigo_empleado
+            ]);
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo_maquina', 'error', 'Debes seleccionar una máquina antes de registrar espera de trabajo.');
+            return;
+        }
+
+        $tipoBoton = $_POST['tipo_boton'] ?? '';
+
+        if ($tipoBoton !== 'Espera_trabajo') {
+            Logger::error('Tipo de botón inválido para espera', [
+                'codigo_empleado' => $this->user->codigo_empleado,
+                'tipo_boton' => $tipoBoton
+            ]);
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'Tipo de registro inválido.');
+            return;
+        }
+
+        try {
+            // Obtener la conexión a la base de datos desde el modelo
+            $db = $this->usuarioModel->getDb();
+
+            // Preparar los datos para insertar
+            $codigo_empleado = (int)$this->user->codigo_empleado;
+            $area_id = (int)$this->user->area_id;
+            $maquina = (int)$this->user->maquina_id;
+            $item = $this->user->item ?? 'N/A';
+            $jtWo = $this->user->jtWo ?? 'N/A';
+            $po = $this->user->po ?? 'N/A';
+            $cliente = $this->user->cliente ?? 'N/A';
+            $tipo_boton = 'Espera_trabajo';
+            $descripcion = 'Espera de trabajo';
+            $comentario = 'Operador en espera de trabajo';
+            $cantidad_scrapt = 0;
+            $cantidad_produccion = 0;
+            $estado_validacion = 'Validado';
+
+            // Insertar el registro de espera
+            $sql = "INSERT INTO registro 
+                    (tipo_boton, codigo_empleado, area_id, maquina, item, jtWo, po, cliente, 
+                     descripcion, cantidad_scrapt, cantidad_produccion, comentario, estado_validacion) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            $stmt = $db->prepare($sql);
+            
+            if (!$stmt) {
+                throw new \Exception('Error al preparar la consulta: ' . $db->error);
+            }
+
+            $stmt->bind_param(
+                'siiiissssddss',
+                $tipo_boton,
+                $codigo_empleado,
+                $area_id,
+                $maquina,
+                $item,
+                $jtWo,
+                $po,
+                $cliente,
+                $descripcion,
+                $cantidad_scrapt,
+                $cantidad_produccion,
+                $comentario,
+                $estado_validacion
+            );
+
+            if (!$stmt->execute()) {
+                throw new \Exception('Error al ejecutar la consulta: ' . $stmt->error);
+            }
+
+            $registroId = $stmt->insert_id;
+            $stmt->close();
+
+            // Actualizar el estado del botón activo
+            $this->usuarioModel->actualizarEstadoBoton($this->user->codigo_empleado, 'Espera_trabajo');
+
+            Logger::info('Espera de trabajo registrada exitosamente', [
+                'codigo_empleado' => $this->user->codigo_empleado,
+                'registro_id' => $registroId,
+                'maquina_id' => $this->user->maquina_id
+            ]);
+
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'success', 'Espera de trabajo registrada correctamente.');
+
+        } catch (\Exception $e) {
+            Logger::error('Error al registrar espera de trabajo', [
+                'codigo_empleado' => $this->user->codigo_empleado,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            $this->redirectWithMessage('/timeControl/public/datos_trabajo', 'error', 'Error al registrar espera de trabajo. Intenta de nuevo.');
+        }
     }
 
     private function redirectWithMessage($url, $status, $message)
     {
         $_SESSION['status'] = $status;
         $_SESSION['message'] = $message;
-        header("Location: $url");
+        header("Location: {$url}");
         exit();
     }
 }

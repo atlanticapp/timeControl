@@ -1,0 +1,163 @@
+[2025-10-16 08:34:52] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 08:34:53] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 08:35:35] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"kigp1jd747o2f3h6tam3f6lf81"}
+[2025-10-16 08:35:35] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 08:35:35] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 08:35:38] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"kigp1jd747o2f3h6tam3f6lf81","tipo_boton":"Producción"}
+[2025-10-16 08:35:38] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-16 08:35:38] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"kigp1jd747o2f3h6tam3f6lf81"}
+[2025-10-16 08:35:38] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 08:35:38] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 08:35:47] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"kigp1jd747o2f3h6tam3f6lf81","tipo_boton":"final_produccion"}
+[2025-10-16 08:35:47] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":90000,"cantidad_scrapt":0}
+[2025-10-16 08:35:47] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"kigp1jd747o2f3h6tam3f6lf81"}
+[2025-10-16 08:35:59] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 08:36:03] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 08:36:10] [INFO] Solicitud de validación de producción recibida {"user_id":14,"registro_id":4647}
+[2025-10-16 08:36:10] [INFO] Registrando historial de validación {"registro_id":4647,"tipo":"produccion","usuario_id":14}
+[2025-10-16 08:36:10] [INFO] Validación de producción exitosa {"user_id":14,"registro_id":4647,"validacion_id":null}
+[2025-10-16 08:36:12] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 08:36:15] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 08:36:16] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-16 08:36:19] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4647,"tipo":"produccion"}
+[2025-10-16 08:36:19] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4647,"usuario_id":14,"validacion_id":164,"tipo":"produccion","comentario":""}
+[2025-10-16 08:36:19] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4647,"tipo":"produccion","validacion_id":164}
+[2025-10-16 08:36:20] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-16 08:42:26] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 08:42:27] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 08:42:38] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"67npgurnjukmg44eke4c8g0ekr"}
+[2025-10-16 08:42:38] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 08:42:38] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 08:43:12] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"67npgurnjukmg44eke4c8g0ekr","tipo_boton":"Producción"}
+[2025-10-16 08:43:12] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-16 08:43:12] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"67npgurnjukmg44eke4c8g0ekr"}
+[2025-10-16 08:43:12] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 08:43:12] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 08:43:24] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"67npgurnjukmg44eke4c8g0ekr","tipo_boton":"final_produccion"}
+[2025-10-16 08:43:24] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":20000,"cantidad_scrapt":0}
+[2025-10-16 08:43:24] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"67npgurnjukmg44eke4c8g0ekr"}
+[2025-10-16 08:43:42] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 08:43:54] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 08:44:02] [INFO] Solicitud de validación de producción recibida {"user_id":14,"registro_id":4649}
+[2025-10-16 08:44:02] [INFO] Registrando historial de validación {"registro_id":4649,"tipo":"produccion","usuario_id":14}
+[2025-10-16 08:44:02] [INFO] Validación de producción exitosa {"user_id":14,"registro_id":4649,"validacion_id":null}
+[2025-10-16 08:44:04] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 08:44:05] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-16 08:44:08] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4649,"tipo":"produccion"}
+[2025-10-16 08:44:08] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4649,"usuario_id":14,"validacion_id":166,"tipo":"produccion","comentario":""}
+[2025-10-16 08:44:08] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4649,"tipo":"produccion","validacion_id":166}
+[2025-10-16 08:44:09] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-16 09:04:40] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 09:04:41] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 09:04:58] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"2kdka8i6t38f38o5ffuhn7sepb"}
+[2025-10-16 09:04:58] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 09:04:58] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 09:05:01] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"2kdka8i6t38f38o5ffuhn7sepb","tipo_boton":"Producción"}
+[2025-10-16 09:05:01] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-16 09:05:01] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"2kdka8i6t38f38o5ffuhn7sepb"}
+[2025-10-16 09:05:01] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 09:05:01] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 09:05:13] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"2kdka8i6t38f38o5ffuhn7sepb","tipo_boton":"final_produccion"}
+[2025-10-16 09:05:13] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":2000,"cantidad_scrapt":0}
+[2025-10-16 09:05:13] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"2kdka8i6t38f38o5ffuhn7sepb"}
+[2025-10-16 09:05:25] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 09:05:28] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 09:05:39] [INFO] Solicitud de validación de producción recibida {"user_id":14,"registro_id":4651}
+[2025-10-16 09:05:39] [INFO] Registrando historial de validación {"registro_id":4651,"tipo":"produccion","usuario_id":14}
+[2025-10-16 09:05:39] [INFO] Validación de producción exitosa {"user_id":14,"registro_id":4651,"validacion_id":null}
+[2025-10-16 09:05:41] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 09:05:42] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-16 09:05:45] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4651,"tipo":"produccion"}
+[2025-10-16 09:05:45] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4651,"usuario_id":14,"validacion_id":168,"tipo":"produccion","comentario":""}
+[2025-10-16 09:05:45] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4651,"tipo":"produccion","validacion_id":168}
+[2025-10-16 09:05:46] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-16 09:10:20] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 10:24:09] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:24:19] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:24:40] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"c62fttfa4uetvgii568tvrtgk8"}
+[2025-10-16 10:24:40] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:24:40] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 10:24:42] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"c62fttfa4uetvgii568tvrtgk8","tipo_boton":"Producción"}
+[2025-10-16 10:24:42] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-16 10:24:42] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"c62fttfa4uetvgii568tvrtgk8"}
+[2025-10-16 10:24:42] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:24:42] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 10:24:51] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"c62fttfa4uetvgii568tvrtgk8","tipo_boton":"final_produccion"}
+[2025-10-16 10:24:51] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":3000,"cantidad_scrapt":200}
+[2025-10-16 10:24:51] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"c62fttfa4uetvgii568tvrtgk8"}
+[2025-10-16 10:25:09] [INFO] Solicitud de validación de producción recibida (SUPERVISOR) {"user_id":13,"registro_id":4653}
+[2025-10-16 10:25:09] [INFO] Registrando historial de validación (SUPERVISOR) {"registro_id":4653,"tipo":"produccion","usuario_id":13}
+[2025-10-16 10:25:18] [INFO] Solicitud de validación de scrap recibida (SUPERVISOR) {"registroId":4654,"cantidad":200,"user_id":13}
+[2025-10-16 10:25:31] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 10:25:33] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":1}
+[2025-10-16 10:25:35] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4653,"tipo":"produccion"}
+[2025-10-16 10:25:35] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4653,"usuario_id":14,"validacion_id":170,"tipo":"produccion","comentario":""}
+[2025-10-16 10:25:35] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4653,"tipo":"produccion","validacion_id":170}
+[2025-10-16 10:25:36] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":1}
+[2025-10-16 10:25:37] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4654,"tipo":"scrap"}
+[2025-10-16 10:25:37] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4654,"usuario_id":14,"validacion_id":102,"tipo":"scrap","comentario":""}
+[2025-10-16 10:25:37] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4654,"tipo":"scrap","validacion_id":102}
+[2025-10-16 10:25:38] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-16 10:25:39] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-16 10:25:41] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":1,"filtros_aplicados":[]}
+[2025-10-16 10:25:42] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":1,"filtros_aplicados":[]}
+[2025-10-16 10:33:45] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:33:47] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:33:55] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"ql055of49m455eu7jm143n77s2"}
+[2025-10-16 10:33:55] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:33:55] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 10:34:02] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"ql055of49m455eu7jm143n77s2","tipo_boton":"Producción"}
+[2025-10-16 10:34:02] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-16 10:34:02] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"ql055of49m455eu7jm143n77s2"}
+[2025-10-16 10:34:02] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:34:02] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 10:34:12] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"ql055of49m455eu7jm143n77s2","tipo_boton":"Parcial"}
+[2025-10-16 10:34:12] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":10000,"cantidad_scrapt":3000}
+[2025-10-16 10:34:12] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"ql055of49m455eu7jm143n77s2"}
+[2025-10-16 10:34:12] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 10:34:12] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 10:34:31] [INFO] Solicitud de validación de producción recibida (SUPERVISOR) {"user_id":13,"registro_id":4656}
+[2025-10-16 10:34:31] [INFO] Registrando historial de validación (SUPERVISOR) {"registro_id":4656,"tipo":"produccion","usuario_id":13}
+[2025-10-16 10:34:43] [INFO] Solicitud de validación de scrap recibida (SUPERVISOR) {"registroId":4657,"cantidad":3000,"user_id":13}
+[2025-10-16 10:34:56] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 10:34:58] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-16 10:35:02] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":1}
+[2025-10-16 10:35:05] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4656,"tipo":"produccion"}
+[2025-10-16 10:35:05] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4656,"usuario_id":14,"validacion_id":172,"tipo":"produccion","comentario":""}
+[2025-10-16 10:35:05] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4656,"tipo":"produccion","validacion_id":172}
+[2025-10-16 10:35:06] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":1}
+[2025-10-16 10:35:07] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4657,"tipo":"scrap"}
+[2025-10-16 10:35:07] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4657,"usuario_id":14,"validacion_id":104,"tipo":"scrap","comentario":""}
+[2025-10-16 10:35:07] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4657,"tipo":"scrap","validacion_id":104}
+[2025-10-16 10:35:08] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-16 14:23:10] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"a7fde9fdplptsq59t2d7dcq3c0"}
+[2025-10-16 14:23:11] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:23:11] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-16 14:23:47] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"a7fde9fdplptsq59t2d7dcq3c0"}
+[2025-10-16 14:23:47] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:23:49] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:23:49] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:24:17] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:24:20] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:24:24] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:24:25] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:24:27] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:24:31] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:24:32] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:24:33] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:27:18] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:27:19] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:28:19] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:28:20] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:31:46] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:31:48] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:34:09] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:34:10] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:40:32] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:41:27] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:41:28] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:43:14] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:43:15] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 14:43:16] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 15:31:37] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-16 15:31:38] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}

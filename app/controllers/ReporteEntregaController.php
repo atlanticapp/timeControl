@@ -14,6 +14,7 @@ class ReporteEntregaController extends Controller
     public function __construct()
     {
         $this->produccionModel = new ProduccionFinal();
+        AuthHelper::requireAuth();
 
         if (!AuthHelper::isAuthenticated()) {
             $this->redirectWithMessage('/timeControl/public/login', 'error', 'Debes iniciar sesión.');
@@ -26,22 +27,45 @@ class ReporteEntregaController extends Controller
     }
 
     public function reporteEntrega()
-    {
-        $user = AuthHelper::getCurrentUser();
-        try {
-            $entregas_validadas = $this->produccionModel->getProduccionGuardada($user->codigo_empleado);
-            $this->view('qa/reporte_entrega', [
-                'data' => [
-                    'entregas_validadas' => $entregas_validadas
-                ]
-            ]);
-        } catch (\Exception $e) {
-            Logger::error('Error en ReporteEntregaController::reporteEntrega', [
-                'error' => $e->getMessage()
-            ]);
-            $this->redirectWithMessage('/timeControl/public/dashboard', 'error', 'Error cargando el reporte de entregas');
+{
+    $user = AuthHelper::getCurrentUser();
+    try {
+        $entregas_validadas = $this->produccionModel->getProduccionGuardada($user->codigo_empleado);
+        
+        // ✅ FILTRAR DUPLICADOS POR registro_id
+        $entregas_unicas = $this->eliminarDuplicados($entregas_validadas);
+        
+        $this->view('qa/reporte_entrega', [
+            'data' => [
+                'entregas_validadas' => $entregas_unicas
+            ]
+        ]);
+    } catch (\Exception $e) {
+        Logger::error('Error en ReporteEntregaController::reporteEntrega', [
+            'error' => $e->getMessage()
+        ]);
+        $this->redirectWithMessage('/timeControl/public/dashboard', 'error', 'Error cargando el reporte de entregas');
+    }
+}
+
+private function eliminarDuplicados($entregas)
+{
+    $registrosVistos = [];
+    $entregasUnicas = [];
+    
+    foreach ($entregas as $entrega) {
+       
+        $registroId = $entrega['registro_id'] ?? $entrega['id'];
+        
+        
+        if (!isset($registrosVistos[$registroId])) {
+            $registrosVistos[$registroId] = true;
+            $entregasUnicas[] = $entrega;
         }
     }
+    
+    return $entregasUnicas;
+}
 
     public function detalle($id)
     {
@@ -77,7 +101,7 @@ class ReporteEntregaController extends Controller
             $this->redirectWithMessage('/timeControl/public/reporte-entrega', 'error', 'Entrega no encontrada');
             return;
         }
-        // Si viene ?imprimir=1, podrías marcar como impresa aquí si lo deseas
+        
         $this->view('qa/detalle_entrega', [ 'entrega' => $entrega ]);
     }
 
@@ -102,30 +126,7 @@ class ReporteEntregaController extends Controller
         $this->redirectWithMessage('/timeControl/public/reporte-entrega', 'error', 'Método no permitido');
     }
 
-    // public function marcarImpresa()
-    // {
-    //     header('Content-Type: application/json');
-    //     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    //         echo json_encode(['status' => 'error', 'message' => 'Método no permitido']);
-    //         return;
-    //     }
-    //     $id = $_GET['id'] ?? null;
-    //     if (!$id) {
-    //         echo json_encode(['status' => 'error', 'message' => 'ID no proporcionado']);
-    //         return;
-    //     }
-    //     try {
-    //         $resultado = $this->produccionModel->marcarComoImpresa($id);
-    //         if ($resultado) {
-    //             echo json_encode(['status' => 'success', 'message' => 'Entrega marcada como impresa']);
-    //         } else {
-    //             echo json_encode(['status' => 'error', 'message' => 'No se pudo actualizar el estado']);
-    //         }
-    //     } catch (\Exception $e) {
-    //         \App\Helpers\Logger::error('Error al marcar como impresa', ['error' => $e->getMessage()]);
-    //         echo json_encode(['status' => 'error', 'message' => 'Error interno']);
-    //     }
-    // }
+    
 
     private function redirectWithMessage($url, $status, $message)
     {

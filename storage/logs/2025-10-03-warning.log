@@ -1,0 +1,17 @@
+[2025-10-03 08:23:14] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":12}
+[2025-10-03 08:45:26] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:45:33] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:09] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:09] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:09] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:10] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:10] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:10] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:10] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:10] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:10] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:46:11] [WARNING] Error en guardado {"user_id":14,"entrega_id":4448,"tipo":"scrap","error":"Duplicate entry '4448' for key 'uq_registroId'"}
+[2025-10-03 08:54:01] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":12}
+[2025-10-03 08:54:32] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":12}
+[2025-10-03 08:55:32] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":12}
+[2025-10-03 08:56:32] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":12}

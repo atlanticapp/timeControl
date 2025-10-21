@@ -1,0 +1,42 @@
+[2025-09-25 11:59:07] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-09-25 11:59:20] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-09-25 12:07:13] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-09-25 12:25:48] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":25000,"motivo":"calidad"}
+[2025-09-25 12:55:09] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-09-25 12:56:01] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 12:56:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 12:56:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 12:56:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 12:56:07] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 12:56:10] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"documentacion"}
+[2025-09-25 12:56:12] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"cantidad"}
+[2025-09-25 12:58:13] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":2000,"motivo":"calidad"}
+[2025-09-25 13:18:04] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:18:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:18:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:18:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:18:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:18:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:18:06] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:18:07] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:53:38] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:53:41] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:53:45] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"documentacion"}
+[2025-09-25 13:55:34] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:55:37] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:55:37] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:55:37] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:55:37] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:55:38] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:55:38] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:55:38] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:55:38] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:56:23] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:58:19] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:58:22] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:58:23] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:58:23] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:58:23] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:58:24] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:58:24] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"calidad"}
+[2025-09-25 13:58:35] [WARNING] Datos inválidos al crear retención {"registro_id":null,"cantidad":12045,"motivo":"documentacion"}

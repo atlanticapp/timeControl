@@ -1,0 +1,11 @@
+[2025-09-26 10:01:46] [INFO] Correcciones pendientes consultadas {"maquina_id":1194,"cantidad":0}
+[2025-09-26 10:02:18] [INFO] Correcciones pendientes consultadas {"maquina_id":4,"cantidad":0}
+[2025-09-26 10:02:22] [INFO] Correcciones pendientes consultadas {"maquina_id":4,"cantidad":0}
+[2025-09-26 11:35:37] [INFO] Correcciones pendientes consultadas {"maquina_id":4,"cantidad":0}
+[2025-09-26 13:40:54] [INFO] Correcciones pendientes consultadas {"maquina_id":6,"cantidad":0}
+[2025-09-26 13:41:41] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-26 13:41:47] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-26 13:41:49] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-09-26 13:41:56] [INFO] Cargando página de acción QA {"user_id":14,"total_entregas":0}
+[2025-09-26 13:41:57] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-09-26 13:41:58] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}

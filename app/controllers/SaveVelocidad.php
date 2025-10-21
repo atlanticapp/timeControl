@@ -14,7 +14,7 @@ class saveVelocidad extends Controller
     {
         try {
             $this->validateRequestMethod('POST');
-
+            
             $user = AuthHelper::getCurrentUser();
             if (!$user) {
                 throw new \Exception("Usuario no autenticado");
@@ -80,9 +80,6 @@ class saveVelocidad extends Controller
         }
     }
 
-    /**
-     * Método auxiliar para iniciar sesión si no está iniciada
-     */
     private function startSessionIfNeeded()
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -90,9 +87,7 @@ class saveVelocidad extends Controller
         }
     }
 
-    /**
-     * Método auxiliar para establecer mensajes en sesión y redirigir
-     */
+
     private function redirectWithMessage($url, $status, $message)
     {
         $_SESSION['status'] = $status;

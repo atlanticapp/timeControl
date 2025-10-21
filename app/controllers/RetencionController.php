@@ -14,7 +14,7 @@ class RetencionController extends Controller
     public function __construct()
     {
         $this->retencionModel = new Retencion();
-
+         
         if (!AuthHelper::isAuthenticated()) {
             $this->redirectWithMessage('/timeControl/public/login', 'error', 'Debes iniciar sesión.');
         }
@@ -28,6 +28,7 @@ class RetencionController extends Controller
     public function index()
     {
         $user = AuthHelper::getCurrentUser();
+       
 
         try {
             $this->view('qa/retenciones', [

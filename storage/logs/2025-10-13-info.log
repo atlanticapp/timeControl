@@ -1,0 +1,57 @@
+[2025-10-13 08:00:59] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 08:01:10] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 08:01:15] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-13 08:01:20] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-13 08:01:23] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-13 09:33:51] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 13:13:18] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-13 13:13:20] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-13 13:13:44] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"u8n2it4d7955l16v3q96h6u1mc"}
+[2025-10-13 13:13:44] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-13 13:13:44] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-13 13:13:51] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"u8n2it4d7955l16v3q96h6u1mc","tipo_boton":"Preparación"}
+[2025-10-13 13:13:51] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Preparación","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-13 13:13:51] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"u8n2it4d7955l16v3q96h6u1mc"}
+[2025-10-13 13:13:51] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-13 13:13:51] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-13 13:14:26] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"rq7fbq590i2u6o445r8iskphpp"}
+[2025-10-13 13:14:26] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-13 13:14:26] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-13 13:14:28] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"rq7fbq590i2u6o445r8iskphpp","tipo_boton":"Producción"}
+[2025-10-13 13:14:28] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-13 13:14:28] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"rq7fbq590i2u6o445r8iskphpp"}
+[2025-10-13 13:14:28] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-13 13:14:28] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-13 13:14:51] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"rq7fbq590i2u6o445r8iskphpp","tipo_boton":"final_produccion"}
+[2025-10-13 13:14:51] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":9000,"cantidad_scrapt":2500}
+[2025-10-13 13:14:51] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"rq7fbq590i2u6o445r8iskphpp"}
+[2025-10-13 13:15:33] [INFO] Solicitud de validación de producción recibida (SUPERVISOR) {"user_id":13,"registro_id":4632}
+[2025-10-13 13:15:33] [INFO] Registrando historial de validación (SUPERVISOR) {"registro_id":4632,"tipo":"produccion","usuario_id":13}
+[2025-10-13 13:15:48] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 13:15:51] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-13 13:15:54] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 13:15:55] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 13:15:56] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 13:15:57] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 13:15:58] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-13 13:16:02] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4632,"tipo":"produccion"}
+[2025-10-13 13:16:02] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4632,"usuario_id":14,"validacion_id":141,"tipo":"produccion","comentario":""}
+[2025-10-13 13:16:02] [INFO] Guardado exitoso {"user_id":14,"entrega_id":4632,"tipo":"produccion","validacion_id":141}
+[2025-10-13 13:16:03] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-13 13:16:04] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-13 16:14:01] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 16:14:05] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-13 16:14:24] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":{"fecha_desde":"2025-08-25"}}
+[2025-10-13 16:14:34] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":{"fecha_desde":"2025-08-26"}}
+[2025-10-13 16:15:00] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 16:15:15] [INFO] Solicitud de validación de producción recibida {"user_id":14,"registro_id":2347}
+[2025-10-13 16:15:15] [INFO] Registrando historial de validación {"registro_id":2347,"tipo":"produccion","usuario_id":14}
+[2025-10-13 16:15:15] [INFO] Validación de producción exitosa {"user_id":14,"registro_id":2347,"validacion_id":null}
+[2025-10-13 16:15:16] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 16:15:18] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-13 16:15:19] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-13 16:15:23] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":2347,"tipo":"produccion"}
+[2025-10-13 16:15:23] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":2347,"usuario_id":14,"validacion_id":143,"tipo":"produccion","comentario":""}
+[2025-10-13 16:15:23] [INFO] Guardado exitoso {"user_id":14,"entrega_id":2347,"tipo":"produccion","validacion_id":143}
+[2025-10-13 16:15:24] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-13 16:15:26] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}

@@ -1,0 +1,132 @@
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #585758;
+        }
+
+        .container {
+            width: 50%;
+            background-color: #605e5f;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h2,
+        label {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 20px;
+        }
+
+        select option {
+            font-size: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3f9ed7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #585758;
+        }
+
+        .logout-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .logout-button:hover {
+            background-color: #c9302c;
+        }
+
+        /* Estilos para el banner de notificación */
+        .alert-notification {
+            border-left: 5px solid #ffc107;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .correction-badge {
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        /* Estilos para tarjetas de corrección */
+        .correction-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .correction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .badge-production {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .badge-scrap {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .card-production {
+            border-left: 5px solid #0d6efd;
+        }
+        
+        .card-scrap {
+            border-left: 5px solid #dc3545;
+        }

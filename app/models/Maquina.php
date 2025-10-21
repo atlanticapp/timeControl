@@ -6,7 +6,7 @@ use App\Core\Model;
 
 class Maquina extends Model
 {
-    // Método para obtener las máquinas por área
+    // Metodo para obtener las maquinas por area
     public function getMaquinasByArea($area_id)
     {
         $sql = "SELECT id, nombre FROM maquinas WHERE area_id = ?";
@@ -37,7 +37,7 @@ class Maquina extends Model
             $stmt->execute();
             $stmt->close();
 
-            return true; // Retorna verdadero si la actualización fue exitosa
+            return true; // Retorna verdadero si la actualizacion fue exitosa
         }
 
         return false; // Retorna falso si hubo un error

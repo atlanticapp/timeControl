@@ -1,0 +1,314 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            overflow-x: hidden;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e3a8a 100%);
+            color: white;
+            padding: 25px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header small {
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu a i {
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            margin-left: 280px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* ========== TOP BAR ========== */
+        .top-bar {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        /* ========== FILTER SECTION ========== */
+        .filter-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* ========== CALENDAR CONTAINER ========== */
+        .calendar-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        #calendar {
+            min-height: 600px;
+        }
+
+        /* Mejorar apariencia de eventos en calendario */
+        .fc-event {
+            border-radius: 6px !important;
+            padding: 4px 8px !important;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .fc-event:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* ========== MODALES ========== */
+        .modal-header {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        /* ========== DISTRIBUCIÓN ========== */
+        .resumen-distribucion {
+            background: linear-gradient(135deg, #294ff7 0%, #294ff7 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .progreso-distribucion {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .distribucion-dia {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1e3a8a;
+            transition: all 0.3s ease;
+        }
+
+        .distribucion-dia:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .input-cantidad {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* ========== BADGES MEJORADOS ========== */
+        .badge {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* ========== BOTONES MEJORADOS ========== */
+        .btn {
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* ========== ALERTS MEJORADOS ========== */
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* ========== SCROLLBAR PERSONALIZADO ========== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e3a8a;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1e3a8a;
+        }
+
+        /* ========== ANIMACIONES ========== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filter-section,
+        .calendar-container,
+        .top-bar {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* ========== DETALLES ORDEN ========== */
+        #detalleOrdenContent .row > div {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        #detalleOrdenContent .row > div:last-child {
+            border-bottom: none;
+        }
+
+        #detalleOrdenContent strong {
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+        .estado-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    border-left: 4px solid;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.estado-badge:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+}
+
+.prioridad-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.estado-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}

@@ -20,6 +20,8 @@
                     <option value="operador">Operador</option>
                     <option value="supervisor">Supervisor</option>
                     <option value="qa">QA</option>
+                    <option value="planificador">Planificador</option>
+                    
                 </select>
             </div>
 
@@ -47,7 +49,7 @@
         <form id="loginForm" class="form" method="post" action="login">
             <input type="text" class="form-control" id="codigo_empleado" name="codigo_empleado" placeholder="Codigo Empleado" required autocomplete="off">
             <input type="password" class="form-control" id="pwd" name="password" placeholder="Contraseña" required autocomplete="off">
-            <a href="#">Forgot password?</a>
+            <a href="/timeControl/public/forgot_password">Forgot password?</a>
             <input type="submit" value="Login" />
         </form>
     </div>

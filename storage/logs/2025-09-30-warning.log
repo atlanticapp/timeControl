@@ -1,0 +1,10 @@
+[2025-09-30 08:54:58] [WARNING] Error al procesar corrección {"solicitud_id":18,"registro_id":4487,"tipo":"produccion","cantidad":3000,"comentario":"aaaa","user_id":12,"error":"La corrección ya no está pendiente, ha sido cancelada o no existe"}
+[2025-09-30 08:56:50] [WARNING] Error al procesar corrección {"solicitud_id":18,"registro_id":4487,"tipo":"produccion","cantidad":5000,"comentario":"ya testa hecho","user_id":12,"error":"La corrección ya no está pendiente, ha sido cancelada o no existe"}
+[2025-09-30 08:59:28] [WARNING] Error al procesar corrección {"solicitud_id":17,"registro_id":4481,"tipo":"produccion","cantidad":2000,"comentario":"adsasdasd","user_id":12,"error":"La corrección ya no está pendiente, ha sido cancelada o no existe"}
+[2025-09-30 09:04:36] [WARNING] Error al procesar corrección {"solicitud_id":18,"error":"La corrección ya no está pendiente, ha sido cancelada o no existe"}
+[2025-09-30 09:04:57] [WARNING] Error al procesar corrección {"solicitud_id":17,"error":"La corrección ya no está pendiente, ha sido cancelada o no existe"}
+[2025-09-30 09:05:07] [WARNING] Error al procesar corrección {"solicitud_id":17,"error":"La corrección ya no está pendiente, ha sido cancelada o no existe"}
+[2025-09-30 09:08:06] [WARNING] Error al procesar corrección {"solicitud_id":18,"error":"La corrección ya no está pendiente, ha sido cancelada o no existe"}
+[2025-09-30 16:04:35] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":3,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-09-30 16:05:18] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":3,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}
+[2025-09-30 16:05:47] [WARNING] Error en validación de scrap por supervisor {"registroId":4508,"cantidad":1000,"user_id":3,"mensaje":"Unknown column 'usuario_qa_id' in 'field list'"}

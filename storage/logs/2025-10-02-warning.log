@@ -1,0 +1,56 @@
+[2025-10-02 00:53:31] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":110452}
+[2025-10-02 06:46:30] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":110452}
+[2025-10-02 09:49:19] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":1194}
+[2025-10-02 10:10:40] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:11:24] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:11:58] [WARNING] ID de registro inválido al validar scrap {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:14:03] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:15:25] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:15:42] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:21:08] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:25:45] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:26:33] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:26:58] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:28:44] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 10:29:45] [WARNING] Intento de validar producción con ID inválido {"user_id":14,"registro_id":"no-id"}
+[2025-10-02 13:19:25] [WARNING] Intento de validar producción con ID inválido (SUPERVISOR) {"user_id":13,"registro_id":"no-id"}
+[2025-10-02 13:19:39] [WARNING] Intento de validar producción con ID inválido (SUPERVISOR) {"user_id":13,"registro_id":"no-id"}
+[2025-10-02 13:19:42] [WARNING] Intento de validar producción con ID inválido (SUPERVISOR) {"user_id":13,"registro_id":"no-id"}
+[2025-10-02 13:21:21] [WARNING] Intento de validar producción con ID inválido (SUPERVISOR) {"user_id":13,"registro_id":"no-id"}
+[2025-10-02 13:21:38] [WARNING] Intento de validar producción con ID inválido (SUPERVISOR) {"user_id":13,"registro_id":"no-id"}
+[2025-10-02 13:21:58] [WARNING] Intento de validar producción con ID inválido (SUPERVISOR) {"user_id":13,"registro_id":"no-id"}
+[2025-10-02 13:22:34] [WARNING] Intento de validar producción con ID inválido (SUPERVISOR) {"user_id":13,"registro_id":"no-id"}
+[2025-10-02 15:00:28] [WARNING] Cantidad excede producción para retención {"user_id":14,"entrega_id":4571,"cantidad_solicitada":30,"cantidad_produccion":"0.00"}
+[2025-10-02 15:00:44] [WARNING] Cantidad excede producción para retención {"user_id":14,"entrega_id":4330,"cantidad_solicitada":700,"cantidad_produccion":"0.00"}
+[2025-10-02 15:00:56] [WARNING] Cantidad excede producción para retención {"user_id":14,"entrega_id":4571,"cantidad_solicitada":30,"cantidad_produccion":"0.00"}
+[2025-10-02 15:01:11] [WARNING] Cantidad excede producción para retención {"user_id":14,"entrega_id":4571,"cantidad_solicitada":30,"cantidad_produccion":"0.00"}
+[2025-10-02 15:04:12] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:13] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:13] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:14] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:14] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:14] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:14] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:14] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:14] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:15] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:15] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:15] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:15] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:04:15] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:05:52] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:06:30] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:06:46] [WARNING] Error en guardado de producción {"user_id":14,"entrega_id":4571,"error":"La cantidad de producción debe ser mayor que cero"}
+[2025-10-02 15:07:02] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:11:00] [WARNING] Error en guardado de producción {"user_id":14,"entrega_id":4571,"error":"La cantidad de producción debe ser mayor que cero"}
+[2025-10-02 15:11:29] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:14:49] [WARNING] Error en guardado de producción {"user_id":14,"entrega_id":4571,"error":"La cantidad de producción debe ser mayor que cero"}
+[2025-10-02 15:14:53] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:19:07] [WARNING] Error en guardado {"user_id":14,"entrega_id":4571,"tipo":"scrap","error":"Unknown column 'tipo_validacion' in 'field list'"}
+[2025-10-02 15:19:16] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:19:19] [WARNING] Error en guardado {"user_id":14,"entrega_id":4571,"tipo":"scrap","error":"Unknown column 'tipo_validacion' in 'field list'"}
+[2025-10-02 15:20:05] [WARNING] Error en guardado {"user_id":14,"entrega_id":4571,"tipo":"scrap","error":"Unknown column 'tipo_validacion' in 'field list'"}
+[2025-10-02 15:21:56] [WARNING] Error en guardado {"user_id":14,"entrega_id":4571,"tipo":"scrap","error":"Unknown column 'comentario' in 'field list'"}
+[2025-10-02 15:38:24] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4330,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:40:38] [WARNING] Error al crear retención desde Acción QA {"user_id":14,"entrega_id":4571,"error":"La cantidad a retener no puede ser mayor que la cantidad producida"}
+[2025-10-02 15:42:04] [WARNING] Usuario sin datos de trabajo {"codigo_empleado":1194}

@@ -1,0 +1,267 @@
+[2025-10-21 08:06:41] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:06:49] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:07:16] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:07:21] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:07:33] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:07:49] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:08:44] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:09] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:11] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:12] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:12:14] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:16] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:17] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:12:20] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:22] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:25] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:30] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:12:30] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:12:31] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:12:36] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 08:12:36] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 08:12:37] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:12:38] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:12:41] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:14:46] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:15:08] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:19:18] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:19:51] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:20:37] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:24:06] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:24:37] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:24:40] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:26:34] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:26:45] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:26:48] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:28:04] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:29:35] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 08:29:39] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:29:41] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:29:43] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:29:44] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:29:46] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:30:35] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:35:06] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:39:38] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:39:44] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:39:45] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:39:46] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 08:40:51] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:40:54] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:40:56] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:40:58] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:41:00] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:41:07] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:41:08] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:41:10] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:44:57] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:44:58] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 08:47:22] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:47:24] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:47:32] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 08:47:36] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:47:39] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:47:45] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:47:46] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:47:48] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:47:50] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:47:51] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:47:55] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:47:56] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:48:00] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:48:03] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 08:48:14] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:48:17] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:50:37] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:50:40] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:50:48] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:54:53] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:54:55] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:54:57] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:55:16] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:55:24] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 08:55:26] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 08:56:30] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:00:51] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:00:55] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 09:00:57] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 09:01:00] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:01:11] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:05:02] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:05:05] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:05:31] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:06:07] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:06:31] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:06:34] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:06:36] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:07:11] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:07:12] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:07:12] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:07:12] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:07:12] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:07:55] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:17] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:18] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:21] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:23] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:26] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 09:08:28] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:29] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:31] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:34] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:36] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:46] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 09:08:48] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:08:56] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:09:01] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 09:10:59] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 10:22:36] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:22:37] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:23:02] [INFO] Solicitud de validación de producción recibida {"user_id":14,"registro_id":2379}
+[2025-10-21 10:23:02] [INFO] Registrando historial de validación {"registro_id":2379,"tipo":"produccion","usuario_id":14}
+[2025-10-21 10:23:02] [INFO] Validación de producción exitosa {"user_id":14,"registro_id":2379,"validacion_id":null}
+[2025-10-21 10:23:03] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:23:05] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:23:08] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-21 10:23:15] [INFO] Solicitud de retención recibida {"user_id":14,"entrega_id":2379,"cantidad":400,"motivo":"documentacion","tipo":"produccion"}
+[2025-10-21 10:23:15] [INFO] Retención creada exitosamente {"retencion_id":44,"registro_id":2379,"cantidad":400,"tipo":"produccion","usuario_id":14}
+[2025-10-21 10:23:15] [INFO] Retención creada exitosamente desde Acción QA {"user_id":14,"entrega_id":2379,"retencion_id":44,"cantidad":400,"motivo":"Documentación incompleta","tipo":"produccion"}
+[2025-10-21 10:23:16] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 10:23:16] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 10:23:18] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 10:23:41] [INFO] Destino asignado a retención {"retencion_id":44,"destino_id":61,"tipo_destino":"produccion_final","cantidad":200,"tipo_retencion":"produccion","motivo":"Liberado a producción"}
+[2025-10-21 10:23:41] [INFO] Destino asignado exitosamente {"retencion_id":44,"tipo_destino":"produccion_final","cantidad":200,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 10:23:41] [INFO] Destino asignado a retención {"retencion_id":44,"destino_id":62,"tipo_destino":"retrabajo","cantidad":100,"tipo_retencion":"produccion","motivo":"Enviado a retrabajo"}
+[2025-10-21 10:23:41] [INFO] Destino asignado exitosamente {"retencion_id":44,"tipo_destino":"retrabajo","cantidad":100,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 10:23:41] [INFO] Registro actualizado a Guardado después de liberar retención {"registro_id":2379}
+[2025-10-21 10:23:41] [INFO] Destino asignado a retención {"retencion_id":44,"destino_id":63,"tipo_destino":"destruccion","cantidad":100,"tipo_retencion":"produccion","motivo":"Material para destruir"}
+[2025-10-21 10:23:41] [INFO] Destino asignado exitosamente {"retencion_id":44,"tipo_destino":"destruccion","cantidad":100,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 10:23:41] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 10:23:41] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 10:23:43] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:23:46] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:23:54] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:23:56] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:23:59] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:24:01] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:24:02] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:24:21] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:31:21] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:35:47] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:35:49] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:36:20] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:38:18] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:43:51] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:43:52] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:44:25] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:44:33] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:44:34] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 10:44:35] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 10:44:36] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:44:42] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 10:44:42] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 10:44:44] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:44:47] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 10:44:47] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:44:56] [INFO] Solicitud de validación de producción recibida {"user_id":14,"registro_id":2379}
+[2025-10-21 10:44:56] [INFO] Registrando historial de validación {"registro_id":2379,"tipo":"produccion","usuario_id":14}
+[2025-10-21 10:44:56] [INFO] Validación de producción exitosa {"user_id":14,"registro_id":2379,"validacion_id":null}
+[2025-10-21 10:44:58] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:44:59] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 10:45:02] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:45:05] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 10:45:08] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 10:46:28] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 10:46:29] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-21 10:46:34] [INFO] Solicitud de retención recibida {"user_id":14,"entrega_id":2379,"cantidad":400,"motivo":"calidad","tipo":"produccion"}
+[2025-10-21 10:46:34] [INFO] Retención creada exitosamente {"retencion_id":45,"registro_id":2379,"cantidad":400,"tipo":"produccion","usuario_id":14}
+[2025-10-21 10:46:34] [INFO] Retención creada exitosamente desde Acción QA {"user_id":14,"entrega_id":2379,"retencion_id":45,"cantidad":400,"motivo":"Problema de calidad","tipo":"produccion"}
+[2025-10-21 10:46:35] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 10:46:57] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:46:59] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 10:46:59] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 10:47:02] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 10:47:21] [INFO] Destino asignado a retención {"retencion_id":45,"destino_id":64,"tipo_destino":"produccion_final","cantidad":200,"tipo_retencion":"produccion","motivo":"Liberado a producción"}
+[2025-10-21 10:47:21] [INFO] Destino asignado exitosamente {"retencion_id":45,"tipo_destino":"produccion_final","cantidad":200,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 10:47:21] [INFO] Destino asignado a retención {"retencion_id":45,"destino_id":65,"tipo_destino":"retrabajo","cantidad":100,"tipo_retencion":"produccion","motivo":"Enviado a retrabajo"}
+[2025-10-21 10:47:21] [INFO] Destino asignado exitosamente {"retencion_id":45,"tipo_destino":"retrabajo","cantidad":100,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 10:47:21] [INFO] Registro actualizado a Guardado después de liberar retención {"registro_id":2379}
+[2025-10-21 10:47:21] [INFO] Destino asignado a retención {"retencion_id":45,"destino_id":66,"tipo_destino":"destruccion","cantidad":100,"tipo_retencion":"produccion","motivo":"Material para destruir"}
+[2025-10-21 10:47:21] [INFO] Destino asignado exitosamente {"retencion_id":45,"tipo_destino":"destruccion","cantidad":100,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 10:47:21] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 10:47:21] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 10:47:27] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:47:29] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:31] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:32] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:32] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:33] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:35] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:36] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:37] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:37] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:47:39] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:48:13] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:48:15] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:48:19] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":1}
+[2025-10-21 10:48:22] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 10:48:24] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 10:48:25] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:48:36] [INFO] Scrap guardado obtenido exitosamente {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 10:59:58] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 11:00:50] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 11:00:51] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 11:02:02] [INFO] Solicitud de validación de producción recibida {"user_id":14,"registro_id":725}
+[2025-10-21 11:02:02] [INFO] Registrando historial de validación {"registro_id":725,"tipo":"produccion","usuario_id":14}
+[2025-10-21 11:02:02] [INFO] Validación de producción exitosa {"user_id":14,"registro_id":725,"validacion_id":null}
+[2025-10-21 11:02:04] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 11:02:04] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-21 11:02:08] [INFO] Solicitud de retención recibida {"user_id":14,"entrega_id":725,"cantidad":4320,"motivo":"calidad","tipo":"produccion"}
+[2025-10-21 11:02:08] [INFO] Retención creada exitosamente {"retencion_id":46,"registro_id":725,"cantidad":4320,"tipo":"produccion","usuario_id":14}
+[2025-10-21 11:02:08] [INFO] Retención creada exitosamente desde Acción QA {"user_id":14,"entrega_id":725,"retencion_id":46,"cantidad":4320,"motivo":"Problema de calidad","tipo":"produccion"}
+[2025-10-21 11:02:09] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 11:02:26] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 11:02:47] [INFO] Error al asignar destino {"retencion_id":46,"tipo_destino":"produccion_final","cantidad":4000,"user_id":14,"resultado":"Unknown column 'reg.usuario_id' in 'on clause'"}
+[2025-10-21 11:02:47] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 11:02:47] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":1}
+[2025-10-21 11:07:16] [INFO] Destino asignado a retención {"retencion_id":46,"destino_id":67,"tipo_destino":"produccion_final","cantidad":4000,"tipo_retencion":"produccion","motivo":"Liberado a producción"}
+[2025-10-21 11:07:16] [INFO] Destino asignado exitosamente {"retencion_id":46,"tipo_destino":"produccion_final","cantidad":4000,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 11:07:16] [INFO] Destino asignado a retención {"retencion_id":46,"destino_id":68,"tipo_destino":"retrabajo","cantidad":200,"tipo_retencion":"produccion","motivo":"Enviado a retrabajo"}
+[2025-10-21 11:07:16] [INFO] Destino asignado exitosamente {"retencion_id":46,"tipo_destino":"retrabajo","cantidad":200,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 11:07:16] [INFO] Registro actualizado a Guardado después de liberar retención {"registro_id":725}
+[2025-10-21 11:07:16] [INFO] Destino asignado a retención {"retencion_id":46,"destino_id":69,"tipo_destino":"destruccion","cantidad":120,"tipo_retencion":"produccion","motivo":"Material para destruir"}
+[2025-10-21 11:07:16] [INFO] Destino asignado exitosamente {"retencion_id":46,"tipo_destino":"destruccion","cantidad":120,"user_id":14,"resultado":"Destino asignado correctamente"}
+[2025-10-21 11:07:16] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 11:07:16] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 11:07:19] [INFO] Scrap guardado obtenido exitosamente (incluye retenciones) {"usuario_qa":14,"total":1,"filtros_aplicados":[]}
+[2025-10-21 11:07:23] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 11:07:37] [INFO] Solicitud de validación de producción recibida {"user_id":14,"registro_id":4600}
+[2025-10-21 11:07:37] [INFO] Registrando historial de validación {"registro_id":4600,"tipo":"produccion","usuario_id":14}
+[2025-10-21 11:07:37] [INFO] Validación de producción exitosa {"user_id":14,"registro_id":4600,"validacion_id":null}
+[2025-10-21 11:07:38] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-21 11:07:45] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 11:07:52] [INFO] Solicitud de validación de scrap recibida {"registroId":4592,"cantidad":200,"user_id":14}
+[2025-10-21 11:07:52] [INFO] Validación de scrap exitosa {"registroId":4592,"cantidad":200,"user_id":14,"mensaje":"Scrap validado correctamente"}
+[2025-10-21 11:07:53] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 11:07:54] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":1}
+[2025-10-21 11:07:54] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-21 11:07:55] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":1}
+[2025-10-21 11:07:59] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4592,"tipo":"scrap"}
+[2025-10-21 11:07:59] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4592,"usuario_id":14,"validacion_id":111,"tipo":"scrap","comentario":""}
+[2025-10-21 11:07:59] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4592,"tipo":"scrap","validacion_id":111}
+[2025-10-21 11:08:00] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":1,"total_scrap":0}
+[2025-10-21 11:08:01] [INFO] Solicitud de guardar entrega recibida {"user_id":14,"entrega_id":4600,"tipo":"produccion"}
+[2025-10-21 11:08:01] [INFO] Entrega guardada exitosamente desde Acción QA {"entrega_id":4600,"usuario_id":14,"validacion_id":182,"tipo":"produccion","comentario":""}
+[2025-10-21 11:08:01] [INFO] Validación directa exitosa {"user_id":14,"entrega_id":4600,"tipo":"produccion","validacion_id":182}
+[2025-10-21 11:08:02] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-21 11:08:04] [INFO] Scrap guardado obtenido exitosamente (incluye retenciones) {"usuario_qa":14,"total":2,"filtros_aplicados":[]}
+[2025-10-21 11:18:02] [INFO] Scrap guardado obtenido exitosamente (incluye retenciones) {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 11:18:04] [INFO] Scrap guardado obtenido exitosamente (incluye retenciones) {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-21 11:18:06] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 11:18:07] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-21 12:05:45] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 12:05:49] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 12:06:02] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 12:06:25] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 12:06:29] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-21 12:07:48] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}

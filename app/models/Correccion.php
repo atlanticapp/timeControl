@@ -84,7 +84,7 @@ class Correccion extends Model
 
             if ($userId) {
                 $stmt = $this->db->prepare($query);
-                $stmt->bind_param('s', $userId); // código_empleado es string
+                $stmt->bind_param('s', $userId); // codigo_empleado es string
                 $stmt->execute();
                 $result = $stmt->get_result();
             } else {
@@ -180,7 +180,7 @@ class Correccion extends Model
             $row = $result->fetch_assoc();
             $registroId = $row['registro_id'];
 
-            // Actualizar estado de la solicitud de corrección
+            // Actualizar estado de la solicitud de correccion
             $query = "UPDATE solicitudes_correccion 
                       SET fecha_resolucion = NOW(), 
                           estado = 'Cancelada'
