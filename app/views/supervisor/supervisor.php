@@ -739,6 +739,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="assets/js/appValidacionSupervisor.js"></script>
     <script src="assets/js/supervisor/supervisor.js"></script>
+    <script src="assets/js/supervisor/paginacion.js"></script>
+
+
 
    
 </body>

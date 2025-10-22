@@ -1,0 +1,55 @@
+[2025-10-22 08:06:58] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 08:07:01] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 08:22:32] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 08:57:43] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 08:57:46] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 08:57:48] [INFO] Scrap guardado obtenido exitosamente (incluye retenciones) {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-22 08:57:52] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 08:59:04] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 08:59:07] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 08:59:09] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 09:01:08] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 09:01:10] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 09:03:47] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:04:06] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:04:13] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:04:30] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:04:37] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:06:49] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:09:27] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:10:40] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:10:54] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:11:30] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 09:24:11] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-22 09:24:12] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-22 09:24:12] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-22 09:24:12] [INFO] Fetching corrections in DataController::index {"codigo_empleado":12,"correcciones_count":0,"mostrar_correcciones":false,"user_data":{"maquina_id":1,"area_id":1}}
+[2025-10-22 09:24:18] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"lscsahrck37dl53311fqj5079i"}
+[2025-10-22 09:24:18] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-22 09:24:18] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-22 09:24:21] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"lscsahrck37dl53311fqj5079i","tipo_boton":"Producción"}
+[2025-10-22 09:24:21] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"Producción","cantidad_produccion":0,"cantidad_scrapt":0}
+[2025-10-22 09:24:21] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"lscsahrck37dl53311fqj5079i"}
+[2025-10-22 09:24:21] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-22 09:24:21] [INFO] Renderizando vista de control {"codigo_empleado":12,"maquina":"Perfecta2","correcciones_pendientes":0}
+[2025-10-22 09:24:28] [INFO] Iniciando registro {"codigo_empleado":12,"session_id":"lscsahrck37dl53311fqj5079i","tipo_boton":"final_produccion"}
+[2025-10-22 09:24:28] [INFO] Registro guardado exitosamente {"codigo_empleado":12,"tipo_boton":"final_produccion","cantidad_produccion":32000,"cantidad_scrapt":210}
+[2025-10-22 09:24:28] [INFO] Acceso a control de registro {"codigo_empleado":12,"session_id":"lscsahrck37dl53311fqj5079i"}
+[2025-10-22 09:24:28] [INFO] Correcciones pendientes consultadas para operador {"codigo_empleado":12,"cantidad":0}
+[2025-10-22 09:24:28] [INFO] Fetching corrections in DataController::index {"codigo_empleado":12,"correcciones_count":0,"mostrar_correcciones":false,"user_data":{"maquina_id":1,"area_id":1}}
+[2025-10-22 11:42:20] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 11:42:22] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 11:42:40] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 11:42:48] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-22 11:42:49] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 11:43:01] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 11:43:06] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-22 11:43:07] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-22 11:43:09] [INFO] Scrap guardado obtenido exitosamente (incluye retenciones) {"usuario_qa":14,"total":0,"filtros_aplicados":[]}
+[2025-10-22 11:43:10] [INFO] Consulta de destinos destrucción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 11:43:12] [INFO] Consulta de destinos producción {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 11:43:13] [INFO] Consulta de destinos retrabajo {"area_id":1,"usuario_id":14,"cantidad":0}
+[2025-10-22 11:43:19] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}
+[2025-10-22 11:43:30] [INFO] Cargando página de acción QA {"user_id":14,"total_produccion":0,"total_scrap":0}
+[2025-10-22 11:43:31] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":14,"cantidad":0}
+[2025-10-22 11:48:09] [INFO] Consulta de retenciones activas {"area_id":1,"codigo_empleado":null,"cantidad":0}

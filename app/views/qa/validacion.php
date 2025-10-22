@@ -14,6 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/timeControl/public/assets/css/qa/validacion.css">
+    
+
 
 </head>
 
@@ -393,5 +395,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="assets/js/appValidacion.js"></script>
     <script src="assets/js/qa/validacion.js"></script>
+    <script src="assets/js/qa/paginacion.js"></script>
 </body>
 </html>

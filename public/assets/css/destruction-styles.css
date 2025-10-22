@@ -1,0 +1,165 @@
+ * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary-blue: #5BA4CF;
+            --primary-dark: #4A4A4A;
+            --primary-blue-dark: #4A8DB8;
+            --bg-light: #F8FAFB;
+            --border-light: #E5E9EB;
+            --danger-red: #DC2626;
+        }
+
+        body {
+            background: var(--bg-light);
+        }
+
+        .modern-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            box-shadow: 0 4px 20px rgba(91, 164, 207, 0.15);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-image {
+            width: 80px;
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-light);
+        }
+
+        .modern-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .modern-table {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .modern-table thead {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+        }
+
+        .modern-table thead th {
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+        }
+
+        .modern-table tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .modern-table tbody tr:hover {
+            background: rgba(91, 164, 207, 0.05);
+        }
+
+        .btn-modern {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .badge-modern {
+            padding: 0.375rem 0.875rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-validado {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .breadcrumb-modern {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        .breadcrumb-modern a {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.2s;
+        }
+
+        .breadcrumb-modern a:hover {
+            color: white;
+        }
+
+        .modern-input,
+        .modern-select {
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 0.875rem;
+        }
+
+        .modern-input:focus,
+        .modern-select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(91, 164, 207, 0.2);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 16px 16px 0 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }

@@ -35,7 +35,7 @@ toastr.options = {
                 $('.entrega-row').each(function () {
                     let $row = $(this);
                     let match = true;
-                    if (fecha && $row.data('fecha') !== fecha) match = false;
+                    if (fecha && $row.data('fecha') == fecha) match = false;
                     if (item && !$row.data('item').toLowerCase().includes(item)) match = false;
                     if (jtwo && !$row.data('jtwo').toLowerCase().includes(jtwo)) match = false;
                     if (po && !$row.data('po').toLowerCase().includes(po)) match = false;
